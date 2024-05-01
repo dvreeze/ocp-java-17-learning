@@ -70,22 +70,22 @@ Note that the code here has no dependencies outside the JDK standard library, so
 For example (without passing any program arguments):
 
 ```shell
-javac -d ./classes src/chapter01/Chapter01Example.java
+javac -d ./classes src/chapter01/CallByValueExample.java
 
-java -cp ./classes chapter01.Chapter01Example
+java -cp ./classes chapter01.CallByValueExample
 ```
 
 The program execution step could be written in 3 different but equivalent ways (analogous remarks apply to compilation through "javac"):
 
-```shelljava -cp ./classes chapter01.Chapter01Example
-java -cp ./classes chapter01.Chapter01Example
-java -classpath ./classes chapter01.Chapter01Example
-java --class-path ./classes chapter01.Chapter01Example
+```shell
+java -cp ./classes chapter01.CallByValueExample
+java -classpath ./classes chapter01.CallByValueExample
+java --class-path ./classes chapter01.CallByValueExample
 ```
 
 For a single-file source-code program we can skip the compilation step, and simply run the program like this:
 
 ```shell
-java src/chapter01/Chapter01Example.java
+java src/chapter01/CallByValueExample.java
 ```
 
