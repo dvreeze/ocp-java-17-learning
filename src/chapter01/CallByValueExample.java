@@ -27,11 +27,11 @@ public class CallByValueExample {
 
     // Of course, this is the exact opposite of good FP practices, but that's not the point here
 
-    private static void plusSecond(long dateInEpochMs) {
+    private static void addSecond(long dateInEpochMs) {
         dateInEpochMs += 1000L;
     }
 
-    private static void plusSecond(Date date) {
+    private static void addSecond(Date date) {
         date.setTime(date.getTime() + 1000L);
     }
 
@@ -40,12 +40,12 @@ public class CallByValueExample {
         System.out.println("1. Date: " + now);
 
         // Call-by-value passing primitive data; nothing is updated in the caller
-        plusSecond(now.getTime());
+        addSecond(now.getTime());
 
         System.out.println("2. Date (after 'fake update'): " + now);
 
         // Call-by-value passing a reference to a mutable Date; it is updated in the caller as a result
-        plusSecond(now);
+        addSecond(now);
 
         System.out.println("3. Date (after update, a second later): " + now);
     }
