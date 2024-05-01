@@ -16,6 +16,7 @@
 
 package chapter01;
 
+import java.time.Instant;
 import java.util.Date;
 
 /**
@@ -35,6 +36,15 @@ public class CallByValueExample {
         date.setTime(date.getTime() + 1000L);
     }
 
+    private static void addSecond(Instant instant) {
+        // Instant, unlike Date, is an immutable type, so we cannot update an Instant in-place
+        instant = instant.plusMillis(1000L);
+    }
+
+    private static Instant plusSecond(Instant instant) {
+        return instant.plusMillis(1000L);
+    }
+
     public static void main(String[] args) {
         var now = new Date();
         System.out.println("1. Date: " + now);
@@ -48,5 +58,15 @@ public class CallByValueExample {
         addSecond(now);
 
         System.out.println("3. Date (after update, a second later): " + now);
+
+        // Call-by-value passing a reference to an immutable Instant; nothing is updated in the caller as a result
+        addSecond(now.toInstant());
+
+        System.out.println("4. Date (after 'fake update' of an immutable Instant): " + now);
+
+        // Using a pure function, and in particular its return value
+        var twoSecsLater = plusSecond(now.toInstant());
+
+        System.out.println("5. Instant from return value of pure method plusSecond, again one second later: " + twoSecsLater);
     }
 }
