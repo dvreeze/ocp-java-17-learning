@@ -9,7 +9,7 @@ Topics (from this OCP Java SE 17 Developer Study Guide):
   * Objects are not accessible directly, but only via *references* (or *pointers*, without the dangers associated with them)
   * Primary elements of a class, i.e. class *members*:
     * (instance-level or static) *fields*
-    * (instance-level or static) *methods* (the functions)
+    * (instance-level or static) *methods* (the functions of a class or instance)
     * constructors (that create objects/instances)
   * Be careful: constructors look like methods, but without return type
   * Also: unlike fields, methods always have a parameter list, even if it is empty
@@ -18,12 +18,12 @@ Topics (from this OCP Java SE 17 Developer Study Guide):
   * Multi-line comments (even if on a single line)
   * Javadoc comments
 * *Source files* and *classes*:
-  * Normal: one top-level type (class), one source file
+  * Normal: one top-level type (class) corresponds to one source file
   * The (top-level) type must match the source file's name without the ".java" extension
   * We can have multiple top-level types in a source file, but at most one of them can be public
 * A program's *main* method (and how to run the program)
-  * Three different "ways" of passing the main method's parameter(s)
-  * Passing program arguments
+  * Three different "ways" of syntactically passing the main method's parameter(s), including the use of *varargs*
+  * Passing program arguments when running programs
 * *Package declarations* and *import statements*:
   * Mind order of (optional) package declaration, (optional) import statements, and the top-level type definitions
   * When do we need to import a type, if we do not want to use FQCNs?
@@ -48,7 +48,7 @@ Topics (from this OCP Java SE 17 Developer Study Guide):
   * But the rules are the same for all of them:
     * Identifiers can contain letters, digits, currency symbols and underscores
     * But they cannot start with a digit, and they cannot be just an underscore
-    * And they cannot be *reserved words* (note that "var" is not a reserved word, but a reserved type name)
+    * And they cannot be *reserved words* (note that "var" is not a reserved word, but a "reserved type name")
     * And they cannot be "word" literals like true, false and null
 * *Variables*:
   * They are pieces of memory storing data (primitives or references)
@@ -62,8 +62,11 @@ Topics (from this OCP Java SE 17 Developer Study Guide):
   * Local variables can use the *var* syntax, to have the compiler infer the type
   * If no type can be inferred, the "var" declaration is rejected by the compiler
   * *Scope* of local variables, method/constructor parameters, instance variables (i.e. *fields*) and class variables
-* *Garbage collection*
+* *Garbage collection*:
+  * Understanding when there are no more references to an object (then the object is eligible for GC)
 
-It is also important to have a clear mental picture of *object references* versus
-*primitive values*, *stack* versus *heap* data, *call-by-value* where the value
-is either primitive data or object references, and *eligibility for garbage collection*.
+It is also important to have a clear mental picture of:
+* *object references* versus *primitive values*
+* *stack* versus *heap* data
+* *call-by-value* where the value is either primitive data or object references
+* *eligibility for garbage collection*

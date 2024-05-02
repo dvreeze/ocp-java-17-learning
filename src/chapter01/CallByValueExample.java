@@ -42,6 +42,7 @@ public class CallByValueExample {
     }
 
     private static Instant plusSecond(Instant instant) {
+        // A reference to a brand new immutable Instant object is returned, leaving the parameter Instant alone
         return instant.plusMillis(1000L);
     }
 
@@ -67,6 +68,10 @@ public class CallByValueExample {
         // Using a pure function, and in particular its return value
         var twoSecsLater = plusSecond(now.toInstant());
 
-        System.out.println("5. Instant from return value of pure method plusSecond, again one second later: " + twoSecsLater);
+        System.out.println(
+                "5. Instant (as Date) from return value of pure method plusSecond, again one second later: " +
+                        Date.from(twoSecsLater)
+        );
+        System.out.println("This did not change the incoming Date, which is still: " + now);
     }
 }
