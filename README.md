@@ -34,6 +34,9 @@ Java is much more rooted in its target platform, the JVM. Unlike Scala, Java mak
 * *Methods* and *operators*
 * *Statements* and *expressions*, the latter producing a value (and the use of the *return* keyword in method bodies returning a value)
 
+This more tight coupling of the Java language to the JVM target platform is also visible when looking at the
+[JVM instruction set](https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html).
+
 To an extent, Java can help in getting a mental picture of how certain Scala constructs are implemented "under the hood".
 I think Scala and Java knowledge strengthen each other.
 
@@ -54,14 +57,20 @@ It may make sense to also try to come up with a list of "meta-topics", in order 
 things" to think about when answering exam questions.
 
 My current attempt at a list of "meta-subjects" looks like this:
-* Java *syntax details* (what syntax corner cases are allowed or disallowed, and why)
+* Java *syntax details* (recognising fields/methods/constructors etc.; what syntax corner cases are allowed or disallowed, and why)
 * The Java *type system* (compile-time type-safety, type conversions etc.)
-* A *mental picture of the JVM* (primitive data vs. objects, call-by-value where the value is primitive or a reference, etc.)
+* A *mental picture of the JVM* (primitive data vs. objects, call-by-value where the value is primitive or a reference, "javap" output, etc.)
 * *Runtime behaviour* (object construction order, overriding/overloading, inheritance/polymorphism, exceptions, try-finally, threading, etc.)
 * *Standard library APIs* (the ones we must really know very well by heart)
 
 Many exam questions typically require knowledge spanning multiple such "meta-topics", trying to trick you into overlooking
 things.
+
+It is also easy to overlook "small details" when not reading carefully, such as:
+* Uppercase versus lowercase (such as "amount" versus "Amount", keeping in mind that identifiers are case-sensitive)
+* Commas versus semicolons (which typically affect where statements end)
+* Single equals sign ("=") for assignment versus double equals sign ("==") for (primitive/reference) equality test
+* Methods looking like constructors, if we overlook the method return type
 
 ### Writing and running Java code
 

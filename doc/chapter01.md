@@ -28,7 +28,7 @@ Topics (from this OCP Java SE 17 Developer Study Guide):
   * Mind order of (optional) package declaration, (optional) import statements, and the top-level type definitions
   * When do we need to import a type, if we do not want to use FQCNs?
   * How can we import types (e.g. via wildcards)?
-  * Solving naming conflicts, e.g. via FQCNs
+  * Solving naming conflicts, e.g. via FQCNs, or via combination of (very specific) non-wildcard and wildcard import
 * *Object construction*:
   * Constructor code itself is run after *fields* and *instance initializer blocks*
 * *Code blocks*:
@@ -54,13 +54,15 @@ Topics (from this OCP Java SE 17 Developer Study Guide):
   * They are pieces of memory storing data (primitives or references)
   * Declaring them gives them a name (which must be a valid identifier)
   * They can be initialized (but they can also be "undefined")
-  * Multiple variables can be declared (but only of the same type)
+  * Multiple variables can be declared in one statement (but only of the same type, which is mentioned only once)
   * Variables are either *local variables*, *method/constructor parameters*, *instance variables* (i.e. *fields*) or *class variables* (i.e. static fields)
   * They can be made "final", which for reference types only prevents reassignment of the reference itself
   * Using uninitialized local variables leads to compilation errors
   * Yet instance variables and class variables are automatically initialized with default values
   * Local variables can use the *var* syntax, to have the compiler infer the type
+  * This is called *local variable type inference*, making clear what it is and is not about
   * If no type can be inferred, the "var" declaration is rejected by the compiler
+  * Only one variable can be initialized in a "var" declaration statement
   * *Scope* of local variables, method/constructor parameters, instance variables (i.e. *fields*) and class variables
 * *Garbage collection*:
   * Understanding when there are no more references to an object (then the object is eligible for GC)
