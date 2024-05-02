@@ -71,6 +71,14 @@ public class OperatorExample {
                 "byteVar = (byte) (twoAsByte + 3L + 4.0)",
                 byteVar = (byte) (twoAsByte + 3L + 4.0),
                 (byte) 9);
+
+        byte byteVarOriginallyOne = 1;
+        // Much like before, but no more need for the down-cast, although it would be clearer to add the cast
+        showExample(
+                "byteVarOriginallyOne *= twoAsByte + 3L + 4.0",
+                byteVarOriginallyOne *= twoAsByte + 3L + 4.0,
+                (byte) 9);
+        byteVarOriginallyOne = 1;
     }
 
     public static void stringConcatenationExamples() {
