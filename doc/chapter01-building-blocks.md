@@ -1,8 +1,8 @@
-# Chapter 1
+# Chapter 1. Building Blocks
 
 See [OCP Java SE 17 Developer Study Guide](https://www.amazon.com/Oracle-Certified-Professional-Developer-Study/dp/1119864585/ref=sr_1_1?crid=1GIZNHYFXHAK4&dib=eyJ2IjoiMSJ9.Mz5O0lUSaZhUZ-O1Mi__dRPfXHL9GM_CfZ3JDTz910a2d8XI7Vsfj7zwcywJAfMcubfCglH02m8PwlAk_DORk8SS5460zaDP1fskFDX4sUiFVR4pxE1Ln0VIY-g5awTQaOJKp4t0Y1HchXkrw0HtOeVSHg3dHG8Jql9TibGCj-WeXYyNdMp4zWtgM4EimHpl4wvlJZufvGpNjNEmXIObAd2B1mp1skt5k7v_B-k_Ip4.bRERgxl7gsekO5AihUKuOeT_yoO6Bsg7jHigb4sjHEM&dib_tag=se&keywords=ocp+java+se17&qid=1714573695&sprefix=ocp+java+%2Caps%2C192&sr=8-1).
 
-Topics (from this OCP Java SE 17 Developer Study Guide):
+Topics in chapter 1 (from this OCP Java SE 17 Developer Study Guide):
 * Tools like javac, java etc. (and choosing the Java version)
 * Understanding *class structure*:
   * An *object* is also called *instance of a class* (the class is a "template" for construction)
@@ -40,7 +40,7 @@ Topics (from this OCP Java SE 17 Developer Study Guide):
   * Primitive values have no methods declared on them
   * Know the primitive types and their wrapper types well
   * Autoboxing and unboxing
-  * Also know the corresponding literals well
+  * Also know the corresponding literals well (note that float literals need an "f" suffix)
   * Underscores in numeric literals
   * *Text blocks* and incidental versus essential whitespace
 * *Identifiers*:
