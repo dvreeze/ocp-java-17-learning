@@ -74,7 +74,7 @@ Type char (which could be seen as an unsigned integer type) contains 2 bytes.
 | Logical complement (NOT) | !b           | Inverts a boolean's logical value               | boolean         |
 | Bitwise complement       | ~n           | Inverts zeroes and ones in number               | "int types"     |
 | Plus                     | +n           | Keeps the sign of a numeric expression the same | "numeric types" |
-| Minus                    | -n           | Reverses the sigh of a numeric expression       | "numeric types" |
+| Minus                    | -n           | Reverses the sign of a numeric expression       | "numeric types" |
 | Increment                | n++, ++n     | Increments a value by 1                         | "numeric types" |
 | Decrement                | n--, --n     | Decrements a value by 1                         | "numeric types" |
 | Cast                     | (String) obj | Casts a value to a specific type                | any type        |
@@ -117,7 +117,7 @@ and (compilation/runtime) errors for reference types.
 Assignments like `n *= 2` are like `n = n * 2`, except that the abbreviated form does a down-cast, if needed, instead of
 causing a compilation error.
 
-### Comparison operators
+### Comparison and "boolean logic" operators
 
 The *comparison operators* "equal-to" ("==") and "not-equal-to" ("!=") mean different things for primitives and reference types:
 * For *primitives* the operand types must "match", and equality is value equality for primitive data
