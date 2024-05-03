@@ -68,7 +68,7 @@ Topics in chapter 1 (from this OCP Java SE 17 Developer Study Guide):
   * Understanding when there are no more references to an object (then the object is eligible for GC)
 
 It is also important to have a clear mental picture of:
-* *object references* versus *primitive values*
+* *references* (to an object, or null) versus *primitive values*
 * *stack* versus *heap* data
-* *call-by-value* where the value is either primitive data or object references
+* *call-by-value* where the value is either primitive data or references (to an object or null)
 * *eligibility for garbage collection*
