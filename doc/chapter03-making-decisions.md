@@ -44,7 +44,8 @@ and the programmer is free to choose "single statements" or "block statements".
 Typically, a "single statements" is:
 * an *expression statement*, that is, an expression followed by a semicolon, turning it into a statement
 * a *local variable declaration*
-but there are many more types of "single statements" (whose parts are not statements themselves), such as "return statements",
+
+There are many more types of "single statements" (whose parts are not statements themselves), such as "return statements",
 "break statements", "continue statements" and "throw statements".
 
 The expression in an expression statement is very often an *assignment expression* or a *method call expression*.
