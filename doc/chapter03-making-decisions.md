@@ -41,20 +41,16 @@ Especially for switch statements and expressions, there is a lot to check, w.r.t
 
 In *control flow statements* the statements can typically be "single statements" or blocks of zero or more statements,
 and the programmer is free to choose "single statements" or "block statements".
-Typically, a "single statements" is:
-* an *expression statement*, that is, an expression followed by a semicolon, turning it into a statement
-* a *local variable declaration*
 
-There are many more types of "single statements" (whose parts are not statements themselves), such as "return statements",
-"break statements", "continue statements" and "throw statements".
+Typically, a "single statement" used directly (instead of as one of the individual statements of a "block statement") is
+an *expression statement*, that is, an expression followed by a semicolon, turning it into a statement.
 
 The expression in an expression statement is very often an *assignment expression* or a *method call expression*.
 
 For expression statements, see [ExpressionStatementTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionStatementTree.html).
-For local variable declarations, see [VariableTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html).
 Don't forget to look at the relevant links to the JLS.
 
-Note that "single statements" (and certainly the ones mentioned above) mostly *end with a semicolon*. This is something
+Note that "single statements" (and certainly expression statements) mostly *end with a semicolon*. This is something
 to be aware of when answering exam questions.
 
 *Block statements* combine zero or more statements, such as "single statements", *enclosed in braces*. The closing brace
@@ -87,7 +83,7 @@ The pattern match looks like a normal "instanceof check" enhanced with a *patter
 not be reassigned within its scope.
 
 Pattern matching works only for *strict subtypes* of the declared type of the checked variable (the LHS of the "instanceof"
-operator), or else the compiler emits an error. When mixing classes and interfaces, this is not necessarily the case.
+operator), or else the compiler emits an error. This assumes that we are not mixing classes and interfaces.
 
 Consider the following example:
 
