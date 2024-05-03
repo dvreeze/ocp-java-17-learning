@@ -155,7 +155,7 @@ Java 14 added *switch expressions*, which are expressions instead of statements.
 assigned to a variable, given some requirements are met (ensuring that the switch expression always returns a value).
 
 Syntactically they look very much like switch statements, but the colons in cases are replaced by *arrows* ("->").
-Also, the "break statements" are gone (they are not needed for switch expressions), and we may see "yield expressions" instead.
+Also, the "break statements" are gone (they are not needed for switch expressions), and we may see "yield statements" instead.
 
 The "case branches" are:
 * either *case expression statements* that by definition *end with a semicolon*
@@ -180,10 +180,96 @@ Note that if the switch expression is the RHS of an assignment expression used a
 
 ### While-loops
 
+*While-loops* are statements that loop zero or more times over the loop's statement, depending on a boolean condition that is checked
+before each iteration, ending the loop once the condition is false.
+
+*Syntactically*, a *while-statement*:
+* starts with the "while" keyword
+* followed by a *condition* that must be enclosed in *parentheses*
+* followed by the statement to iterate over, which can be a "single statement" or block statement
+
+As for *correct use of types*, the condition must be a *boolean expression*.
+
+These loops are very basic, leaving details like "creation of a loop variable" to the programmer.
+Be aware of infinite loops, if the loop condition is not "progressing towards successful termination".
+
 ### Do-while-loops
+
+If we want a loop where we iterate one or more times instead of zero of more times, use a *do-while-loop*.
+
+*Syntactically*, a *do-while-statement*:
+* starts with the "do" keyword
+* followed by the statement to iterate over, which can be a "single statement" or block statement
+* followed by the "while" keyword
+* followed by a *condition* that must be enclosed in *parentheses*
+* followed by a *semicolon*
+
+As for *correct use of types*, the condition must be a *boolean expression*.
+
+Like for regular while-loops, be aware of infinite loops.
 
 ### For-loops
 
+A *for-loop* offers some support in creating and using "loop variables".
+
+*Syntactically*, a *for-loop*:
+* starts with the "for" keyword
+* followed by the "init-condition-update" part, *enclosed in parentheses*
+* followed by the statement to iterate over, which can be a "single statement" or block statement
+
+The "init-condition-update" part contains exactly *2 (top-level) semicolons*, to separate the "init part" from the
+"condition", and the "condition" from the "update part". All those 3 parts can be empty, leaving only 2 semicolons!
+
+The "init part", if present, is either a local variable declaration or a comma-separated list of so-called "statement expressions".
+So, in practice, the "init part" is either a local variable declaration or a comma-separated list of assignments or
+pre-/post-unary expressions.
+
+The optional condition is an expression, and the optional "update part" is a comma-separated list of these so-called
+"statement expressions" (so typically assignments or pre-/post-unary expressions).
+
+As for *correct use of types*, the condition must be a *boolean expression*.
+
+Be careful to not redeclare a variable in the loop "init part", or else the compiler will emit an error.
+This makes sense, because there cannot be 2 local variables with the same name in scope at the same time.
+
+Also note that loop variables are no longer in scope after the loop. Finally, do not modify loop variables (to prevent
+having "2 owners" of that loop variable).
+
+It is still possible to create infinite loops.
+
 ### Enhanced-for-loops
 
+The *enhanced-for-loop* (or *for-each-loop*) has been designed to loop over collections or arrays.
+
+*Syntactically*, a *for-each-loop*:
+* starts with the "for" keyword
+* followed by en "initialization section" that *must be surrounded by parentheses*
+* followed by the statement to iterate over, which can be a "single statement" or block statement
+
+The "initialization section", within the pair of parentheses:
+* starts with a type (can be "var")
+* followed by a *variable name*
+* followed by a *colon* (and not a keyword like "in"!)
+* followed by an expression for the collection or array to loop over
+
+The collection/array to loop over must either be a *Java array* or a collection implementing *java.lang.Iterable*.
+The latter includes most collections, but excludes Maps (from the Collections Framework). Of course the data type
+of the element variable must match the element type of the array or collection to loop over.
+
 ### Break and continue
+
+It is possible to assign *labels* to statements, in particular looping statements (like for-loops). Then using
+*break statements* or *continue statements* we can break out of nested loops or loop iterations when needed.
+
+With *break statements* (with or without mentioned label) we can break out of enclosing loops. With *continue statements*
+(with or without mentioned label) we can break out of an iteration of an enclosing loop.
+
+Of course, with a *return statement* we can break out of an entire method body.
+
+Of course, in general "go-to statements" are considered harmful (as argued a long time ago by Edsger Dijkstra).
+But these specific "go-to statements" are safe in that they only break out of some enclosing context, or else
+the compiler will emit an error. More specifically, if a "continue statement" has no (enclosing) "continue target",
+the compiler will consider that an error. A similar remark holds for "break statements" and "break targets".
+
+If the compiler detects that break/continue/return statements make pieces of code unreachable, the compiler will
+emit an error.
