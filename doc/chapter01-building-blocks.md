@@ -72,3 +72,18 @@ It is also important to have a clear mental picture of:
 * *stack* versus *heap* data
 * *call-by-value* where the value is either primitive data or references (to an object or null)
 * *eligibility for garbage collection*
+
+More information can be found in the
+[Java AST API](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/package-summary.html),
+which contains links to the Java Language specification for specific language constructs.
+Note, however, that this AST partly feels more low-level than the "semantic" language constructs
+that we know as Java programmers. (The Java AST API looks like the result of early Java parsing "phases",
+before annotating the AST with typing info.)
+
+For example, for class declarations, see
+[ClassTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html),
+and for the class members, see for example
+[VariableTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html) for fields, and
+[MethodTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html)
+for methods and constructors (where the latter have *null* return type),
+and follow the links to specific relevant parts of the JLS.

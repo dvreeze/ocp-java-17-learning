@@ -4,6 +4,13 @@ See [OCP Java SE 17 Developer Study Guide](https://www.amazon.com/Oracle-Certifi
 
 Topics in chapter 2 (from this OCP Java SE 17 Developer Study Guide) are summarized below.
 
+More information can be found in the (more low-level)
+[Java AST API](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/package-summary.html),
+which contains links to the Java Language specification for specific language constructs.
+In particular, see [UnaryTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/UnaryTree.html)
+and [BinaryTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/BinaryTree.html),
+with their links to corresponding sections in the JLS (Java Language Specification).
+
 ### Operators in general
 
 Java *operations* are expressions containing *operators* applied to *operands*, with the latter being
@@ -138,5 +145,5 @@ that do not evaluate the right-hand operand if that is not needed for computing 
 
 ### Ternary operator
 
-It's like and if-else-statement as expression. The use of parentheses can help readability. If the types of the 2 branches
+It's like an if-else-statement as expression. The use of parentheses can help readability. If the types of the 2 branches
 cannot "match", the compiler will emit an error.
