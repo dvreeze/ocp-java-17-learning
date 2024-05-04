@@ -144,9 +144,9 @@ the scoping rules we have seen so far for variables (for static fields, instance
 * followed by a "switch block", which is zero or more "cases" *surrounded by a pair of braces* (hence the name "switch block")
 
 *Syntactically*, a (non-default) *switch case*:
-* starts with the "case" keyword
-* followed by one or more comma-separated "case values" (before Java 14 it could only be one such expression)
-* followed by a colon
+* starts with one or more pairs of "switch label" and colon
+  * where each "switch label" starts with the "case" keyword, which is followed by a non-empty comma-separated list of "case values"
+  * note that before Java 14 there could be only one "case value" per "switch label"
 * followed by a branch, which is zero or more statements
 * the last statement should be a "break statement", or else execution "falls through" to the remaining cases, which can be unexpected
 
@@ -157,6 +157,32 @@ The other *switch case* is the "default case", which:
 * there can be only 1 default case at most in the switch statement, or else the compiler emits an error
 * this should be the last case of the switch statement, but this is not checked by the compiler
 * for consistency, the default case should also end with a "break statement"
+
+Grammar (simplified):
+
+```
+switchStatement:
+    "switch" "(" expression ")" switchBlock
+
+switchBlock:
+    "{" { switchCase } "}"
+
+switchCase:
+    nonDefaultCase
+    defaultCase
+
+nonDefaultCase:
+    switchLabel ":" { switchLabel ":" } branch
+
+switchLabel:
+    "case" constantExpression { "," constantExpression }
+
+defaultCase:
+    "default" ":" branch
+
+branch:
+    { statement }
+```
 
 As for the *type* of the "target expression", it can only be one of:
 * integral primitive types no larger than int, so byte, short, int and char
