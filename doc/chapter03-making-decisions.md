@@ -37,13 +37,21 @@ We have to think like the Java compiler, to a large extent. For example:
 
 Especially for switch statements and expressions, there is a lot to check, w.r.t. syntax, types etc.
 
+Below, (simplified) grammars of flow control statements are given. Different alternatives in a grammar rule occur on different lines,
+`{}` means zero-or-more, and `[]` means zero-or-one. Terminal symbols (including keywords) are enclosed in double-quotes.
+
 ### Expression statements and blocks
 
 In *control flow statements* the statements can typically be "single statements" or blocks of zero or more statements,
-and the programmer is free to choose "single statements" or "block statements".
+and the programmer is free to choose "single statements" or "blocks" (which are statements themselves).
 
-Typically, a "single statement" used directly (instead of as one of the individual statements of a "block statement") is
-an *expression statement*, that is, an expression followed by a semicolon, turning it into a statement.
+Typically, a "single statement" used directly (instead of as one of the individual statements of a "block") is
+an *expression statement*, that is, an expression followed by a semicolon, turning it into a statement:
+
+```
+expressionStatement:
+    expression ";"
+```
 
 The expression in an expression statement is very often an *assignment expression* or a *method call expression*.
 
@@ -53,17 +61,32 @@ Don't forget to look at the relevant links to the JLS.
 Note that "single statements" (and certainly expression statements) mostly *end with a semicolon*. This is something
 to be aware of when answering exam questions.
 
-*Block statements* combine zero or more statements, such as "single statements", *enclosed in braces*. The closing brace
+*Blocks* combine zero or more statements, such as "single statements", *enclosed in braces*. The closing brace
 is *not followed by a semicolon*. So be careful when checking statement syntax, w.r.t. braces and semicolons.
 
-For block statements, see [BlockTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/BlockTree.html).
+A much simplified grammar rule for blocks is like this:
+
+```
+block:
+    "{" { statement } "}"
+```
+
+For blocks, see [BlockTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/BlockTree.html).
 
 ### If-statements
 
 *Syntactically*, an *if-statement*:
 * may or may not have an *else-branch*
 * the *condition* must be enclosed in *parentheses*
-* the branch statement or statements can be "single statements" or block statements (see preceding section)
+* the branch statement or statements can be "single statements" or blocks (see preceding section)
+
+Grammar:
+
+```
+ifStatement:
+    "if" "(" expression ")" statement
+    "if" "(" expression ")" statement "else" statement
+```
 
 In nested if-statements, we may encounter the [dangling else](http://www.cs.emory.edu/~cheung/Courses/561/Syllabus/2-C/dangling-else.html)
 problem. This is resolved by the following rule (as mentioned in that article): An "else" keyword always associates with
@@ -140,7 +163,8 @@ As for the *type* of the "target expression", it can only be one of:
 * or the corresponding wrapper types
 * or the type String
 * or an enumeration type
-* or "var", if it resolves to one of the types mentioned above
+
+A "var" is also allowed, if it resolves to one of the types mentioned above
 
 Each "case value" must be a "compile-time constant". Its type must be *assignable to the type of the target expression*.
 With *compile-time constant* we mean:
@@ -159,7 +183,7 @@ Also, the "break statements" are gone (they are not needed for switch expression
 
 The "case branches" are:
 * either *case expression statements* that by definition *end with a semicolon*
-* or *case blocks*, which are block statements
+* or *case blocks*, which are blocks
 
 The case blocks must contain *yield statements*, to make sure that the compiler knows that all code paths in the case block
 lead to a value (of the correct type) or throw an exception. If the entire switch expression returns no value (so is of type void),
@@ -186,7 +210,14 @@ before each iteration, ending the loop once the condition is false.
 *Syntactically*, a *while-statement*:
 * starts with the "while" keyword
 * followed by a *condition* that must be enclosed in *parentheses*
-* followed by the statement to iterate over, which can be a "single statement" or block statement
+* followed by the statement to iterate over, which can be a "single statement" or block
+
+Grammar:
+
+```
+whileLoop:
+    "while" "(" expression ")" statement
+```
 
 As for *correct use of types*, the condition must be a *boolean expression*.
 
@@ -199,10 +230,17 @@ If we want a loop where we iterate one or more times instead of zero of more tim
 
 *Syntactically*, a *do-while-statement*:
 * starts with the "do" keyword
-* followed by the statement to iterate over, which can be a "single statement" or block statement
+* followed by the statement to iterate over, which can be a "single statement" or block
 * followed by the "while" keyword
 * followed by a *condition* that must be enclosed in *parentheses*
 * followed by a *semicolon*
+
+Grammar:
+
+```
+doWhileLoop:
+    "do" statement "while" "(" expression ")" ";"
+```
 
 As for *correct use of types*, the condition must be a *boolean expression*.
 
@@ -217,7 +255,7 @@ A *for-loop* offers some support in creating and using "loop variables".
 *Syntactically*, a *for-loop*:
 * starts with the "for" keyword
 * followed by the "init-condition-update" part, *enclosed in parentheses*
-* followed by the statement to iterate over, which can be a "single statement" or block statement
+* followed by the statement to iterate over, which can be a "single statement" or block
 
 The "init-condition-update" part contains exactly *2 (top-level) semicolons*, to separate the "init part" from the
 "condition", and the "condition" from the "update part". All those 3 parts can be empty, leaving only 2 semicolons!
@@ -228,6 +266,26 @@ pre-/post-unary expressions.
 
 The optional condition is an expression, and the optional "update part" is a comma-separated list of these so-called
 "statement expressions" (so typically assignments or pre-/post-unary expressions).
+
+Grammar:
+
+```
+forLoop:
+    "for" "(" [ initializer ] ";" [ condition ] ";" [ update ] ")" statement
+
+initializer:
+    statementExpressionList
+    localVariableDeclaration
+
+condition:
+    expression
+
+update:
+    statementExpressionList
+
+statementExpressionList:
+    statementExpression { "," statementExpression }
+```
 
 As for *correct use of types*, the condition must be a *boolean expression*.
 
@@ -246,13 +304,20 @@ The *enhanced-for-loop* (or *for-each-loop*) has been designed to loop over coll
 *Syntactically*, a *for-each-loop*:
 * starts with the "for" keyword
 * followed by en "initialization section" that *must be surrounded by parentheses*
-* followed by the statement to iterate over, which can be a "single statement" or block statement
+* followed by the statement to iterate over, which can be a "single statement" or block
 
 The "initialization section", within the pair of parentheses:
 * starts with a type (can be "var")
 * followed by a *variable name*
 * followed by a *colon* (and not a keyword like "in"!)
 * followed by an expression for the collection or array to loop over
+
+Grammar:
+
+```
+enhancedForLoop:
+    "for" "(" variable ":" expression ")" statement
+```
 
 The collection/array to loop over must either be a *Java array* or a collection implementing *java.lang.Iterable*.
 The latter includes most collections, but excludes Maps (from the Collections Framework). Of course the data type
@@ -272,6 +337,10 @@ Of course, in general "go-to statements" are considered harmful (as argued a lon
 But these specific "go-to statements" are safe in that they only break out of some enclosing context, or else
 the compiler will emit an error. More specifically, if a "continue statement" has no (enclosing) "continue target",
 the compiler will consider that an error. A similar remark holds for "break statements" and "break targets".
+
+Note that break/continue/return are all "safe go-to statements" *returning control to a syntactically enclosing context*.
+Also note that it makes sense for switch statements to support the break statement inside switch cases, and that
+the continue statement makes no sense for switch statements (leading to a compilation error if we try to use it).
 
 If the compiler detects that break/continue/return statements make pieces of code unreachable, the compiler will
 emit an error.

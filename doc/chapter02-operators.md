@@ -9,7 +9,9 @@ More information can be found in the (more low-level)
 which contains links to the Java Language specification for specific language constructs.
 In particular, see [UnaryTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/UnaryTree.html)
 and [BinaryTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/BinaryTree.html),
-with their links to corresponding sections in the JLS (Java Language Specification).
+with their links to corresponding sections in the JLS (Java Language Specification). For assignment, see
+[AssignmentTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/AssignmentTree.html)
+and [CompoundAssignmentTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/CompoundAssignmentTree.html).
 
 ### Operators in general
 
