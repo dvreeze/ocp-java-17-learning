@@ -158,7 +158,7 @@ The other *switch case* is the "default case", which:
 * this should be the last case of the switch statement, but this is not checked by the compiler
 * for consistency, the default case should also end with a "break statement"
 
-Grammar (simplified):
+Grammar (simplified, and using "wrong" name "switchCase"):
 
 ```
 switchStatement:
@@ -168,17 +168,11 @@ switchBlock:
     "{" { switchCase } "}"
 
 switchCase:
-    nonDefaultCase
-    defaultCase
-
-nonDefaultCase:
     switchLabel ":" { switchLabel ":" } branch
 
 switchLabel:
     "case" constantExpression { "," constantExpression }
-
-defaultCase:
-    "default" ":" branch
+    "default"
 
 branch:
     { statement }
