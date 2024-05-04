@@ -204,6 +204,7 @@ Also, the "break statements" are gone (they are not needed for switch expression
 The "case branches" are:
 * either *case expression statements* that by definition *end with a semicolon*
 * or *case blocks*, which are blocks
+* or *throw statements*
 
 The case blocks must contain *yield statements*, to make sure that the compiler knows that all code paths in the case block
 lead to a value (of the correct type) or throw an exception. If the entire switch expression returns no value (so is of type void),
@@ -211,6 +212,25 @@ this is not needed, of course.
 
 A great feature of switch expressions versus switch statements is that there is no more need for break statements,
 and that fall-through behaviour is impossible.
+
+Grammar (simplified, and using "wrong" name "switchCase"):
+
+```
+switchExpression:
+    "switch" "(" expression ")" switchBlockInSwitchExpression
+
+switchBlockInSwitchExpression:
+    "{" switchRule { switchRule } "}"
+
+switchRule:
+    switchLabel "->" expression ";"
+    switchLabel "->" block
+    switchLabel "->" throwStatement
+
+switchLabel:
+    "case" constantExpression { "," constantExpression }
+    "default"
+```
 
 As for *typing*, we have the following requirements:
 * the type of the "target expression" of the switch expression is restricted in exactly the same way as for switch statements

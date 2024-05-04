@@ -19,30 +19,34 @@ package chapter03;
 import java.util.Optional;
 
 /**
- * Switch statement example.
+ * Switch expression example.
  *
  * @author Chris de Vreeze
  */
-public class SwitchStatementExample {
+public class SwitchExpressionExample {
+
+    private static boolean isEven(int k) {
+        return k % 2 == 0;
+    }
 
     private static Optional<Boolean> isSmallEvenNumber(int n) {
-        Optional<Boolean> evenAndSmall;
-        switch (n) {
-            case 2:
-            case 4:
-            case 6, 8, 10: case 12, 14:
-            case 16, 18:
-                evenAndSmall = Optional.of(true);
-                break;
-            case 1, 3, 5: case 7, 9:
-            case 11, 13, 15: case 17:
-                evenAndSmall = Optional.of(false);
-                break;
-            default:
-                evenAndSmall = Optional.empty();
-                break;
-        }
-        return evenAndSmall;
+        // Note that we are not even allowed to use the complex "case syntax" that switch statements permit.
+        // But foremost we get rid of the break statements that are basically always needed in switch statements.
+        // Both are big improvements, as far as I am concerned.
+        return
+            switch (n) {
+                case 2, 4, 6, 8, 10, 12, 14, 16, 18 -> Optional.of(true);
+                case 1, 3, 5, 7, 9, 11, 13, 15, 17 -> {
+                    // If we use a block, we need to "yield" a value (in all code paths, except where exceptions are thrown)
+                    if (isEven(n)) {
+                        // Not the case, obviously
+                        yield Optional.of(true);
+                    } else {
+                        yield Optional.of(false);
+                    }
+                }
+                default -> Optional.empty();
+        };
     }
 
     public static void main(String[] args) {

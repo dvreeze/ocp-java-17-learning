@@ -99,3 +99,30 @@ For a single-file source-code program we can skip the compilation step, and simp
 java src/chapter01/CallByValueExample.java
 ```
 
+### Resources
+
+More information about Java 17 language constructs can be found in the (more low-level)
+[Java AST API](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/package-summary.html).
+
+For example, statements (and different kinds of statements) are modelled in
+[StatementTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html),
+and expressions (and different kinds of expressions) are modelled in
+[ExpressionTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html).
+
+This gives a good idea of how Java "hangs together" conceptually as AST, but it does not show the exact syntax with
+the "terminal symbols".
+
+For example, [WhileLoopTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/WhileLoopTree.html)
+exposes methods to get the loop condition as expression, and to get the loop body as statement, but it does not show the exact
+syntax (except for a non-normative example in the Javadoc documentation of the class).
+
+The AST classes seem to result from an early compiler phase in which language constructs are recognized, but where type checking
+has not yet taken place. Still, keeping this in mind, this Java AST API aids in understanding Java.
+
+Moreover, from these AST classes we find links to the *Java Language specification* for specific language constructs.
+The JLS is very detailed, obviously. It is meant for implementers, not for regular Java programmers. The grammars in
+the JLS are also very detailed, to a large part for disambiguation. So the grammar in the JLS is too complex as an aid
+to understand the syntax of Java. Still, the JLS provides a lot of useful information, even to users of the Java language,
+so browsing it for specific language constructs often makes sense, also for coming up with a simplified grammar for
+specific language constructs. We need to have a good grasp of the precise syntax when answering exam questions, after all,
+to catch small syntax errors.
