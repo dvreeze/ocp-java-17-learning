@@ -208,6 +208,8 @@ As for *correct use of types*, the condition must be a *boolean expression*.
 
 Like for regular while-loops, be aware of infinite loops.
 
+Note that variables introduced in the statement to iterate over are no longer in scope in the loop condition!
+
 ### For-loops
 
 A *for-loop* offers some support in creating and using "loop variables".
