@@ -361,6 +361,7 @@ enhancedForLoop:
 
 localVariableDeclarationInEnhancedForLoop:
     type variableName
+    var variableName
 ```
 
 The collection/array to loop over must either be a *Java array* or a collection implementing *java.lang.Iterable*.
