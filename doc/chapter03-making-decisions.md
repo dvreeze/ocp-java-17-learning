@@ -213,7 +213,7 @@ this is not needed, of course.
 A great feature of switch expressions versus switch statements is that there is no more need for break statements,
 and that fall-through behaviour is impossible.
 
-Grammar (simplified, and using "wrong" name "switchCase"):
+Grammar (simplified):
 
 ```
 switchExpression:
