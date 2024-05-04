@@ -244,7 +244,7 @@ Note that if the switch expression is the RHS of an assignment expression used a
 
 ### While-loops
 
-*While-loops* are statements that loop zero or more times over the loop's statement, depending on a boolean condition that is checked
+*While-loops* are statements that loop zero or more times over the loop's body, depending on a boolean condition that is checked
 before each iteration, ending the loop once the condition is false.
 
 *Syntactically*, a *while-statement*:
@@ -266,7 +266,7 @@ Be aware of infinite loops, if the loop condition is not "progressing towards su
 
 ### Do-while-loops
 
-If we want a loop where we iterate one or more times instead of zero of more times, use a *do-while-loop*.
+If we want a loop where we iterate one or more times instead of zero or more times, use a *do-while-loop*.
 
 *Syntactically*, a *do-while-statement*:
 * starts with the "do" keyword
@@ -347,16 +347,20 @@ The *enhanced-for-loop* (or *for-each-loop*) has been designed to loop over coll
 * followed by the statement to iterate over, which can be a "single statement" or block
 
 The "initialization section", within the pair of parentheses:
-* starts with a type (can be "var")
-* followed by a *variable name*
+* starts with a *local variable declaration* (which may start with "var")
+  * the "local variable declaration" typically starts with a type or "var", followed by a "variable name"
+  * the "local variable declaration" must have no initializer, and it must declare a single variable
 * followed by a *colon* (and not a keyword like "in"!)
 * followed by an expression for the collection or array to loop over
 
-Grammar:
+Grammar (simplified):
 
 ```
 enhancedForLoop:
-    "for" "(" variable ":" expression ")" statement
+    "for" "(" localVariableDeclarationInEnhancedForLoop ":" expression ")" statement
+
+localVariableDeclarationInEnhancedForLoop:
+    type variableName
 ```
 
 The collection/array to loop over must either be a *Java array* or a collection implementing *java.lang.Iterable*.
