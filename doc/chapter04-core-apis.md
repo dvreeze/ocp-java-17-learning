@@ -29,7 +29,7 @@ to a method (like `substring`), the start index is *inclusive* and the end index
 Some important *instance methods of class String* (or sets of overloaded String instance methods) are:
 * `length`
 * `charAt` (may throw a `StringIndexOutOfBoundsException`)
-* `indexOf` (may return `-1` instead of throwing an exception, if called with "correct" method arguments)
+* `indexOf` (may return `-1` instead of throwing an exception)
 * `substring`
 * `toLowerCase`, `toUpperCase`
 * `equals` (from the `Object` super-class), `equalsIgnoreCase`
@@ -37,7 +37,7 @@ Some important *instance methods of class String* (or sets of overloaded String 
 * `replace` (taking 2 characters, or 2 strings), as opposed to `replaceAll` (taking a regular expression as first parameter)
 * `strip`, `stripLeading`, `stripTrailing`, `trim` (method "trim" is older, using a less advanced definition of whitespace)
 * `indent`, `stripIndent` (these methods are powerful, but mind line break normalization and trailing line break), and `lines`
-* `translateEscapes`
+* `translateEscapes` (since Java 15)
 * `isEmpty`, `isBlank`
 * `formatted` (since Java 15; see static method `format`)
 
