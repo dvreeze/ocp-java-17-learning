@@ -126,3 +126,4 @@ to understand the syntax of Java. Still, the JLS provides a lot of useful inform
 so browsing it for specific language constructs often makes sense, also for coming up with a simplified grammar for
 specific language constructs. We need to have a good grasp of the precise syntax when answering exam questions, after all,
 to catch small syntax errors.
+
