@@ -6,7 +6,7 @@ Topics in chapter 1 (from this OCP Java SE 17 Developer Study Guide):
 * Tools like javac, java etc. (and choosing the Java version)
 * Understanding *class structure*:
   * An *object* is also called *instance of a class* (the class is a "template" for construction)
-  * Objects are not accessible directly, but only via *references* (or *pointers*, without the dangers associated with them)
+  * Objects are not accessible directly, but only via *references* (or *pointers*, but without the dangers associated with them in languages like C)
   * Primary elements of a class, i.e. class *members*:
     * (instance-level or static) *fields*
     * (instance-level or static) *methods* (the functions of a class or instance)
