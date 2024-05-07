@@ -20,7 +20,7 @@ This GitHub repository is used for summaries of topics, additional notes and (ow
 ### Different philosophies of Scala and Java
 
 Scala has some attractive traits that distinguish it from Java:
-* A very powerful *type system*, and *compile-time type-safety*. "If something is not in the type system, it does not exist."
+* A very powerful *type system*, and *compile-time type-safety* (Java is also compile-time type-safe, but its type system is less powerful). "If something is not in the type system, it does not exist."
 * A philosophy of *unification*, for example between OO and FP. Scala, at its core, tries to offer a *minimal set of orthogonal concepts*.
 * As such, Scala is not married to the JVM (to the extent that Java is).
 
