@@ -51,7 +51,7 @@ This is already the case for (final) class `String`. As an aside, this is also s
 
 An important *static method of class String* is `format`. Commonly used *formatting symbols* in this method are
 "%s" (for any type), "%d" (for integer values), "%f" (for floating-point values) and "%n" (line break).
-For example, we can format floating-point values with "%12.8f" (leading to some leading spaces) or "%012f" (leading to some leading zeroes).
+For example, we can format floating-point values with "%12.8f" (possibly leading to some leading spaces) or "%012f" (possibly leading to some leading zeroes).
 
 When creating a String in many steps, consider using a `StringBuilder` to create the String. The same `StringBuilder` object is used
 for creating one String, thus (potentially) getting rid of many intermediate immutable String objects that were only used for creating
