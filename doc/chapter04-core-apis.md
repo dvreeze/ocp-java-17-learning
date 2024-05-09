@@ -91,4 +91,96 @@ Of course, we should not use *object equality* for Strings or method `intern` in
 
 ### Arrays
 
+*Arrays* are *reference types*, directly extending `java.lang.Object`. That is as true for `char[]` as for `String[]`.
+Arrays have a *fixed size*, and on array creation the elements of the array get their default values (which as `null` for arrays
+of reference types).
+
+Below follow some examples taken from the "OCP book". Creating an array of primitive types:
+
+```java
+int[] numbers = new int[3];
+int numbers[] = new int[3]; // Equivalent to the preceding declaration, but more rare
+int[] numbers = new int[] { 0, 0, 0 }; // Explicitly setting the elements to the default value (which happens anyway)
+
+int[] moreNumbers = new int[] { 42, 55, 99 };
+// Anonymous array, achieving exactly the same:
+int[] moreNumbers = { 42, 55, 99 };
+```
+
+Note the difference between `int[] ids, type` on the one hand and `int ids[], types` on the other hand.
+
+Creating an array of reference types (and "printing" it):
+
+```java
+String[] bugs = { "cricket", "beetle", "ladybug" };
+String[] alias = bugs; // Copies reference to the same array object
+System.out.println(bugs.equals(alias)); // true, because the (default) equality implementation is reference equality
+System.out.println(bugs.toString()); // e.g. [Ljava.lang.String;@160bc7c0
+
+System.out.println(java.util.Arrays.toString(bugs)); // prints array members cricket, beetle and ladybug
+```
+
+Creating an array of reference types (and casting it):
+
+```java
+String[] strings = { "stringValue" };
+Object[] objects = strings; // String extends Object, so String[] extends Object[]
+String[] againStrings = (String[]) objects; // works, because we happen to know the runtime type
+
+againStrings[0] = new StringBuilder(); // DOES NOT COMPILE
+
+objects[0] = new StringBuilder(); // throws ArrayStoreException at runtime, because the runtime type is String[]
+```
+
+An important *field* of array types is `length`.
+*Array access* (to get one element of an array) looks like this, for example (getting the first element, if any): `myArray[0]`.
+
+Some array support methods are:
+* `java.util.Arrays.sort`
+* `java.util.Arrays.binarySearch` (returning index, if array has already been sorted; mind specific negative value if not found)
+* `java.util.Arrays.compare (for arrays of the same type; returning number < 0 if first array is "smaller" than the second one, etc.)
+* `java.util.Arrrays.mismatch` (returns first index where the 2 arrays differ, and -1 if they are equal)
+
+What does "smaller" (in array comparisons) mean:
+* null is smaller than any other value
+* for numbers, normal numeric order is used
+* for strings, if one is a prefix of another string, it is considered smaller
+* for strings/characters, numbers are smaller than letters
+* for strings/characters, uppercase is smaller than lowercase
+
+*Vararg* method parameters can be used as arrays.
+
+Arrays are objects, so can be array elements themselves, leading to *multidimensional arrays* (which is a somewhat misleading name):
+
+```java
+int[] array1 [], array2[][]; // don't do this, but it's equivalent to the following
+int[][] array1;
+int[][][] array2;
+```
+
+Multidimensional array creation:
+
+```java
+String[][] arr = new String[3][2]; // array of 3 elements, each of them being an array of 2 strings
+
+int[][] differentSizes = { { 1, 4 }, { 3 }, { 9, 8, 7 } }; // this is equal to the following
+
+int[][] differentSizes = new int[3][];
+differentSizes[0] = { 1, 4 };
+differentSizes[1] = { 3 };
+differentSizes[2] = { 9, 8, 7 };
+```
+
+### Math APIs
+
+Some `java.lang.Math` static methods:
+* `min` and `max`, with overloads for double, float, int, long
+* `round`, with overloads for float (returning int) and double (returning long)
+* `ceil`, `floor`, taking and returning a double
+* `pow`, taking and returning a double
+* `random`, returing a double between 0 (inclusive) and 1 (exclusive)
+
+### Dates and Times
+
 TODO
+
