@@ -138,7 +138,7 @@ An important *field* of array types is `length`.
 Some array support methods are:
 * `java.util.Arrays.sort`
 * `java.util.Arrays.binarySearch` (returning index, if array has already been sorted; mind specific negative value if not found)
-* `java.util.Arrays.compare (for arrays of the same type; returning number < 0 if first array is "smaller" than the second one, etc.)
+* `java.util.Arrays.compare` (for arrays of the same type; returning number < 0 if first array is "smaller" than the second one, etc.)
 * `java.util.Arrrays.mismatch` (returns first index where the 2 arrays differ, and -1 if they are equal)
 
 What does "smaller" (in array comparisons) mean:
@@ -166,9 +166,9 @@ String[][] arr = new String[3][2]; // array of 3 elements, each of them being an
 int[][] differentSizes = { { 1, 4 }, { 3 }, { 9, 8, 7 } }; // this is equal to the following
 
 int[][] differentSizes = new int[3][];
-differentSizes[0] = { 1, 4 };
-differentSizes[1] = { 3 };
-differentSizes[2] = { 9, 8, 7 };
+differentSizes[0] = new int[] { 1, 4 };
+differentSizes[1] = new int[] { 3 };
+differentSizes[2] = new int[] { 9, 8, 7 };
 ```
 
 ### Math APIs
@@ -177,7 +177,7 @@ Some `java.lang.Math` static methods:
 * `min` and `max`, with overloads for double, float, int, long
 * `round`, with overloads for float (returning int) and double (returning long)
 * `ceil`, `floor`, taking and returning a double
-* `pow`, taking and returning a double
+* `pow`, taking and returning doubles
 * `random`, returing a double between 0 (inclusive) and 1 (exclusive)
 
 ### Dates and Times
