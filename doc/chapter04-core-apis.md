@@ -251,10 +251,10 @@ var daily = Duration.ofDays(1); // PT24H; similar for hours
 var daily2 = Duration.of(1, ChronoUnit.DAYS); // equivalent to the former Duration
 
 var everyMinute = Duration.ofMinutes(1); // PT1M
-var everyMinute2 = Duration.of(1, ChronoUnit.MINUTES); // equivalent to the former Duation
+var everyMinute2 = Duration.of(1, ChronoUnit.MINUTES); // equivalent to the former Duration
 
 var everyTenSeconds = Duration.ofSeconds(10); // PT10S; similar for millis and nanos
-var everyTenSeconds2 = Duation.of(10, ChronoUnit.SECONDS); // ChronoUnit can also express MILLIS and NANOS)
+var everyTenSeconds2 = Duration.of(10, ChronoUnit.SECONDS); // ChronoUnit can also express MILLIS and NANOS)
 ```
 
 Durations can be used in the same way as Periods, using methods such as `plus`. Durations cannot be used with `LocalDate`.
