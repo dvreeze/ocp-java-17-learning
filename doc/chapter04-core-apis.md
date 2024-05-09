@@ -182,5 +182,97 @@ Some `java.lang.Math` static methods:
 
 ### Dates and Times
 
-TODO
+Forget about the old `java.util.Date` and `java.util.Calendar` types. Use the `java.time` API instead.
+
+Consider the following types:
+* `LocalDate` (date, but no time)
+* `LocalTime` (time, but no date)
+* `LocalDateTime` (date and time, but like LocalDate and LocalTime no time zone)
+* `ZonedDateTime` (date, time and time zone)
+
+These classes are *immutable*, *thread-safe* and instances are created using *factory methods* (the constructors are private).
+
+Time zone zero is known as GMT (or UTC). Time zones can be given as offsets (e.g. "+02:00", "GMT+2")
+or short strings like "Asia/Kolkata".
+
+Types `LocalDate`, `LocalTime`, `LocalDateTime` and `ZonedDateTime` all have static method `now`.
+
+They also have methods called `of`. For example:
+
+```java
+LocalDate.of(2024, Month.MAY, 9)
+LocalDate.of(2024, 5, 9) // equivalent to the former expression; months are 1-based, not 0-based
+
+LocalTime.of(6, 15) // 6:15, so no seconds, milliseconds and nanoseconds
+LocalTime.of(6, 15, 30, 200) // nanosecond precision (there is no field for millisecond precision)
+
+LocalDateTime.of(2024, Month.MAY, 9, 6, 15, 30) // precision can be minutes to nanoseconds (here it is seconds)
+LocalDateTime.of(localDate1, localTime1)
+```
+
+Examples to create a `ZonedDateTime`:
+
+```java
+var zone = ZoneId.of("US/Eastern");
+var zoned1 = ZonedDateTime.of(2022, 1, 20, 6, 15, 30, 200, zone); // nanosecond precision in this case (we cannot pass a Month)
+var zoned2 = ZonedDateTime.of(date1, time1, zone);
+var zoned3 = ZonedDateTime.of(dateTime1, zone);
+```
+
+There are methods like `plusDays`, `minusDays`, etc. (also for weeks, months, years, hours, minutes, seconds etc.).
+Note that not all of these methods apply to all of the 4 types above (you cannot add days to a LocalTime, for example).
+Also note that these types are *immutable*, so these methods do not update dates/times in place.
+
+Below, types `Period`, `Duration` and `Instant` are shown. These types are also *immutable*, *thread-safe* and they have
+public static *factory methods* (and private constructors that obviously are not part of the public API).
+
+Examples of creating/using type `Period` are:
+
+```java
+var everyOtherDay = Period.ofDays(2); // every 2 days; similar static methods exist for weeks, months, years
+var everyYearAndAWeek = Period.of(1, 0, 7); // every year and 7 days (years: 1, months: 0, days: 7)
+
+var today = LocalDateTime.now();
+var dayAfterTomorrow = today.plus(everyOtherDay); // adding a Period to a LocalDateTime
+
+System.out.println(Period.of(1, 2, 3)); // prints "P1Y2M3D"
+System.out.println(Period.ofMonths(3)); // prints "P3M" (leaving out the "zero parts" among years, months and days)
+```
+
+We cannot chain methods on Periods. Also, we cannot use Periods with `LocalTime` (there must be a date component).
+
+Type `Duration` is similar to `Period`, but it is meant for objects that have a time component, so `Duration` cannot be used
+with `LocalDate`.
+
+Examples of `Duration` creation:
+
+```java
+var daily = Duration.ofDays(1); // PT24H; similar for hours
+var daily2 = Duration.of(1, ChronoUnit.DAYS); // equivalent to the former Duration
+
+var everyMinute = Duration.ofMinutes(1); // PT1M
+var everyMinute2 = Duration.of(1, ChronoUnit.MINUTES); // equivalent to the former Duation
+
+var everyTenSeconds = Duration.ofSeconds(10); // PT10S; similar for millis and nanos
+var everyTenSeconds2 = Duation.of(10, ChronoUnit.SECONDS); // ChronoUnit can also express MILLIS and NANOS)
+```
+
+Durations can be used in the same way as Periods, using methods such as `plus`. Durations cannot be used with `LocalDate`.
+
+Using `java.time.temporal.ChronoUnit` for differences:
+
+```java
+var one = LocalTime.of(5, 15);
+var two = LocalTime.of(6, 30);
+
+ChronoUnit.HOURS.between(one, two); // 1 (note the truncation rather than rounding)
+ChronoUnit.MINUTES.between(one, two); // 75
+```
+
+Objects with a time component can be truncated, e.g. `LocalTime.of(3, 12, 45).truncatedTo(ChronoUnit.MINUTES)` gets rid of seconds.
+
+Class `Instant` represents a moment in time in the GMT time zone. With `ZonedDateTime.toInstant` we can convert a `ZonedDateTime`
+to an `Instant`.
+
+Note how *Daylight Saving Time* influences methods like `plusHours` twice each year (in the US and in many other countries).
 
