@@ -92,7 +92,7 @@ Of course, we should not use *object equality* for Strings or method `intern` in
 ### Arrays
 
 *Arrays* are *reference types*, directly extending `java.lang.Object`. That is as true for `char[]` as for `String[]`.
-Arrays have a *fixed size*, and on array creation the elements of the array get their default values (which as `null` for arrays
+Arrays have a *fixed size*, and on array creation the elements of the array get their default values (which is `null` for arrays
 of reference types).
 
 Below follow some examples taken from the "OCP book". Creating an array of primitive types:
