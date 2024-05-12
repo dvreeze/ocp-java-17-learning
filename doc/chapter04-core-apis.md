@@ -275,4 +275,4 @@ Class `Instant` represents a moment in time in the GMT time zone. With `ZonedDat
 to an `Instant`.
 
 Note how *Daylight Saving Time* influences methods like `plusHours` twice each year (in the US and in many other countries).
-
+Java is smart enough to adapt "date-times with time zone" accordingly.
