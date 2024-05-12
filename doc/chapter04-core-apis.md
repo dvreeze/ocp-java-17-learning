@@ -135,11 +135,15 @@ objects[0] = new StringBuilder(); // throws ArrayStoreException at runtime, beca
 An important *field* of array types is `length`.
 *Array access* (to get one element of an array) looks like this, for example (getting the first element, if any): `myArray[0]`.
 
-Some array support methods are:
+Some (overloaded) array support (static) methods are:
 * `java.util.Arrays.sort`
-* `java.util.Arrays.binarySearch` (returning index, if array has already been sorted; mind specific negative value if not found)
+* `java.util.Arrays.binarySearch` (returning index, if array has already been sorted; mind specific negative value `-insertionPoint - 1` if not found)
 * `java.util.Arrays.compare` (for arrays of the same type; returning number < 0 if first array is "smaller" than the second one, etc.)
 * `java.util.Arrrays.mismatch` (returns first index where the 2 arrays differ, and -1 if they are equal)
+
+Note that for some of these methods there are non-generic and generic overloads. For example, the non-generic `sort` method
+(taking Object arrays) may throw a ClassCastException at runtime if elements are not comparable, whereas the generic variants
+have extra generic `Comparator` method parameters to help prevent those exceptions. The same is true for `binarySearch`.
 
 What does "smaller" (in array comparisons) mean:
 * null is smaller than any other value
