@@ -32,22 +32,22 @@ The method signature determines *which* method can be called and *how* it can be
 irrelevant in this case). Return type and access modifiers are not part of the method signature, and they determine *where*
 the method can be called.
 
-| Element             | Value in "getDeclaredFields" | Value in "printDeclaredFields"     | Required?            | Other values         |
-|---------------------|------------------------------|------------------------------------|----------------------|----------------------|
-| Access modifier     | public                       | public                             | No                   | private, protected   |
-| Optional specifiers | static                       | static                             | No                   | final, abstract etc. |
-| Return type         | List<Field>                  | void                               | Yes                  |                      |
-| Method name         | getDeclaredFields            | printDeclaredFields                | Yes                  |                      |
-| Parameter list      | (Class<?> cls)               | (String className, PrintWriter pw) | Yes                  |                      |
-| Exception list      |                              | throws ClassNotFoundException      | No                   |                      |
-| Method body         | block after method signature | block after exception list         | Yes, unless abstract |                      |
+| Element             | Value in "getDeclaredFields"      | Value in "printDeclaredFields"     | Required?            | Other values         |
+|---------------------|-----------------------------------|------------------------------------|----------------------|----------------------|
+| Access modifier     | public                            | public                             | No                   | private, protected   |
+| Optional specifiers | static                            | static                             | No                   | final, abstract etc. |
+| Return type         | List&lt;Field&gt;                 | void                               | Yes                  |                      |
+| Method name         | getDeclaredFields                 | printDeclaredFields                | Yes                  |                      |
+| Parameter list      | (Class&lt;?&gt; cls)              | (String className, PrintWriter pw) | Yes                  |                      |
+| Exception list      |                                   | throws ClassNotFoundException      | No                   |                      |
+| Method body         | code block after method signature | code block after exception list    | Yes, unless abstract |                      |
 
 The method parameter list can be empty (having no parameters), but the *parentheses are mandatory*.
 
 The relative order of access modifiers and optional specifiers can deviate, although that is not recommended.
 In any case they must occur *before the return type*.
 
-So the 2 method signatures are:
+So the 2 method signatures (including the parameter names) are:
 * `getDeclaredFields(Class<?> cls)`
 * `printDeclaredFields(String className, PrintWriter pw)`
 
@@ -58,7 +58,7 @@ So the 2 method signatures are:
 * *public*: method can be called from anywhere
 
 *Optional specifiers for methods*:
-* *static*: the method belongs to the class itself instead of an instance of the class
+* *static*: the method belongs to the class itself instead of to an instance of the class
 * *abstract*: abstract class or interface where the method body is excluded
 * *final*: the method may not be overridden in a subclass
 * *default*: used in an interface to provide a default implementation of a method (for classes that implement the interface)
