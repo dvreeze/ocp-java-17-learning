@@ -88,3 +88,36 @@ The *exception list* will be treated in chapter 11.
 
 The *method body* is a statement, typically a code block. It is mandatory unless the method is abstract (in which case we need
 a semicolon to finish the abstract method declaration).
+
+### Declaring local and instance variables
+
+*Local variable declarations* have the following properties:
+* They occur *in a block* (or in the header of a basic or enhanced *for* statement, or in a "resource specification", or in a type pattern)
+* Typically, that block is a *method body* or a nested block inside a method body
+* These variables are *not implicitly initialized* if an initializer is missing
+* The scope of such a variable is (the remainder of) the block in which it is defined
+* But if the variable is of a reference type, the object itself may still exist after the block is executed
+* There is only one *modifier* for local variables, and that is *final* (and the combination `final var` is allowed)
+* Note that for reference types, `final` *only makes the reference final*, not the referenced object
+* A final local variable may initially be initialized, but it must be *initialized exactly once before use*
+* It may even get different values in different code paths, as long as it is initialized exactly once before use
+* An *effectively final* local variable is one that is not modified after assigning it a value
+* In other words, an effectively final local variable is one where the `final` modifier can be used without causing a compilation error
+* These remarks about "final" and "effectively final" also hold for method/constructor *parameters*, which can be seen as pre-initialized local variables
+
+*Instance variable declarations* have the following properties:
+* They are the *non-static field* declarations in a class, and occur in a class outside of any method
+* These variables are *implicitly initialized* to the default value of their type (`null` for reference types) if an initializer is missing
+* The scope of such a field is the life-time of the containing object itself
+* Instance variables can have the *same access modifiers* (public, private, protected or "default") as methods
+* They can have optional specifiers *final*, *volatile* and *transient*
+* A final instance variable must be assigned a value *when declared, or when the object is instantiated* (in constructor of instance initializer)
+* And not very surprisingly, a final instance variable must be assigned a value *exactly and only once*
+* Although non-final instance variables get a default value if not explicitly initialized, this is not allowed with `final`
+
+### Varargs
+
+Methods can have *at most one varargs parameter*, and it must be *the last one*.
+
+*Varargs* method parameters are *arrays*. It is just that *when calling* the method, it is allowed to pass the individual
+array elements one by one as method argument.
