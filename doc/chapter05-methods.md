@@ -121,3 +121,109 @@ Methods can have *at most one varargs parameter*, and it must be *the last one*.
 
 *Varargs* method parameters are *arrays*. It is just that *when calling* the method, it is allowed to pass the individual
 array elements one by one as method argument.
+
+### Applying access modifiers
+
+The following *access modifiers* can be applied to *methods and fields*, from most to least restrictive:
+* `private`: only accessible within the same class
+* *package access* (no keyword): accessible to all members of the same package
+* `protected`: accessible to all members of the same package (like package access) and accessible within subclasses
+* `public`: accessible anywhere (when ignoring *modules*)
+
+So *private* means that even other classes in the same source file cannot access the private method/field.
+
+The details of *protected* access are a bit complicated. For example, consider the following classes:
+
+```java
+package rectangle;
+
+public class Rectangle {
+    protected double height;
+    protected double width;
+
+    public Rectangle(double height, double width) {
+        this.height = height;
+        this.width = width;
+    }
+
+    protected double area() {
+        return height * width;
+    }
+}
+```
+
+and
+
+```java
+package square;
+
+import rectangle.Rectangle;
+
+public class Square extends Rectangle {
+
+    public Square(double width) {
+        super(width, width);
+    }
+
+    public void printArea() {
+        // Accessing protected member of superclass in this subclass
+        System.out.println(area());
+    }
+
+    public static void printArea(double width) {
+        // Within this subclass Square, create an instance of Square and use protected members of the superclass via this variable
+        Square square = new Square(width);
+        System.out.println(square.area());
+    }
+}
+```
+
+Subclass `Square` can access protected members of superclass `Rectangle`:
+* directly (belonging to the inherited object), *without referring to a variable* (this is the usual case)
+* or: indirectly (typically belonging to another object), *referring to a variable* declared to be of type `Square`, or a subtype
+
+It is this 2nd case that may be a bit surprising, although it does make sense.
+
+### Accessing static data
+
+A *static* field or method (or class) belongs to the class and not to any specific instance of the class, if any.
+
+Static members can be accessed through the class name, but (confusingly) also through a variable referring to an instance,
+even if it is `null` (in which case it does not throw an NPE)! It is still one and the same static member.
+
+Static methods are often used for utility methods (requiring no instance) and for global state shared by all instances of the class.
+
+Be careful: *static members cannot use instance members*, other than through referencing an instance of the class.
+
+The static variable modifiers are the same as for instance variables: `final`, `volatile` and `transient`.
+A `static final` variable is known as a *constant*, with a different naming convention (e.g. NUM_PLAYERS), although it would
+only really be a constant if the type is either primitive or a reference to a deeply immutable type.
+
+For *instance fields* (i.e. non-static fields), we learned earlier that constructor code itself is run after *fields* and
+*instance initializer blocks*. Something analogous is true for *static fields*, except that there is no such thing as a
+"static constructor".
+
+*Static initializers* are run when the class is first used, in the order of occurrence in the source code. As for `final`
+and the rule that assignment of `final` members must be done exactly once, this can still be the case even when having
+multiple static initializers.
+
+*Static imports* import static members of a class, to use them conveniently without prefixing them with the class name.
+Static imports can use wildcards too. Note that "own" members have priority over statically imported ones.
+
+### Passing data among methods
+
+Java uses *pass-by-value* (as opposed to pass-by-reference), making a *copy of the variable* to be passed to the method.
+So in that sense assignments within the method to not affect the caller.
+
+Yet for parameters of reference types, *the copy is a reference*, and if the referenced object is mutable any change to
+that object made in the method affects the caller too. That gives the appearance of call-by-reference, although it is
+still call-by-value, with the value being just the reference.
+
+*Autoboxing* and *auto-unboxing* for all primitive types and their wrapper types works pretty much out of the box.
+Yet note that "unboxing and implicit casting in one go" (say, from wrapper type `Integer` to primitive type `long`)
+does work, while the other way around "boxing after implicit casting in one go" does not work.
+Also, unboxing `null` throws an NPE.
+
+### Overloading
+
+TODO
