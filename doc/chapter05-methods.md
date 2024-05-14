@@ -111,7 +111,7 @@ a semicolon to finish the abstract method declaration).
 * The scope of such a field is the life-time of the containing object itself
 * Instance variables can have the *same access modifiers* (public, private, protected or "default") as methods
 * They can have optional specifiers *final*, *volatile* and *transient*
-* A final instance variable must be assigned a value *when declared, or when the object is instantiated* (in constructor of instance initializer)
+* A final instance variable must be assigned a value *when declared, or when the object is instantiated* (in constructor or instance initializer)
 * And not very surprisingly, a final instance variable must be assigned a value *exactly and only once*
 * Although non-final instance variables get a default value if not explicitly initialized, this is not allowed with `final`
 
