@@ -213,7 +213,7 @@ Static imports can use wildcards too. Note that "own" members have priority over
 ### Passing data among methods
 
 Java uses *pass-by-value* (as opposed to pass-by-reference), making a *copy of the variable* to be passed to the method.
-So in that sense assignments within the method to not affect the caller.
+So in that sense assignments within the method do not affect the caller.
 
 Yet for parameters of reference types, *the copy is a reference*, and if the referenced object is mutable any change to
 that object made in the method affects the caller too. That gives the appearance of call-by-reference, although it is
