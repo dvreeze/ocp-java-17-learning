@@ -226,4 +226,20 @@ Also, unboxing `null` throws an NPE.
 
 ### Overloading
 
-TODO
+*Method overloading* is not the same as *method overriding*. Method overloading happens when methods in the same class
+*have the same name but different method signatures*. Recall that the method signature does not include the return type.
+Nor does it include specifiers like static. Also note that the method signature in this context does not include the
+parameter names.
+
+Method overloading is resolved at compile-time.
+
+If the class contains 2 overloaded methods with the same signature, the compiler will emit an error.
+
+Overloading a method where one has a more specific parameter type than the other is allowed, and the best match will be
+selected.
+
+Overloading for methods with primitives as parameters, in the correct order:
+* Exact match by type
+* Larger primitive type
+* Autoboxing
+* Varargs
