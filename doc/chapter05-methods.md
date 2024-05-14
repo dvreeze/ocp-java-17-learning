@@ -59,7 +59,7 @@ So the 2 method signatures (including the parameter names) are:
 
 *Optional specifiers for methods*:
 * *static*: the method belongs to the class itself instead of to an instance of the class
-* *abstract*: abstract class or interface where the method body is excluded
+* *abstract*: abstract method (in an abstract class or interface) where the method body is excluded
 * *final*: the method may not be overridden in a subclass
 * *default*: used in an interface to provide a default implementation of a method (for classes that implement the interface)
 * *synchronized*: used in multithreaded code
