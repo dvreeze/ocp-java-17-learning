@@ -126,7 +126,7 @@ public class Developer {
 
 This section is about *order of initialization*, for classes and class instances, in the presence of inheritance.
 
-A class is *loaded at most once* (by a class loader), typically just *before its first use*, e.g. when an instance is about to be created.
+A class is *loaded at most once* (by a class loader), typically just *before its first use*, e.g. when its first instance is about to be created.
 Loading a class implies that the *static members* are invoked.
 
 The *order of initialization of a class* is as follows:
