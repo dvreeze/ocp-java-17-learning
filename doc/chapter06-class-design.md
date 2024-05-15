@@ -75,7 +75,7 @@ Again, this can only be used if we have a current instance of the class, so it c
 
 *Constructors* look like methods, except that:
 * constructors have *no return type*
-* constructors have the *same name as the class* to which it belongs (case-sensitive, as always in Java)
+* constructors have the *same name as the class* to which they belong (case-sensitive, as always in Java)
 
 So constructors are easy to distinguish syntactically from methods (if we look carefully).
 
@@ -100,5 +100,24 @@ this is very important to understand.
 
 Some important additional *rules about constructors* are:
 * As mentioned before, the *first statement* in each constructor is either a `super()` call or `this()` call (potentially compiler-generated)
-* If a constructor makes no `this()` or `super()` call (as first statement), the *compiler inserts* `super()` with no arguments
-* If a constructor call `super()`, it must be *the first statement in the constructor body*
+* If a constructor makes no explicit `this()` or `super()` call (as first statement), the *compiler inserts* `super()` with no arguments
+* If a constructor call `super()`, it must be *the first statement in the constructor body* (analogous to `this()`)
+
+A simple example of compiler-generated constructor code:
+
+```java
+// This is the class written by the programmer
+public class Developer {}
+
+// The compiler generates a default constructor in this case
+public class Developer {
+    public Developer() {}
+}
+
+// The compiler generates a super() call in the generated default constructor
+public class Developer {
+    public Developer() {
+        super();
+    }
+}
+```
