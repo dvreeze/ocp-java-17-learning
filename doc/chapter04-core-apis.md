@@ -227,8 +227,8 @@ Examples to create a `ZonedDateTime`:
 ```java
 var zone = ZoneId.of("US/Eastern");
 var zoned1 = ZonedDateTime.of(2022, 1, 20, 6, 15, 30, 200, zone); // nanosecond precision in this case (we cannot pass a Month)
-var zoned2 = ZonedDateTime.of(date1, time1, zone);
-var zoned3 = ZonedDateTime.of(dateTime1, zone);
+var zoned2 = ZonedDateTime.of(localDate1, localTime1, zone);
+var zoned3 = ZonedDateTime.of(localDateTime1, zone);
 ```
 
 There are methods like `plusDays`, `minusDays`, etc. (also for weeks, months, years, hours, minutes, seconds etc.).
