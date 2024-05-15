@@ -100,7 +100,7 @@ is not evaluated as part of the execution.
 ### Pattern matching
 
 Java 16 introduced *pattern matching* with the *instanceof* operator. This can be used in the condition of an if-statement,
-to shorten the code (by getting rid of the distinction between a type check and the actual cast).
+to shorten the code (by getting rid of the distinction between a type check and the actual cast, combining them instead).
 
 The pattern match looks like a normal "instanceof check" enhanced with a *pattern variable*. The pattern variable should
 not be reassigned within its scope.
@@ -207,7 +207,7 @@ The "case branches" are:
 * or *throw statements*
 
 The case blocks must contain *yield statements*, to make sure that the compiler knows that all code paths in the case block
-lead to a value (of the correct type) or throw an exception. If the entire switch expression returns no value (so is of type void),
+lead to a value (of the correct type), or throw an exception. If the entire switch expression returns no value (so is of type void),
 this is not needed, of course.
 
 A great feature of switch expressions versus switch statements is that there is no more need for break statements,

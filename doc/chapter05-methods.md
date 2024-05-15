@@ -4,9 +4,14 @@ See [OCP Java SE 17 Developer Study Guide](https://www.amazon.com/Oracle-Certifi
 
 This chapter is about methods in Java.
 
-### Designing methods
+More information can be found in the (more low-level)
+[Java AST API](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/package-summary.html),
+which contains links to the Java Language specification for specific language constructs.
 
-Method examples (non-generic):
+In particular, see:
+* [MethodTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html)
+* [MethodInvocationTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html)
+* [VariableTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html)
 
 ```java
 import java.io.PrintWriter;
