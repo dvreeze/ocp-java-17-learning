@@ -22,8 +22,8 @@ package chapter05.rectangle;
  * @author Chris de Vreeze
  */
 public class Rectangle {
-    protected double height;
-    protected double width;
+    private final double height;
+    private final double width;
 
     public Rectangle(double height, double width) {
         this.height = height;

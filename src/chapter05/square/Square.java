@@ -35,7 +35,7 @@ public class Square extends Rectangle {
     }
 
     public static void printArea(double width) {
-        // Within this subclass Square, create an instance of Square and use protected members of the superclass via this variable
+        // Within this subclass Square, create a Square object and use protected members of the superclass via this variable
         Square square = new Square(width);
         System.out.println(square.area());
     }

@@ -101,7 +101,7 @@ a semicolon to finish the abstract method declaration).
 * Typically, that block is a *method body* or a nested block inside a method body
 * These variables are *not implicitly initialized* if an initializer is missing
 * The scope of such a variable is (the remainder of) the block in which it is defined
-* But if the variable is of a reference type, the object itself may still exist after the block is executed
+* But if the variable is of a reference type, the referenced object itself may still exist after the block is executed
 * There is only one *modifier* for local variables, and that is *final* (and the combination `final var` is allowed)
 * Note that for reference types, `final` *only makes the reference final*, not the referenced object
 * A final local variable may initially be initialized, but it must be *initialized exactly once before use*
@@ -143,8 +143,8 @@ The details of *protected* access are a bit complicated. For example, consider t
 package rectangle;
 
 public class Rectangle {
-    protected double height;
-    protected double width;
+    private final double height;
+    private final double width;
 
     public Rectangle(double height, double width) {
         this.height = height;
@@ -176,7 +176,7 @@ public class Square extends Rectangle {
     }
 
     public static void printArea(double width) {
-        // Within this subclass Square, create an instance of Square and use protected members of the superclass via this variable
+        // Within this subclass Square, create a Square object and use protected members of the superclass via this variable
         Square square = new Square(width);
         System.out.println(square.area());
     }
@@ -184,8 +184,8 @@ public class Square extends Rectangle {
 ```
 
 Subclass `Square` can access protected members of superclass `Rectangle`:
-* directly (belonging to the inherited object), *without referring to a variable* (this is the usual case)
-* or: indirectly (typically belonging to another object), *referring to a variable* declared to be of type `Square`, or a subtype
+* *directly* (belonging to the inherited object), *without referring to a variable* (this is the usual case)
+* or: *indirectly* (typically belonging to another object), *referring to a variable* declared to be of type `Square`, or a subtype
 
 It is this 2nd case that may be a bit surprising, although it does make sense.
 
@@ -218,6 +218,7 @@ Static imports can use wildcards too. Note that "own" members have priority over
 ### Passing data among methods
 
 Java uses *pass-by-value* (as opposed to pass-by-reference), making a *copy of the variable* to be passed to the method.
+That is, the *parameter* is a *new variable*, scoped to the method body.
 So in that sense assignments within the method do not affect the caller.
 
 Yet for parameters of reference types, *the copy is a reference*, and if the referenced object is mutable any change to
@@ -240,8 +241,8 @@ Method overloading is resolved at compile-time.
 
 If the class contains 2 overloaded methods with the same signature, the compiler will emit an error.
 
-Overloading a method where one has a more specific parameter type than the other is allowed, and the best match will be
-selected.
+Overloading a method where one has a more specific parameter type than the other is allowed, and the best (i.e. most specific)
+match will be selected.
 
 Overloading for methods with primitives as parameters, in the correct order:
 * Exact match by type
