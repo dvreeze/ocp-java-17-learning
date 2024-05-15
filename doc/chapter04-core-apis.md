@@ -91,9 +91,17 @@ Of course, we should not use *object equality* for Strings or method `intern` in
 
 ### Arrays
 
-*Arrays* are *reference types*, directly extending `java.lang.Object`. That is as true for `char[]` as for `String[]`.
+*Arrays* are *reference types*, extending `java.lang.Object`. That is as true for `char[]` as for `String[]`.
 Arrays have a *fixed size*, and on array creation the elements of the array get their default values (which is `null` for arrays
 of reference types).
+
+Note: `String[]` is a subtype of `Object[]` (which is a subtype of `Object`), but the superclass of `String[]` is `Object`.
+I have to get used to that somehow. See:
+
+```java
+System.out.println(String[].class.getSuperclass()); // class java.lang.Object
+System.out.println(Object[].class.isAssignableFrom(String[].class)); // true
+```
 
 Below follow some examples taken from the "OCP book". Creating an array of primitive types:
 
