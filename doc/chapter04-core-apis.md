@@ -103,7 +103,7 @@ int numbers[] = new int[3]; // Equivalent to the preceding declaration, but more
 int[] numbers = new int[] { 0, 0, 0 }; // Explicitly setting the elements to the default value (which happens anyway)
 
 int[] moreNumbers = new int[] { 42, 55, 99 };
-// Anonymous array with shorter syntax (note that the array type follows from the variable type), achieving exactly the same:
+// Anonymous array with shorter syntax (the array type follows from the variable type), achieving exactly the same:
 int[] moreNumbers = { 42, 55, 99 };
 ```
 
