@@ -101,7 +101,7 @@ this is very important to understand.
 Some important additional *rules about constructors* are:
 * As mentioned before, the *first statement* in each constructor is either a `super()` call or `this()` call (potentially compiler-generated)
 * If a constructor makes no explicit `this()` or `super()` call (as first statement), the *compiler inserts* `super()` with no arguments
-* If a constructor call `super()`, it must be *the first statement in the constructor body* (analogous to `this()`)
+* If a constructor calls `super()`, it must be *the first statement in the constructor body* (analogous to `this()`)
 
 A simple example of compiler-generated constructor code:
 
