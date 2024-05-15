@@ -121,3 +121,65 @@ public class Developer {
     }
 }
 ```
+
+### Initializing objects
+
+This section is about *order of initialization*, for classes and class instances, in the presence of inheritance.
+
+A class is *loaded at most once* (by a class loader), typically just *before its first use*, e.g. when an instance is about to be created.
+Loading a class implies that the *static members* are invoked.
+
+The *order of initialization of a class* is as follows:
+* Keep track of this class and all superclasses, reverse the order, and then, per class:
+  * Process all *static field declarations* and *static initializers* in the order of occurrence in the class
+
+Note that the book is wrong here. It says static field declarations come before static initializers, which is not true.
+
+*Final static fields* must be *explicitly* assigned a value *exactly once*.
+
+Something similar is true for *final instance fields*. More precisely:
+* *By the time the constructor completes, all final instance fields must be assigned a value exactly once*
+
+Let's now turn to the *order of initialization of an object of a class*, assuming that class loading of the class has
+already taken place (otherwise it is triggered just before creating the object of that class).
+
+The *order of initialization of an instance of a class* is as follows, *once the class has been loaded*:
+* Keep track of this class and all superclasses (and the specific constructors to be called), reverse the order, and then, per class:
+  * Process all *instance field declarations* and *instance initializers* in the order of occurrence in the class
+  * Run the (correct) *constructor*, which may potentially invoke other constructors using the `this()` syntax
+
+Note that the book is wrong here. It says instance field declarations come before instance initializers, which is not true.
+
+### Inheriting members
+
+A superclass and subclass may have *methods with the same method signature*. If they are *instance methods*, the subclass
+is said to *override* the corresponding superclass method. The subclass method may still refer to the superclass method
+using the `super` keyword.
+
+*Instance method overriding* helps support *polymorphism* and the *Liskov substitution principle*. The latter says that
+it should be possible to initialize a *variable declared to be of the supertype* with an *instance of the subtype without
+breaking anything*. This implies that the method override in the subclass should *not break the API contract* of the superclass
+method. In particular:
+* The (instance) method in the subclass must have the *same method signature* as the (instance) method in the superclass, or else we have no overriding
+* The method in the subclass must be *at least as accessible* as the method in the superclass
+* If the method returns a value, its type must be the *same type or a subtype of the return type* of the superclass method (*covariant return types*)
+* The subclass method must *not throw any additional/broader checked exceptions* that are not allowed by the superclass method 
+
+When overriding an instance method, use the *Override* annotation to make that intention clear to the compiler.
+
+There is a catch, though. If the *superclass instance method is private*, we have *no overriding*, and the superclass and subclass
+methods are *distinct methods*, that have nothing to do with each other, and may have quite different return types.
+
+For *static methods* with the same signature in parent and child classes, we have *no overriding but method hiding*.
+The rules for *static method hiding* are the same rules as (above) for *instance method overriding*, plus the additional
+rule that if the parent class method is *static*, then so must the child class method be static (and the other way around).
+
+If *fields* in a superclass and subclass have the same name, the two fields are *distinct variables*, where the one from
+the subclass *hides* the one from the superclass. The *type of the reference variable* determines whether the subclass
+or superclass field is referenced, which is quite different from method overriding and polymorphism.
+
+*Final instance/static methods* cannot be overridden in subclasses.
+
+### Creating abstract classes
+
+TODO
