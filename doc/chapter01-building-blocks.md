@@ -61,7 +61,7 @@ Topics in chapter 1 (from this OCP Java SE 17 Developer Study Guide):
   * Yet instance variables and class variables are automatically initialized with default values (if not explicitly initialized)
   * Local variables can use the *var* syntax, to have the compiler infer the type
   * This is called *local variable type inference*, making clear what it is and is not about
-  * If no type can be inferred, the "var" declaration is rejected by the compiler
+  * If no type can be inferred, the "var" declaration is rejected by the compiler; after all, *Java is compile-time type-safe*!
   * Only one variable can be initialized in a "var" declaration statement
   * *Scope* of local variables, method/constructor parameters, instance variables (i.e. *fields*) and class variables
 * *Garbage collection*:

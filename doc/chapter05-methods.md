@@ -13,6 +13,8 @@ In particular, see:
 * [MethodInvocationTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html)
 * [VariableTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html)
 
+### Designing methods
+
 ```java
 import java.io.PrintWriter;
 import java.util.Arrays;
