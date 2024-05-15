@@ -35,16 +35,16 @@ Topics in chapter 1 (from this OCP Java SE 17 Developer Study Guide):
   * Code blocks are surrounded by braces
   * Code blocks (i.e. their pairs of braces) must nest properly and braces always come in pairs
 * *Primitive types* versus *reference types*:
-  * Understand the difference: the value is a primitive value versus a *reference* to an object
+  * Understand the difference: the value is a primitive value versus a *reference* to an object (or a `null` reference)
   * Values of reference types can be *null*; not so for values of primitive types
   * Primitive values have no methods declared on them
   * Know the primitive types and their wrapper types well
   * Autoboxing and unboxing
-  * Also know the corresponding literals well (note that float literals need an "f" suffix)
+  * Also know the corresponding literals well (note that float literals need an "f" suffix; otherwise it's a `double`)
   * Underscores in numeric literals
   * *Text blocks* and incidental versus essential whitespace
 * *Identifiers*:
-  * They are used for variables, methods, classes, interfaces and packages (with corresponding naming best practices)
+  * They are used for variables, methods, classes, interfaces and packages (with corresponding naming conventions)
   * But the rules are the same for all of them:
     * Identifiers can contain letters, digits, currency symbols and underscores
     * But they cannot start with a digit, and they cannot be just an underscore
@@ -58,7 +58,7 @@ Topics in chapter 1 (from this OCP Java SE 17 Developer Study Guide):
   * Variables are either *local variables*, *method/constructor parameters*, *instance variables* (i.e. *fields*) or *class variables* (i.e. static fields)
   * They can be made "final", which for reference types only prevents reassignment of the reference itself
   * Using uninitialized local variables leads to compilation errors
-  * Yet instance variables and class variables are automatically initialized with default values
+  * Yet instance variables and class variables are automatically initialized with default values (if not explicitly initialized)
   * Local variables can use the *var* syntax, to have the compiler infer the type
   * This is called *local variable type inference*, making clear what it is and is not about
   * If no type can be inferred, the "var" declaration is rejected by the compiler
