@@ -106,7 +106,7 @@ The following holds for binary arithmetic operators:
   * Modulus ("%")
 * Division for integer types returns an integer, namely a "floor value" (unless dividing by zero)
 * There is also a "+" addition operator for Strings, for string concatenation
-* Note that if `x / y == i && x % y == j`, then `i * y + j == x`
+* Note (for integer types) that if `x / y == i && x % y == j`, then `i * y + j == x`
 * It's very important to know the *numeric promotion rules* below
 
 The *numeric promotion rules* for (numeric) operands of binary arithmetic operations are:
@@ -131,6 +131,8 @@ causing a compilation error.
 The *comparison operators* "equal-to" ("==") and "not-equal-to" ("!=") mean different things for primitives and reference types:
 * For *primitives* the operand types must "match", and equality is value equality for primitive data
 * For *reference types* true is returned if both operands reference the same object or if both operands are null references
+
+Equality comparisons for reference types should normally be done using method `Object.equals`, instead of using comparison operators.
 
 *Relational operators* "<", "<=" etc. only take numeric operands.
 
