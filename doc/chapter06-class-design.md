@@ -144,9 +144,11 @@ Let's now turn to the *order of initialization of an object of a class*, assumin
 already taken place (otherwise it is triggered just before creating the object of that class).
 
 The *order of initialization of an instance of a class* is as follows, *once the class has been loaded*:
-* Keep track of this class and all superclasses (and the specific constructors to be called), reverse the order, and then, per class:
+* Keep track of this class and all superclasses, reverse the order, and then, per class:
   * Process all *instance field declarations* and *instance initializers* in the order of occurrence in the class
-  * Run the (correct) *constructor*, which may potentially invoke other constructors using the `this()` syntax
+* Now *run the constructor* of this class, with the first constructor statement being a `this()` or `super()` call
+  * This will trigger a cascade of constructor calls, from constructors in the far most ancestor type till constructors in this class
+  * Each such constructor call will start with a `this()` or `super()` call, whether explicit or implicit
 
 Note that the book is wrong here. It says instance field declarations come before instance initializers, which is not true.
 
