@@ -28,8 +28,6 @@ public class ClassInitializationOrderExample {
 
     private static int intField = initializeIntField(1, true);
 
-    private static char charField = initializeCharField('a', true);
-
     static {
         charField = initializeCharField('b', false);
     }
@@ -50,8 +48,15 @@ public class ClassInitializationOrderExample {
         doubleField = initializeDoubleField(2.0, false);
     }
 
+    // Way after the static initializer that also initializes this field; this is apparently allowed
+    private static char charField = initializeCharField('a', true);
+
     public static void main(String[] args) {
         System.out.println("Class initialized");
+        System.out.printf("Character field value: %s%n", charField);
+        System.out.printf("Integer field value: %d%n", intField);
+        System.out.printf("Double field value: %.2f%n", doubleField);
+        System.out.printf("String field value: %s%n", stringField);
     }
 
     private static int initializeIntField(int value, boolean inDeclaration) {

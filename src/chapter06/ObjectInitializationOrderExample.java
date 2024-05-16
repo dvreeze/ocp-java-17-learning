@@ -29,8 +29,6 @@ public class ObjectInitializationOrderExample {
 
     private int intField = initializeIntField(1, true, false);
 
-    private char charField = initializeCharField('a', true, false);
-
     {
         charField = initializeCharField('b', false, false);
     }
@@ -58,9 +56,16 @@ public class ObjectInitializationOrderExample {
         doubleField = initializeDoubleField(2.0, false, false);
     }
 
+    // Way after the initializer that also initializes this field; this is apparently allowed
+    private char charField = initializeCharField('a', true, false);
+
     public static void main(String[] args) {
         var obj = new ObjectInitializationOrderExample();
         System.out.println("Object initialized");
+        System.out.printf("Character field value: %s%n", obj.charField);
+        System.out.printf("Integer field value: %d%n", obj.intField);
+        System.out.printf("Double field value: %.2f%n", obj.doubleField);
+        System.out.printf("String field value: %s%n", obj.stringField);
     }
 
     private static int initializeIntField(int value, boolean inDeclaration, boolean inConstructor) {
