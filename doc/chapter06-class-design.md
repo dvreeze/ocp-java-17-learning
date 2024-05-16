@@ -150,7 +150,7 @@ Then the *order of initialization of an instance of a class* is as follows, *onc
 
 So the net effect is that initialization takes place in a top-down manner, from parent to child, where for each visited class:
 * First all *instance field declarations* and *instance initializers* are run in the order of occurrence in the class
-* Then the *constructor* itself is run (potentially invoking another constructor in the same class)
+* Then the (correct) *constructor* itself is run (potentially invoking another constructor in the same class)
 
 Note that the book is wrong here. It says instance field declarations come before instance initializers, which is not true.
 
