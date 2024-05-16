@@ -16,7 +16,7 @@ In particular, see:
 ### Inheritance
 
 *Inheritance* terminology:
-* A class `B` can *inherit* from class `A`, meaning that class `B` inherits some members from class `A`
+* A class `B` can (directly) *inherit* from class `A`, meaning that class `B` inherits some members from class `A`
 * Class `B` is called a *direct subclass* or *child class* of class `A`
 * Class `A` is called the *direct superclass* or *parent class* of class `B`
 * We can also use the terms *subtype* and *supertype*, but they are more general terms, including *interfaces* as well
@@ -37,8 +37,8 @@ public final class Dog extends Mammal {}
 Java supports *single inheritance* (and not multiple inheritance), so each class can inherit from only one direct superclass.
 This makes perfect sense, once we think about this (and what kinds of issues are thus prevented).
 
-There may be multiple levels of inheritance, though. Although a class can have only one direct superclass, it can
-*implement multiple interfaces*.
+There may be multiple levels of inheritance, though (e.g. `C` extends `B`, and `B` extends `A`).
+Although a class can have only one direct superclass, it can *implement multiple interfaces*.
 
 All classes have `java.lang.Object` as *ancestor*, which itself is the only class without parent.
 If a class does not explicitly extend any other class, it (implicitly) has `java.lang.Object` as its parent.
@@ -47,10 +47,8 @@ The *class modifiers* we should know about are:
 * `final`, meaning that the class cannot be extended
 * `abstract`, meaning that the class may contain abstract members, and that a concrete subclass is required in order to instantiate the class
 * `sealed`, meaning that the class may only be extended by a specific list of classes
-* `non-sealed`, meaning that potentially unnamed subclasses are permitted
+* `non-sealed`, meaning that potentially unknown subclasses are permitted
 * `static`, meaning that the class is a nested static class (in another class)
-
-A `final` class cannot be extended any further.
 
 ### Creating classes
 
@@ -62,8 +60,8 @@ most granular scope). We can access the instance variable, though, by using the 
 *the current instance of the class*. The `this` reference can even be used to access inherited members, but it cannot be
 used in static methods and static initializer blocks, obviously.
 
-A method can be defined in both a parent class and a child class. Moreover, even an instance variable can be defined in both
-a parent class and a child class. The latter implies that there are *two distinct instance variables with the same name*,
+A method can be defined in both a parent class and a child class (see below). Moreover, even an instance variable can be defined
+in both a parent class and a child class. The latter implies that there are *two distinct instance variables with the same name*,
 where the one from the subclass *hides* the one from the superclass.
 
 To reference the instance variable or method from the superclass, use the `super` reference.
@@ -94,9 +92,9 @@ Some important *rules about constructors* are:
 
 With the `super()` syntax a *constructor in the direct superclass* can be called.
 
-The *first statement* of every constructor is a `super()` call or a `this()` call, considering that the Java compiler will
-generate a `super()` call if no `this()` or `super()` is provided (as first statement in the constructor body). Conceptually
-this is very important to understand.
+Implicitly or explicitly, the *first statement* of every constructor is a `super()` call or a `this()` call, considering that the
+Java compiler will generate a `super()` call if no `this()` or `super()` is provided (as first statement in the constructor body).
+Conceptually this is very important to understand.
 
 Some important additional *rules about constructors* are:
 * As mentioned before, the *first statement* in each constructor is either a `super()` call or `this()` call (potentially compiler-generated)
@@ -130,7 +128,7 @@ A class is *loaded at most once* (by a class loader), typically just *before its
 Loading a class implies that the *static members* are invoked.
 
 The *order of initialization of a class* is as follows:
-* Keep track of this class and all superclasses, reverse the order, and then, per class:
+* Keep track of this class and all superclasses (until `java.lang.Object`), reverse the order, and then, per class:
   * Process all *static field declarations* and *static initializers* in the order of occurrence in the class
 
 Note that the book is wrong here. It says static field declarations come before static initializers, which is not true.
@@ -144,21 +142,22 @@ Let's now turn to the *order of initialization of an object of a class*, assumin
 already taken place (otherwise it is triggered just before creating the object of that class).
 
 The *order of initialization of an instance of a class* is as follows, *once the class has been loaded*:
-* Keep track of this class and all superclasses, reverse the order, and then, per class:
+* Keep track of this class and all superclasses (until `java.lang.Object`), reverse the order, and then, per class:
   * Process all *instance field declarations* and *instance initializers* in the order of occurrence in the class
 * Now *run the constructor* of this class, with the first constructor statement being a `this()` or `super()` call
-  * This will trigger a cascade of constructor calls, from constructors in the far most ancestor type till constructors in this class
-  * Each such constructor call will start with a `this()` or `super()` call, whether explicit or implicit
+  * This will trigger a cascade of constructor calls through the inheritance chain
+  * Each such constructor call will *start* with a `this()` or `super()` call, whether explicit or implicit
+  * So the net effect is that constructor (initialization) code runs from top to bottom in the inheritance chain
 
 Note that the book is wrong here. It says instance field declarations come before instance initializers, which is not true.
 
 ### Inheriting members
 
-A superclass and subclass may have *methods with the same method signature*. If they are *instance methods*, the subclass
-is said to *override* the corresponding superclass method. The subclass method may still refer to the superclass method
-using the `super` keyword.
+A superclass and subclass may have *methods with the same method signature*. If they are (non-private) *instance methods*,
+the subclass is said to *override* the corresponding superclass method. The subclass method may still refer to the superclass
+method using the `super` keyword.
 
-*Instance method overriding* helps support *polymorphism* and the *Liskov substitution principle*. The latter says that
+*Instance method overriding* helps support *polymorphism* and the *Liskov substitution principle*. The latter means that
 it should be possible to initialize a *variable declared to be of the supertype* with an *instance of the subtype without
 breaking anything*. This implies that the method override in the subclass should *not break the API contract* of the superclass
 method. In particular:
