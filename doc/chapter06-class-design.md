@@ -141,13 +141,16 @@ Something similar is true for *final instance fields*. More precisely:
 Let's now turn to the *order of initialization of an object of a class*, assuming that class loading of the class has
 already taken place (otherwise it is triggered just before creating the object of that class).
 
-The *order of initialization of an instance of a class* is as follows, *once the class has been loaded*:
-* Keep track of this class and all superclasses (until `java.lang.Object`), reverse the order, and then, per class:
-  * Process all *instance field declarations* and *instance initializers* in the order of occurrence in the class
-* Now *run the constructor* of this class, with the first constructor statement being a `this()` or `super()` call
-  * This will trigger a cascade of constructor calls through the inheritance chain
-  * Each such constructor call will *start* with a `this()` or `super()` call, whether explicit or implicit
-  * So the net effect is that constructor (initialization) code runs from top to bottom in the inheritance chain
+Let's pretend all default constructors have been generated, and that each constructor starts with a `super()` or `this()` call.
+Then the *order of initialization of an instance of a class* is as follows, *once the class has been loaded*:
+* Follow the *chain of constructor calls* through the inheritance chain
+* For each ancestor-or-self class visited (from far most ancestor down to this class itself), do the following:
+  * First process all *instance field declarations* and *instance initializers* in the order of occurrence in the class
+  * Only after that, run the *constructor code* for that class itself (note that one constructor can call another using `this()`)
+
+So the net effect is that initialization takes place in a top-down manner, from parent to child, where for each visited class:
+* First all *instance field declarations* and *instance initializers* are run in the order of occurrence in the class
+* Then the *constructor* itself is run (potentially invoking another constructor in the same class)
 
 Note that the book is wrong here. It says instance field declarations come before instance initializers, which is not true.
 
