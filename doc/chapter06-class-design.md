@@ -210,8 +210,12 @@ Also, the combination `private abstract` makes no sense, and is therefore not al
 
 This section hardly goes into the topic of *thread-safety*. It does not talk about the *Java memory model* at all.
 
-*Immutable objects* cannot be modified after creation. This simplifies reasoning about code, and safe sharing of (immutable)
+*Immutable objects* cannot be modified after creation. For reference types that means that both the reference and the
+referenced object cannot be modified after creation. This simplifies reasoning about code, and safe sharing of (immutable)
 objects between threads.
+
+Personal note: an *immutable class* is a class that *cannot be extended* (thus preventing the introduction of mutable instance
+fields), and whose instances are *immutable objects*.
 
 How to create an *immutable class*:
 * Make the class `final` (or all constructors `private`), to prevent the creation of mutable subclasses
