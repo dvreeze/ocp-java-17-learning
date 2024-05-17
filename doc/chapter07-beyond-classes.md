@@ -96,7 +96,7 @@ Default (instance) methods are overridable by a class implementing the interface
 
 Note that non-private non-static non-abstract interface methods are required to have an explicit `default` marker.
 
-To access a *hidden default* method `m` in superclass `A`, use syntax `A.super.m()` (not `A.this.m()` or `A.m()`).
+To access a *hidden default* method `m` in interface supertype `A`, use syntax `A.super.m()` (not `A.this.m()` or `A.m()`).
 
 *Static interface methods* have the following characteristics (that make sense from what we have learned so far):
 * They are explicitly marked `static` and must contain a method body
