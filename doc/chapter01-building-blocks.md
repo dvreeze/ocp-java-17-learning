@@ -18,7 +18,7 @@ Topics in chapter 1 (from this OCP Java SE 17 Developer Study Guide):
   * Multi-line comments (even if on a single line)
   * Javadoc comments
 * *Source files* and *classes*:
-  * Normal: one top-level type (class) corresponds to one source file
+  * Normal: one top-level type (class/interface) corresponds to one source file
   * The (top-level) type must match the source file's name without the ".java" extension
   * We can have multiple top-level types in a source file, but at most one of them can be public
 * A program's *main* method (and how to run the program)
