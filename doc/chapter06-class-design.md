@@ -193,7 +193,7 @@ instantiated indirectly, as part of the initialization of a non-abstract subclas
 They can have *abstract methods* (marked `abstract`, and having no method body, but a semicolon instead). Only
 *instance methods* can be abstract, so (static/non-static) fields, constructors and static methods *cannot be abstract*.
 
-*Non-abstract classes* (i.e. *concrete classes*) *cannot declare any abstract methods*. Moreover, it *cannot leave any
+*Non-abstract classes* (i.e. *concrete classes*) *cannot declare any abstract methods*. Moreover, they *cannot leave any
 inherited abstract methods unimplemented*. So a non-abstract class having an abstract class as superclass must implement all
 (directly or indirectly) inherited abstract methods.
 
