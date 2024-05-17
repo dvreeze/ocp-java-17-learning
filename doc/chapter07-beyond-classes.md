@@ -94,7 +94,7 @@ Default (instance) methods are overridable by a class implementing the interface
 * A `default` method may be overridden by a class implementing the interface
 * If a class inherits 2 or more `default` methods with the *same method signature*, it must *override the method*
 
-Note that non-private non-static interface methods are required to have an explicit `default` marker.
+Note that non-private non-static non-abstract interface methods are required to have an explicit `default` marker.
 
 To access a *hidden default* method `m` in superclass `A`, use syntax `A.super.m()` (not `A.this.m()` or `A.m()`).
 
