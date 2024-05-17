@@ -12,7 +12,8 @@ In particular, see:
 * [ClassTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html), in this case for *interfaces*, *enums*, *records*, etc.
 
 In chapter 5, we learned some basic rules about *access modifiers* and *static members*, and these basic rules also hold
-for interfaces, enums, records etc. Some additional rules may exist for these specific kinds of types.
+for interfaces, enums, records etc. The same is true for what we learned in chapter 6 about *overriding* etc. Some additional
+rules exist for these specific kinds of types.
 
 ### Implementing interfaces
 
