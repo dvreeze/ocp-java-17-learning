@@ -52,8 +52,8 @@ The *class modifiers* we should know about are:
 
 ### Creating classes
 
-*Access modifiers* `private` and `protected` *cannot be used on top-level classes*. All access modifiers can be used on
-nested classes, though.
+*Access modifiers* `private` and `protected` *cannot be used on top-level classes* (or any top-level type, for that matter).
+All access modifiers can be used on nested classes, though.
 
 A local variable (including method parameters) can *shadow* an instance variable with the same name (because Java uses the
 most granular scope). We can access the instance variable, though, by using the `this` reference, which refers to
