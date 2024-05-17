@@ -120,6 +120,8 @@ public class Developer {
 }
 ```
 
+For the exam it is important to keep this compiler-generated constructor code firmly in mind!
+
 ### Initializing objects
 
 This section is about *order of initialization*, for classes and class instances, in the presence of inheritance.
