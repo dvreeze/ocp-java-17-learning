@@ -177,6 +177,7 @@ methods are *distinct methods*, that have nothing to do with each other, and may
 For *static methods* with the same signature in parent and child classes, we have *no overriding but method hiding*.
 The rules for *static method hiding* are the same rules as (above) for *instance method overriding*, plus the additional
 rule that if the parent class method is *static*, then so must the child class method be static (and the other way around).
+So for *static methods* we do have *inheritance*, but instead of overriding we have method hiding.
 
 If *fields* in a superclass and subclass have the same name, the two fields are *distinct variables*, where the one from
 the subclass *hides* the one from the superclass. The *type of the reference variable* determines whether the subclass
@@ -186,4 +187,43 @@ or superclass field is referenced, which is quite different from method overridi
 
 ### Creating abstract classes
 
-TODO
+*Abstract classes*, so classes using the `abstract` modifier, *cannot be instantiated directly* (they can only be
+instantiated indirectly, as part of the initialization of a non-abstract subclass).
+
+They can have *abstract methods* (marked `abstract`, and having no method body, but a semicolon instead). Only
+*instance methods* can be abstract, so (static/non-static) fields, constructors and static methods *cannot be abstract*.
+
+*Non-abstract classes* (i.e. *concrete classes*) *cannot declare any abstract methods*. Moreover, it *cannot leave any
+inherited abstract methods unimplemented*. So a non-abstract class having an abstract class as superclass must implement all
+(directly or indirectly) inherited abstract methods.
+
+*Overriding an abstract method* follows all the rules for *overriding (instance) methods* mentioned earlier, in order to
+follow the *Liskov substitution principle*. Indeed, *abstract classes/methods* support *polymorphism* very well.
+
+*Object initialization order* is like explained before, as part of object initialization of an instance of a concrete subclass.
+
+The combination `abstract final` makes no sense, and is therefore not allowed by the compiler.
+Also, the combination `private abstract` makes no sense, and is therefore not allowed by the compiler.
+(The combination `private final` makes sense but is redundant, and the compiler is ok with that.)
+
+### Creating immutable objects
+
+This section hardly goes into the topic of *thread-safety*. It does not talk about the *Java memory model* at all.
+
+*Immutable objects* cannot be modified after creation. This simplifies reasoning about code, and safe sharing of (immutable)
+objects between threads.
+
+How to create an *immutable class*:
+* Make the class `final` (or all constructors `private`), to prevent the creation of mutable subclasses
+* Make all *instance fields* `private final`, to help prevent modification after instantiation
+* Don't define any *setter methods* (or other "mutating" methods), to further help prevent modification after instantiation
+* Don't allow any *referenced mutable objects* to be modified, e.g. by using *defensive copies*
+* Use a *constructor* to set all instance fields of an object, making *defensive copies* if needed
+
+So, for example, if the constructor takes a `java.util.List`, make a copy of the collection before storing it as instance field.
+Also, if a "getter" returns a `java.util.List`, make a copy of the collection before returning it to the caller.
+
+Personal note: creating immutable classes becomes easier if the "components" are immutable themselves, e.g. Guava
+*immutable collections* rather than potentially mutable standard Java collections, or using a `java.time.Instant` rather
+than a `java.util.Date`, etc. Then the need for defensive copies goes away entirely. Of course, *record classes* support
+immutability well.
