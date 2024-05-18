@@ -53,12 +53,12 @@ The compiler then generates several *implicit modifiers*:
   * private static methods (marked as `private static`), with body (no implicit modifiers are generated)
 * The compiler adds implicit modifiers `public static final` to all ("constant") fields
 
-So *methods in interfaces* are:
-* either explicitly `private` instance or static methods, with body
-* or: non-private explicitly `static` methods, with body
-* or: implicitly public *instance methods*:
-  * either an *instance method without body*, and therefore an *abstract method* (typically forming the bulk of interface methods)
-  * or: a *default method*, with body
+Put differently, *methods in interfaces* are:
+* either explicitly `private` or (explicitly or implicitly) `public`; interface members cannot be "protected" or "package-private"
+* either explicitly `static` methods or otherwise *instance methods*
+* there are exactly 2 flavours of *non-private instance methods* in an interface:
+  * *instance methods without body*, which obviously are *abstract* (explicitly or implicitly) as well as `public` (explicitly or implicitly)
+  * *default methods with body* (the `default` keyword is mandatory, but modifier `public` may be inferred)
 
 This leads to the following (more verbose but also semantically more clear) result code for the interfaces above:
 
@@ -109,3 +109,139 @@ Conceptually:
 * Treat *instance methods* of an interface (that is, abstract, default and non-static private methods) as belonging to an *instance of the interface*
 * Treat *static* methods and fields as belonging to the *interface class object*
 * All *private* interface methods are only *accessible within the interface declaration*
+
+### Working with enums
+
+An *enumeration* or *enum* in short is like a *fixed set of constants*. For example, the seasons of the year.
+Enumerations offer compile-time type-safety for such sets of constants.
+
+Enum values are not created by us, but by the compiler. In other words, *enum constructors* are *private*, either implicitly
+or explicitly (if we explicitly provide a constructor).
+
+Enum types are final and can therefore *not be extended*, thus preventing the introduction of more enum values.
+
+Despite the dedicated *syntax for enums*, under the hood enums are *classes extending abstract class java.lang.Enum* (which
+has a type parameter for the actual enum subtype itself).
+
+Consider the following *simple enum*:
+
+```java
+public enum Season {
+
+    WINTER, SPRING, SUMMER, FALL; // The semicolon is optional, but that is the case only for simple enums
+}
+```
+
+Let's look with *javap* what methods such a simple enum contain:
+
+```shell
+javap -cp ./classes -p chapter07.Season
+```
+
+```
+public final class chapter07.Season extends java.lang.Enum<chapter07.Season> {
+  public static final chapter07.Season WINTER;
+  public static final chapter07.Season SPRING;
+  public static final chapter07.Season SUMMER;
+  public static final chapter07.Season FALL;
+  private static final chapter07.Season[] $VALUES;
+  public static chapter07.Season[] values();
+  public static chapter07.Season valueOf(java.lang.String);
+  private chapter07.Season();
+  static {};
+}
+```
+
+The *enum* superclass itself:
+
+```shell
+javap -protected java.lang.Enum
+```
+
+```
+public abstract class java.lang.Enum<E extends java.lang.Enum<E>> implements java.lang.Comparable<E>, java.io.Serializable {
+  public final java.lang.String name();
+  public final int ordinal();
+  protected java.lang.Enum(java.lang.String, int);
+  public java.lang.String toString();
+  public final boolean equals(java.lang.Object);
+  public final int hashCode();
+  protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  public final int compareTo(E);
+  public final java.lang.Class<E> getDeclaringClass();
+  public static <T extends java.lang.Enum<T>> T valueOf(java.lang.Class<T>, java.lang.String);
+  protected final void finalize();
+  public int compareTo(java.lang.Object);
+}
+```
+
+Let's have a look at this *javap output* (for this simple enum):
+* The *enum type* is a `final` class, so it cannot be extended
+* The *enum values* are indeed `public static final` constants
+* The *constructor* is `private`; each enum value is automatically created *only once*
+* An array of all the values is returned by static method `values`
+* Static method `valueOf` obtains the enum value whose name exactly matches the passed String
+* Enums have instance ("getter") methods `name` and `ordinal`
+* Enums have overridden methods `equals` and `hashCode`; even reference comparison suffices to compare enum values for equality
+* Enums have overridden method `toString`, printing the name of the value
+
+Note that `Season.SUMMER == 2` does not compile.
+
+When using enums in `switch` expressions and statements, be careful not to prefix the enum values to match on with the
+enum class name, or else the expression/statement does not compile.
+
+Enums can also have custom *constructors*, *fields* and *methods*. Enums can also *implement interfaces*.
+
+The following example shows the use of custom (private) constructors, fields and methods in a so-called *complex enum*:
+
+```java
+public enum ZooSeason {
+
+    // No "new" keyword, again illustrating that the compiler creates the enum values and creates them only once
+    WINTER("Low") {
+        public String getHours() {
+            return "10am-3pm";
+        }
+    },
+    SPRING("Medium"),
+    SUMMER("High") {
+        public String getHours() {
+            return "9am-7pm";
+        }
+    },
+    FALL("Medium");
+
+    private final String expectedVisitors; // Immutable field, as should be the case within enum values
+
+    // The constructor is implicitly private, and cannot be changed to protected or public
+    ZooSeason(String expectedVisitors) {
+        this.expectedVisitors = expectedVisitors;
+    }
+
+    public String getHours() {
+        return "9am-5pm";
+    }
+
+    public void printExpectedVisitors() {
+        System.out.println(expectedVisitors);
+    }
+}
+```
+
+As can be seen above:
+* Enum values are listed first, before the other members of the enum class
+* Enums can have custom *constructors*, but these constructors are always `private` (whether explicitly or implicitly)
+* The `new` keyword is not used in enum values, again stressing that enum values are constructed automatically and only once
+* Custom *instance methods* can even be *overridden per enum value*
+
+In summary, ignoring the enum syntactic sugar, *under the hood* an *enum* class (whether simple or complex) is like a regular
+*class*, except that there are some *restrictions*:
+* There is a fixed set of *instances of the enum class*, which are `public static final` constants known at compile-time
+* Construction of these constants takes place only once, without programmer intervention
+* Related: enum *constructors* are always `private`
+
+Note that an *enum* containing only one enum value could be used to implement *singleton classes*.
+
+### Sealing classes
+
+TODO
