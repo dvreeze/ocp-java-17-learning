@@ -132,7 +132,25 @@ public class Xml {
                                 new Element(
                                         new QName("emptyElem"),
                                         Collections.emptyMap(),
-                                        Collections.emptyList()))
+                                        Collections.emptyList()),
+                                new Element(
+                                        new QName("childElem"),
+                                        Collections.emptyMap(),
+                                        List.of(
+                                                new Element(
+                                                        new QName("grandChildElem"),
+                                                        Collections.emptyMap(),
+                                                        List.of(
+                                                                new Element(
+                                                                        new QName("grandGrandChildElem"),
+                                                                        Collections.emptyMap(),
+                                                                        List.of(new Text("anotherText"), new Text("yetAnotherText"))
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
                 );
         System.out.println(elemTree);
         System.out.println();
