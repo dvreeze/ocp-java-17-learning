@@ -245,4 +245,53 @@ Note that an *enum* containing only one enum value could be used to implement *s
 
 ### Sealing classes
 
+With enums we limit the number of values/instances to a fixed set known at compile-time. What if we only want to limit the
+number of *direct subtypes* of a class/interface, instead of the number of instances of one class? For that, Java 17 offers
+*sealed classes* and *sealed interfaces*.
+
+A *sealed class* is a class that limits the *direct subclasses* to a fixed set of classes. These direct subclasses are required
+to be in the *same package or module*. A sealed class is explicitly marked `sealed`, and the allowed direct subclasses of the
+sealed class are specified in a `permits`-clause. For example:
+
+```java
+public sealed abstract class Expression permits UnaryExpression, BinaryExpression, OtherExpression { }
+```
+
+In this example, only classes `UnaryExpression`, `BinaryExpression` and `OtherExpression` are permitted as *direct subclasses*,
+and they have to be in the same package or module.
+
+Each of these permitted direct subclasses (of the sealed class) must themselves be:
+* either a `sealed` class itself
+* or a `final` class, that therefore cannot be extended any further
+* or a `non-sealed` class, which opens up that class for direct extension by any subclass (known or not yet known)
+
+For example (leaving out class members for brevity):
+
+```java
+public sealed abstract class Expression permits UnaryExpression, BinaryExpression, OtherExpression { }
+
+public final class UnaryExpression extends Expression { }
+
+public final class BinaryExpression extends Expression { }
+
+public non-sealed abstract class OtherExpression extends Expression { }
+```
+
+Note that there are no implicit modifiers for sealed class hierarchies. Everything is explicit (`sealed`, `permits`, `extends`, `final` etc.).
+
+The `permits` clause can be left out, though, in 2 cases:
+* The permitted direct subclasses are *nested* in the sealed parent class (typically as static inner classes)
+* The permitted direct subclasses belong to the same source file (but then they cannot be public if the sealed parent is public)
+
+Besides sealed classes, we can have *sealed interfaces*. The `permits`-clause of a *sealed interface* can contain:
+* Classes that directly implement that interface (they must be `sealed`, `final` or `non-sealed`)
+* Interfaces that directly extend that interface (they must be `sealed` or `non-sealed`)
+
+Analogously to sealed classes, these direct subtypes permitted by a sealed interface must belong to *the same package or module*
+as the sealed interface.
+
+Note that in Java 17, the use of sealed classes in `switch` statements/expressions is supported, be it in Preview.
+
+### Encapsulating data with records
+
 TODO
