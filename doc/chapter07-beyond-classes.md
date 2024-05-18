@@ -239,6 +239,7 @@ In summary, ignoring the enum syntactic sugar, *under the hood* an *enum* class 
 * There is a *fixed set of instances* of the enum class, which are `public static final` constants known at compile-time
 * Indeed, construction of these constants takes place only once, on initialization of these constants
 * Enum *constructors* are always `private`, to help enforce the core property of enums that they are a fixed set of constants
+* And, of course, enumeration classes directly extend `java.lang.Enum` (with the type argument set to the enum subtype itself)
 
 Note that an *enum* containing only one enum value could be used to implement *singleton classes*.
 
