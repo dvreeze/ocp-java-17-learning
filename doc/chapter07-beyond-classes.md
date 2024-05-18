@@ -116,7 +116,7 @@ An *enumeration* or *enum* in short is like a *fixed set of constants*. For exam
 Enumerations offer compile-time type-safety for such sets of constants.
 
 Enum values are not created by us, but by the compiler. In other words, *enum constructors* are *private*, either implicitly
-or explicitly (if we explicitly provide a constructor).
+or explicitly (if we explicitly provide a constructor and explicitly mark it as `private`).
 
 Enum types are final and can therefore *not be extended*, thus preventing the introduction of more enum values.
 
@@ -236,9 +236,9 @@ As can be seen above:
 
 In summary, ignoring the enum syntactic sugar, *under the hood* an *enum* class (whether simple or complex) is like a regular
 *class*, except that there are some *restrictions*:
-* There is a fixed set of *instances of the enum class*, which are `public static final` constants known at compile-time
-* Construction of these constants takes place only once, without programmer intervention
-* Related: enum *constructors* are always `private`
+* There is a *fixed set of instances* of the enum class, which are `public static final` constants known at compile-time
+* Indeed, construction of these constants takes place only once, on initialization of these constants
+* Enum *constructors* are always `private`, to help enforce the core property of enums that they are a fixed set of constants
 
 Note that an *enum* containing only one enum value could be used to implement *singleton classes*.
 
