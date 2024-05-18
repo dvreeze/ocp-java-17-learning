@@ -33,7 +33,7 @@ Consider the following interfaces:
 public interface Expression {
 }
 
-public interface BinaryExpression {
+public interface BinaryExpression extends Expression {
     String getOperator();
     Expression getLhs();
     Expression getRhs();
@@ -66,7 +66,7 @@ This leads to the following (more verbose but also semantically more clear) resu
 public abstract interface Expression {
 }
 
-public abstract interface BinaryExpression {
+public abstract interface BinaryExpression extends Expression {
     public abstract String getOperator();
     public abstract Expression getLhs();
     public abstract Expression getRhs();
