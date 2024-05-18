@@ -132,7 +132,7 @@ public enum Season {
 }
 ```
 
-Let's look with *javap* what methods such a simple enum contain:
+Let's look with *javap* which methods such a simple enum contains:
 
 ```shell
 javap -cp ./classes -p chapter07.Season
@@ -152,7 +152,7 @@ public final class chapter07.Season extends java.lang.Enum<chapter07.Season> {
 }
 ```
 
-The *enum* superclass itself:
+The `Enum` superclass itself:
 
 ```shell
 javap -protected java.lang.Enum
@@ -180,7 +180,7 @@ Let's have a look at this *javap output* (for this simple enum):
 * The *enum values* are indeed `public static final` constants
 * The *constructor* is `private`; each enum value is automatically created *only once*
 * An array of all the values is returned by static method `values`
-* Static method `valueOf` obtains the enum value whose name exactly matches the passed String
+* Static method `valueOf` returns the enum value whose name exactly matches the passed String (and throws an exception otherwise)
 * Enums have instance ("getter") methods `name` and `ordinal`
 * Enums have overridden methods `equals` and `hashCode`; even reference comparison suffices to compare enum values for equality
 * Enums have overridden method `toString`, printing the name of the value
