@@ -461,27 +461,28 @@ Conceptually, distinguish *in-memory (heap) objects* on the one hand from *refer
 objects on the other hand. Objects are not directly accessible, as we know, but only accessible *through references*.
 Note that *assignment for reference types* only *assigns references*, copying a reference to *the same in-memory object*.
 Recall this is also the case when calling methods and passing parameters of reference types. If we want to copy an in-memory
-object itself, we need to create a new object and initialize its fields.
+object itself, we need to create a new object through a constructor.
 
 The *runtime type* of the (reference to) the in-memory object is the type of the constructor that created the object.
 We may *assign this reference to a variable of a supertype*, *without casting*. This supertype may be a superclass or
-implemented interface.
+(implemented) interface.
 
 The in-memory object determines *which capabilities exist* within the object. The *type of the reference* determines which
 of those fields and methods can be accessed through that reference. Hence, the term *polymorphism*.
 
 As for polymorphism:
 * *Implicit up-casting* for reference types (to a supertype, which is an interface or class type) always succeeds (see above)
+* Only up-casting may be implicit; otherwise we need explicit casting
 * *Explicit down-casting* for reference types is allowed by the compiler, but may lead to a `ClassCastException` at runtime
 * *Explicit casting* for *unrelated types* is disallowed by the compiler
 
-Yet what are *unrelated types*? Two classes having only supertype `java.lang.Object` in common are clearly unrelated.
-But for interfaces it is more difficult for the compiler to determine whether 2 types are unrelated. After all, we have
-multiple inheritance for interfaces, and if some class does not implement some interface, a subclass might still implement
-that interface. Only if the compiler knows for sure the cast cannot succeed, it will disallow the cast.
+Yet what are *unrelated types*? Two classes having only supertype `java.lang.Object` in common are clearly unrelated
+(if we try to cast to another type than `java.lang.Object`). But for interfaces it is more difficult for the compiler to
+determine whether 2 types are unrelated. After all, we have multiple inheritance for interfaces, and if some class does not
+implement some interface, a subclass might still implement that interface. Only if the compiler knows for sure the cast
+cannot succeed, it will disallow the cast.
 
-For the `instanceof` operator we have the same situation, that the compiler will disallow it only if the compiler is sure
-it cannot succeed.
+Analogously, the compiler will only disallow an occurrence of the `instanceof` operator if it knows for sure it cannot return `true`.
 
 Recall from chapter 6 the rules for (non-private) *instance method overriding*, and for *static method hiding* and *field hiding*.
 These rules were given for classes, but easily generalize to classes and interfaces. *Polymorphism* through *method overriding*
