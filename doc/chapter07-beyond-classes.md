@@ -388,4 +388,73 @@ Yet it is *not allowed to add instance fields*, not even private ones, which mak
 
 ### Creating nested classes
 
+A *nested class* is a class defined with another class. There are 4 flavours:
+* *Inner class* (or *member inner class*), which is a *non-static type member* of the outer class
+* *Static nested class*, which is a *static type member* of the outer class
+* *Local class*, which is defined *within a method body*
+* *Anonymous class*, which is a special kind of *local class without a name*
+
+When we say *nested class* we actually mean any *nested type*, including nested interfaces, enums, records and annotations.
+
+A *member inner class*:
+* is a nested class whose instances are linked to a *specific instance of the outer class*
+* is therefore a nested class that can access *instance members and static members* of the outer class, even private members
+* can *extend a class and implement interfaces* (after all, what would be the point of disallowing that?)
+* can be marked `abstract` or `final` (again, why not?)
+* can be declared `public`, `protected`, package-private or `private`
+* unlike Java 11, since Java 16 inner class can have static members (other than just static constants)
+
+Some examples of how to create an instance of an inner class (which requires an instance of the outer class):
+* `outerObject.new Inner()`
+* `Outer.this.new Inner()`
+* `new Outer().new Inner()`
+
+A *static nested class*:
+* is a nested class whose instances are *not linked to specific instances of the outer class*, but *to the outer class as a whole* instead
+* is therefore a nested class that can access *only static members* of the outer class, even private static members
+* is a nested class within an outer class that acts as a "namespace"
+* has fields and methods that can be referred to by the enclosing class (!)
+* can *extend a class and implement interfaces*
+* can be `abstract` or `final`
+* can be declared `public`, `protected`, package-private or `private`
+
+A *local class*:
+* is a nested class *defined within a method* (or within a constructor or initializer)
+* is therefore a class *scoped to a specific method call*, going out of scope when the method returns
+* is therefore a class *whose instances can only be created from within the method*, although *those instances can be returned from the method* (just like local variables)
+* if the enclosing method is an *instance method*, the nested class can access *all fields and methods* of the outer class
+* can access *final and effectively final* local variables
+* can *extend a class and implement interfaces*
+* can be `abstract` or `final`
+* has *no access modifiers* (obviously)
+
+The reason for *only final and effectively local variables* to be available is that nested classes lead to separate "class"
+files, and there is no way for the separate class to refer to local variables. If the local variable is final or effectively
+final, a copy of that local variable can be passed to the constructor of the local class, however.
+
+An *anonymous class* is a special kind of *local class without name*. For anonymous classes the declaration of the class
+and the creation of an instance of that class are combined.
+
+The template for *creation of an anonymous class and its instance* is as follows, where type `A` is the *name of a known
+class or interface*:
+
+```java
+new A() {
+    // implementations of abstract methods etc.
+}
+```
+
+Note that the anonymous class *directly extends class A or directly implements interface A*. Only one direct supertype
+can be given in an anonymous class declaration.
+
+Like is the case for local classes:
+* if the enclosing method is an *instance method*, the nested class can access *all fields and methods* of the outer class
+* can access *final and effectively final* local variables
+
+Although we said that anonymous classes are special kinds of local classes, they can also occur *outside of method bodies*.
+
+Note that with the advent of *lambdas* in Java 8, anonymous classes are hardly ever used anymore.
+
+### Understanding polymorphism
+
 TODO
