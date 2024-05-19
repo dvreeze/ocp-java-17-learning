@@ -402,7 +402,7 @@ A *member inner class*:
 * can *extend a class and implement interfaces* (after all, what would be the point of disallowing that?)
 * can be marked `abstract` or `final` (again, why not?)
 * can be declared `public`, `protected`, package-private or `private`
-* unlike Java 11, since Java 16 inner class can have static members (other than just static constants)
+* can have static members (other than just static constants), since Java 16
 
 Some examples of how to create an instance of an inner class (which requires an instance of the outer class):
 * `outerObject.new Inner()`
@@ -422,7 +422,7 @@ A *local class*:
 * is a nested class *defined within a method* (or within a constructor or initializer)
 * is therefore a class *scoped to a specific method call*, going out of scope when the method returns
 * is therefore a class *whose instances can only be created from within the method*, although *those instances can be returned from the method* (just like local variables)
-* if the enclosing method is an *instance method*, the nested class can access *all fields and methods* of the outer class
+* can access *all fields and methods* of the outer class, provided the enclosing method is an *instance method*
 * can access *final and effectively final* local variables
 * can *extend a class and implement interfaces*
 * can be `abstract` or `final`
@@ -445,15 +445,15 @@ new A() {
 ```
 
 Note that the anonymous class *directly extends class A or directly implements interface A*. Only one direct supertype
-can be given in an anonymous class declaration.
+can be given in an anonymous class instantiation expression.
 
-Like is the case for local classes:
-* if the enclosing method is an *instance method*, the nested class can access *all fields and methods* of the outer class
+Like is the case for local classes, anonymous classes:
+* can access *all fields and methods* of the outer class, provided the enclosing method is an *instance method*
 * can access *final and effectively final* local variables
 
 Although we said that anonymous classes are special kinds of local classes, they can also occur *outside of method bodies*.
 
-Note that with the advent of *lambdas* in Java 8, anonymous classes are hardly ever used anymore.
+Note that with the advent of *lambdas* in Java 8, anonymous classes are rarely used anymore.
 
 ### Understanding polymorphism
 
