@@ -78,6 +78,9 @@ public abstract interface BinaryExpression extends Expression {
 *Overriding* (abstract) interface methods works the same way as overriding abstract methods in abstract classes, with the
 same rules concerning proper overriding (e.g. same method signature, and Liskov substitution principle not being violated).
 
+Be careful: (non-private) abstract instance methods are implicitly `public` in interfaces, but the method overrides in
+implementing classes must *explicitly add the public modifier*, in order to properly override the interface method.
+
 Like abstract classes, interfaces cannot be made `final`. After all, the combination `abstract final` is rejected by the compiler.
 
 Due to multiple interface inheritance, a class may inherit 2 abstract methods that have *compatible method declarations*.
