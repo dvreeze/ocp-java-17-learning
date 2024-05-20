@@ -60,8 +60,8 @@ Note, however, that the following methods do not count as abstract methods, rega
 * `java.lang.Object.hashCode()`
 * `java.lang.Object.toString()`
 
-After all, these `java.lang.Object` instance methods are implemented by all Java objects, whether the default
-`java.lang.Object` implementation is used or not. Mind the exact method signatures when checking the abstract method count!
+After all, these `java.lang.Object` instance methods are implemented by all Java objects, whether overridden or not. Mind
+the exact method signatures when checking the abstract method count!
 
 If an interface is intended to be a functional interface, it makes sense to use the `FunctionalInterface` annotation
 to make that intention clear to the compiler (and readers of the code), leading to a compilation error if the interface
@@ -105,10 +105,10 @@ boolean strStartsWithCapitalT = strStartsWith.test("T"); // false
 
 // Another instance method example for a particular object, but here the function has no parameters
 
-Supplier<Boolean> strIsEmpty = str::isEmpty;
-Supplier<Boolean> strIsEmptyAsLambda = () -> str.isEmpty();
+BooleanSupplier strIsEmpty = str::isEmpty;
+BooleanSupplier strIsEmptyAsLambda = () -> str.isEmpty();
 
-boolean strIsEmptyValue = strIsEmpty.get(); // false
+boolean strIsEmptyValue = strIsEmpty.getAsBoolean(); // false
 
 // Instance method on a parameter to be determined at runtime
 
