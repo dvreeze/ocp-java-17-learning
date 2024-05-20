@@ -75,7 +75,7 @@ by even shorter syntax, namely a *method reference*. A method reference has form
 There are 4 formats for *method references*:
 * *static methods* as method references, in the format `Class::staticMethodName`
   * as lambda, the lambda parameters are the static method parameters
-* *instance methods on a particular object, as method references, in the format `someObject::instanceMethodName`
+* *instance methods on a particular object*, as method references, in the format `someObject::instanceMethodName`
   * as lambda, the lambda parameters are the parameters passed to the instance method called on the particular object
 * *instance methods on a parameter to be determined at runtime*, as method references, in the format `Class::instanceMethodName`
   * as lambda, the first lambda parameter is the instance itself, and the remaining lambda parameters are the parameters passed to the instance method
