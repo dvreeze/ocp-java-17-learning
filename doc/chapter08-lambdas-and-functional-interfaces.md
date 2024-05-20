@@ -132,7 +132,57 @@ String createdString = createStringFromBytes.apply("Abc".getBytes(StandardCharse
 
 ### Working with built-in functional interfaces
 
-TODO
+The most fundamental built-in functional interface in package `java.util.function` is `Function&lt;T, R&gt;`,
+which is the *functional interface* type for functions from `T` to `R`. The *single abstract method* signature is `apply(T)`.
+
+Let's "rediscover" some other widely used built-in functional interfaces:
+
+```java
+import java.util.function.Function;
+
+// Predicates
+Function<String, Boolean> isEmpty = s -> Boolean.valueOf(s.isEmpty());
+
+Boolean emptyStringIsEmpty = isEmpty.apply("");
+
+// Predicates are so common-place that it makes sense to have a dedicated Predicate functional interface type.
+// That type would return boolean primitives, thus preventing the need for lots of boxing and unboxing of booleans.
+
+// Suppliers
+Function<Void, String> createHelloString = ignoredValue -> "Hello";
+
+String hello = createHelloString.apply(null);
+
+// Not very convenient, of course. Why is that unused parameter even needed? So we need a Supplier functional interface.
+
+// Consumers
+Function<String, Void> printString = s -> { System.out.println(s); return null; };
+
+Void ignoredReturnValue = printString.apply("Hello");
+
+// That is even less convenient. Why is the return value even needed? So we need a Consumer functional interface.
+```
+
+This leads to the following "core" built-in functional interfaces:
+* `Function&lt;T, R&gt;`, with abstract method signature `apply(T)` and return type `R`
+* `Predicate&lt;T&gt;`, with abstract method signature `test(T)` and (primitive) return type `boolean`
+* `Supplier&lt;T&gt;`, with abstract method signature `get()` and return type `T`
+* `Consumer&lt;T&gt;`, with abstract method signature `accept(T)` and return type `void`
+
+The preceding example then becomes a lot more attractive:
+
+```java
+import java.util.function.*;
+
+Predicate<String> isEmpty = String::isEmpty;
+boolean emptyStringIsEmpty = isEmpty.test(""); // true
+
+Supplier<String> createHelloString = () -> "Hello";
+String hello = createHelloString.get();
+
+Consumer<String> printString = System.out::println;
+printString.accept("Hello");
+```
 
 ### Working with variables in lambdas
 
