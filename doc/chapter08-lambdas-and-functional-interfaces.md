@@ -132,7 +132,7 @@ String createdString = createStringFromBytes.apply("Abc".getBytes(StandardCharse
 
 ### Working with built-in functional interfaces
 
-The most fundamental built-in functional interface in package `java.util.function` is `Function&lt;T, R&gt;`,
+The most fundamental built-in functional interface in package `java.util.function` is `Function<T, R>`,
 which is the *functional interface* type for functions from `T` to `R`. The *single abstract method* signature is `apply(T)`.
 
 Let's "rediscover" some other widely used built-in functional interfaces:
@@ -164,10 +164,10 @@ Void ignoredReturnValue = printString.apply("Hello");
 ```
 
 This leads to the following "core" built-in functional interfaces:
-* `Function&lt;T, R&gt;`, with abstract method signature `apply(T)` and return type `R`
-* `Predicate&lt;T&gt;`, with abstract method signature `test(T)` and (primitive) return type `boolean`
-* `Supplier&lt;T&gt;`, with abstract method signature `get()` and return type `T`
-* `Consumer&lt;T&gt;`, with abstract method signature `accept(T)` and return type `void`
+* `Function<T, R>`, with abstract method signature `apply(T)` and return type `R`
+* `Predicate<T>`, with abstract method signature `test(T)` and (primitive) return type `boolean`
+* `Supplier<T>`, with abstract method signature `get()` and return type `T`
+* `Consumer<T>`, with abstract method signature `accept(T)` and return type `void`
 
 The preceding example then becomes a lot more attractive:
 
