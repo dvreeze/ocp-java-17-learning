@@ -125,7 +125,7 @@ boolean startsWithExample = startsWith.test("sample", "sam"); // true
 // Constructor example
 
 Function<byte[], String> createStringFromBytes = String::new;
-Function<byte[], String> createStringFromBytesAsLambda = bytes -> new String(bytes);
+Function<byte[], String> createStringFromBytesAsLambda = bytes -> new String(bytes, StandardCharsets.UTF_8);
 
 String createdString = createStringFromBytes.apply("Abc".getBytes(StandardCharsets.UTF_8));
 ```
