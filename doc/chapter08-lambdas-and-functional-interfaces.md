@@ -184,6 +184,18 @@ Consumer<String> printString = System.out::println;
 printString.accept("Hello");
 ```
 
+Let's add some functional interfaces that take 2 parameters instead of 1 parameter, and some `Function` subtypes where
+parameter types and return types are the same. This list must be remembered, but is (now) relatively easy to remember:
+* `Function<T, R>`, with abstract method signature `apply(T)` and return type `R`
+  * For 2 parameters: `BiFunction<T, U, R>`
+  * Subtype `UnaryOperator<T>` of `Function<T, T>`
+  * Subtype `BinaryOperator<T>` of `BiFunction<T, T, T>`
+* `Predicate<T>`, with abstract method signature `test(T)` and (primitive) return type `boolean`
+  * For 2 parameters: `BiPredicate<T, U>`
+* `Supplier<T>`, with abstract method signature `get()` and return type `T`
+* `Consumer<T>`, with abstract method signature `accept(T)` and return type `void`
+  * For 2 parameters: `BiConsumer<T, U>`
+
 ### Working with variables in lambdas
 
 TODO
