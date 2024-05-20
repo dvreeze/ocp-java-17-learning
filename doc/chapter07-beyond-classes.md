@@ -421,6 +421,9 @@ A *static nested class*:
 * can be `abstract` or `final`
 * can be declared `public`, `protected`, package-private or `private`
 
+Note that nested interfaces, enums and records are always `static` members of the outer class, even if the keyword `static`
+is missing.
+
 A *local class*:
 * is a nested class *defined within a method* (or within a constructor or initializer)
 * is therefore a class *scoped to a specific method call*, going out of scope when the method returns
