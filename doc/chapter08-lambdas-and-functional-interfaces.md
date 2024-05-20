@@ -130,7 +130,7 @@ Function<byte[], String> createStringFromBytesAsLambda = bytes -> new String(byt
 String createdString = createStringFromBytes.apply("Abc".getBytes(StandardCharsets.UTF_8));
 ```
 
-### Working with build-in functional interfaces
+### Working with built-in functional interfaces
 
 TODO
 
