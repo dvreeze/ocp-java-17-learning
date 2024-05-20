@@ -196,6 +196,36 @@ parameter types and return types are the same. This list must be remembered, but
 * `Consumer<T>`, with abstract method signature `accept(T)` and return type `void`
   * For 2 parameters: `BiConsumer<T, U>`
 
+Many built-in functional interfaces have some default instance methods for convenience, to "compose" functional interfaces.
+For example:
+* `Function<T, R>` has "method chaining" *higher order functions* `andThen` ("first apply this function, then apply the parameter function") and `compose` ("apply this function after the parameter function")
+* `Predicate<T>` has functions to combine independent predicates, such as (short-circuiting) `and`, (short-circuiting) `or` and `negate`
+* `Consumer<T>` has function `andThen`
+
+For *primitives* (`double`, `int`, `long`, and in one case `boolean`) there are dedicated variants of `Function`,
+`Predicate`, `Supplier` and `Consumer`. Below some of them are given, and the rest can be guessed rather easily:
+* Functions:
+  * `DoubleFunction<R>` with SAM signature `apply(double)` and return type `R`; analogous functional interfaces for `int` and `long`
+  * `DoubleUnaryOperator` with SAM signature `applyAsDouble(double)` and return type `double`; analogous functional interfaces for `int` and `long`
+  * `DoubleBinaryOperator` with SAM signature `applyAsDouble(double, double)`; analogous functional interfaces for `int` and `long`
+  * `ToDoubleFunction<T>` with SAM signature `applyAsDouble(T)` and return type `double`; analogous functional interfaces for `int` and `long`
+  * `ToDoubleBiFunction<T, U>` returning a `double`; analogous functional interfaces for `int` and `long`
+  * Conversion functions like `DoubleToLongFunction` with SAM signature `applyAsLong(double)` and return type `long`; similar conversion functions converting between `double`, `long` and `int`
+* Predicates:
+  * `DoublePredicate` with SAM signature `test(double)` and return type `boolean`; analogous functional interfaces for `int` and `long`
+* Suppliers:
+  * `DoubleSupplier` with SAM signature `getAsDouble()` and return type `double`; analogous functional interfaces for `int` and `long`
+  * `BooleanSupplier` with SAM signature `getAsBoolean()` and return type `boolean`
+* Consumers:
+  * `DoubleConsumer` with SAM signature `accept(double)` and return type `void`; analogous functional interfaces for `int` and `long`
+  * `ObjDoubleConsumer<T>` with SAM signature `accept(T, double)` and return type `void`; analogous functional interfaces for `int` and `long`
+
 ### Working with variables in lambdas
 
-TODO
+From a *lambda body* inside a method we can access:
+* instance fields and static fields
+* lambda parameters
+* local variables and method parameters, provided they are *effectively final*
+
+Note that local variables *cannot shadow each other* in Java. So redefining a variable (e.g. as lambda parameter) where
+a variable with the same name is already in scope is disallowed by the Java compiler.
