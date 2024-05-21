@@ -2,7 +2,7 @@
 
 See [OCP Java SE 17 Developer Study Guide](https://www.amazon.com/Oracle-Certified-Professional-Developer-Study/dp/1119864585/ref=sr_1_1?crid=1GIZNHYFXHAK4&dib=eyJ2IjoiMSJ9.Mz5O0lUSaZhUZ-O1Mi__dRPfXHL9GM_CfZ3JDTz910a2d8XI7Vsfj7zwcywJAfMcubfCglH02m8PwlAk_DORk8SS5460zaDP1fskFDX4sUiFVR4pxE1Ln0VIY-g5awTQaOJKp4t0Y1HchXkrw0HtOeVSHg3dHG8Jql9TibGCj-WeXYyNdMp4zWtgM4EimHpl4wvlJZufvGpNjNEmXIObAd2B1mp1skt5k7v_B-k_Ip4.bRERgxl7gsekO5AihUKuOeT_yoO6Bsg7jHigb4sjHEM&dib_tag=se&keywords=ocp+java+se17&qid=1714573695&sprefix=ocp+java+%2Caps%2C192&sr=8-1).
 
-This chapter is about Java interfaces, enums, records etc.
+This chapter is about *functional interfaces*, *lambda expressions* and *method references*.
 
 More information can be found in the (more low-level)
 [Java AST API](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/package-summary.html),
@@ -10,6 +10,7 @@ which contains links to the Java Language specification for specific language co
 
 In particular, see:
 * [LambdaExpressionTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/LambdaExpressionTree.html)
+* [MemberReferenceTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MemberReferenceTree.html)
 
 *Lambdas* were introduced in Java 8 to make Java more of a "functional programming language" than it was before Java 8.
 With lambdas code becomes more *declarative* (the "what") instead of *manipulating object state* (the "how").
