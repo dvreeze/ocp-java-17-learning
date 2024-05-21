@@ -230,3 +230,22 @@ From a *lambda body* inside a method we can access:
 
 Note that local variables *cannot shadow each other* in Java. So redefining a variable (e.g. as lambda parameter) where
 a variable with the same name is already in scope is disallowed by the Java compiler.
+
+### Check lists
+
+How to quickly but thoroughly check that a *lambda* is *syntactically correct*:
+1. The lambda must be a *parameter list*, followed by a "->" *arrow*, followed by a *lambda body*
+2. The parameter list must have *surrounding parentheses* (unless it is just one parameter without type or `var`), and use *consistent style* (parameters all typed, or all `var` or all without type)
+3. The *body* must either be an *expression* (without trailing semicolon) or a *block* (mind semicolons in the block, and `return`)
+4. No 2 *local variables* with the *same name* can be in-scope at the same time (that includes lambda parameters, method parameters etc.)
+5. *Local variables* from outside the lambda must be *effectively final* if they are used within the lambda
+
+Checking built-in *functional interface* types:
+* Mind the correct names: it is `BiFunction` but `BinaryOperator`, for example
+* Mind the *type parameters* (in particular also the number of type parameters)
+
+Checking *functional interface* declarations:
+* Only an *interface* can be a functional interface; classes cannot be functional interfaces
+* A functional interface must be a *valid interface* (so no `protected` modifier, no `default` method without body etc.)
+* Adding abstract method through inheritance sneakily violates the *SAM rule*
+* `java.lang.Object` instance methods do not count for the SAM rule (but mind the exact method signatures and return types)
