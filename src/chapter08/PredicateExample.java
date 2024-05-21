@@ -30,13 +30,6 @@ public class PredicateExample {
     private PredicateExample() {
     }
 
-    // Method invocation context for predicate lambdas
-    // (see https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/package-summary.html).
-
-    public static Predicate<String> stringPredicate(Predicate<String> p) {
-        return p;
-    }
-
     public static boolean containsWord(String s, String word) {
         Objects.checkIndex(0, word.length());
         var i = s.indexOf(word);
@@ -51,7 +44,7 @@ public class PredicateExample {
     }
 
     public static Predicate<String> containsWord(String word) {
-        return stringPredicate(s -> containsWord(s, word)); // The extra stringPredicate call is unnecessary here
+        return s -> containsWord(s, word);
     }
 
     public static Predicate<String> couldWellBeWimHofQuote() {
@@ -89,7 +82,7 @@ public class PredicateExample {
         System.out.println("Probable Wim Hof quotes:");
         quotes.stream().filter(couldWellBeWimHofQuote()).forEach(quote -> {
             System.out.println();
-            System.out.printf("%s%n", quote);
+            System.out.println(quote);
         });
     }
 }
