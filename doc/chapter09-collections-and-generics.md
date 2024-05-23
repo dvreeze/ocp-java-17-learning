@@ -69,6 +69,8 @@ The book calls these "unmodifiable" Lists "immutable", which is not correct. *Un
 for addition/removal/replacement of elements, but still allow for the contained elements to be mutable. So unmodifiable
 collections cause "collection mutator methods" to throw an exception (namely `UnsupportedOperationException`).
 
+*Unmodifiable collections* disallow `null` as elements!
+
 Most collection implementations have *two constructors*. For example:
 
 ```java
@@ -97,3 +99,28 @@ Copying a List to an array:
 * `List.toArray(E[])`, returning an `E[]` (`myList.toArray(new E[0])` will return an array of the right size)
 
 The copy is no longer linked to the original List. Hence, the name *toArray*, instead of "asArray".
+
+### Using the Set interface
+
+A *Set* is a collection that *disallows duplicate elements*. The *Set* interface does not add much to the *Collection*
+interface. In particular, unlike the List API, there are no Set methods for index-based access.
+
+Two *main implementations* of interface `java.util.Set<E>` are:
+* Class `java.util.HashSet<E>`, which under the hood stores the elements in a *hash table*
+  * each "bucket" has one hash code value (as key in the hash table), and can quickly be found, given an element to lookup (based on its `hashCode`)
+  * clearly, *equal* elements (based on `Object.equals(Object)`) must have *equal hash codes*, because otherwise the element to find and compare to may not be found
+  * these Sets are *unordered*
+  * adding elements and checking whether an element is in the Set takes constant time
+* Class `java.util.TreeSet<E>`, which under the hood stores the elements in a *sorted tree structure*
+  * the Set is *ordered*, typically in natural sorting order, or otherwise in an explicitly provided sorting order
+  * adding elements and checking whether an element is in the Set takes more time than for `HashSet`
+
+For Sets, method `add(E)` returns `false` if the element is already in the Set.
+
+Analogously to Lists, interface `Set` has static methods `of(E...)` and `copyOf(Collection<? extends E>)`.
+
+Copying a Set to an array is similar to copying Lists to an array.
+
+### Using the Queue and Deque interfaces
+
+TODO
