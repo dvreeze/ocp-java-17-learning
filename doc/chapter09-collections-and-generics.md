@@ -124,4 +124,34 @@ Copying a Set to an array is similar to copying Lists to an array. After all, th
 
 ### Using the Queue and Deque interfaces
 
+A *Queue* is a collection that *holds its elements in a specific order before processing* (FIFO, LIFO etc.).
+
+It has pairs of methods where one method may throw an exception and the other method returns a special value (like
+a `boolean` or `null`). In particular:
+* method `add(e)` (from the Collection interface) throwing an exception if no space is available, versus `offer(E)` which returns `false` if the element was not added
+* method `remove()` to remove the head, and throwing an exception if empty, versus `poll()` returning `null` if empty
+* method `element()`, retrieving the head without removing it, and throwing an exception if empty, versus `peek()`, returning `null` if empty
+
+A `java.util.Deque<E>` ("double-ended queue") is a `java.util.Queue<E>` that can add/remove elements at both ends.
+Not surprisingly, and quite similar to *Queue*, it adds the following pairs of methods:
+* `addFirst(E)` and `offerFirst(E)`
+* `addLast(E)` and `offerLast(E)` (equivalent to `add(E)` and `offer(E)`, respectively)
+* `removeFirst()` and `pollFirst()` (equivalent to `remove()` and `poll()`, respectively)
+* `removeLast()` and `pollLast()`
+* `getFirst()` and `peekFirst()` (equivalent to `element()` and `peek()`, respectively)
+* `getLast()` and `peekLast()`
+
+When using a *Deque* as *LIFO stack*, use *Deque* methods like:
+* `push(E)`, which is equivalent to `addFirst(E)`
+* `pop()`, which is equivalent to `removeFirst()`
+* the already mentioned method `peek()` (equivalent to `peekFirst()`)
+
+Whether or not a specific *Queue* implementation class allows for `null` elements (`LinkedList` does), it is best
+not to use `null` as element because of the methods mentioned above that may return `null` as special value.
+
+Class `LinkedList<E>` is a `Deque<E>` implementation, but if we do not need the *List* API, `ArrayDeque<E>` offers a
+better more optimized *Deque* implementation.
+
+### Using the Map interface
+
 TODO
