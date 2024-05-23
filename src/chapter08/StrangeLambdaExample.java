@@ -16,9 +16,9 @@
 
 package chapter08;
 
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.IntSupplier;
-import java.util.stream.IntStream;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.LongSupplier;
+import java.util.stream.LongStream;
 
 /**
  * Example of a "strange" lambda, taking an effectively final local variable from its context that is nevertheless mutable.
@@ -28,12 +28,18 @@ import java.util.stream.IntStream;
 public class StrangeLambdaExample {
 
     public static void main(String[] args) {
-        var counter = new AtomicInteger(0);
-
         // Effectively final local variable that is used in the lambda below, but mutable all the same
-        IntSupplier supplier = counter::incrementAndGet;
+        var counter = new AtomicLong(0L);
 
-        int result = IntStream.generate(supplier).takeWhile(i -> i <= 100).reduce(Math::max).orElse(0);
+        LongSupplier supplier = () -> {
+            var x = counter.incrementAndGet();
+            return x * x;
+        };
+
+        long result = LongStream.generate(supplier)
+                .takeWhile(ignored -> counter.get() <= 1000L)
+                .reduce(Math::max)
+                .orElse(0L);
 
         System.out.println(result);
     }
