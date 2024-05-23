@@ -128,8 +128,8 @@ A *Queue* is a collection that *holds its elements in a specific order before pr
 
 It has pairs of methods where one method may throw an exception and the other method returns a special value (like
 a `boolean` or `null`). In particular:
-* method `add(e)` (from the Collection interface) throwing an exception if no space is available, versus `offer(E)` which returns `false` if the element was not added
-* method `remove()` to remove the head, and throwing an exception if empty, versus `poll()` returning `null` if empty
+* method `add(e)` (from the Collection interface) throwing an exception if no space is available, versus `offer(E)`, which returns `false` if the element was not added
+* method `remove()` to remove the head, and throwing an exception if empty, versus `poll()`, returning `null` if empty
 * method `element()`, retrieving the head without removing it, and throwing an exception if empty, versus `peek()`, returning `null` if empty
 
 A `java.util.Deque<E>` ("double-ended queue") is a `java.util.Queue<E>` that can add/remove elements at both ends.
