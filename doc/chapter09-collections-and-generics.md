@@ -31,7 +31,7 @@ Some common `java.util.Collection<E>` methods (whose precise semantics may depen
 * `remove(Object)`, removing a single matching element, and returning `true` if removal was successful
 * `isEmpty()` and `size()` (the latter returning the current size)
 * `clear()`, removing all elements from the collection
-* `contains(Object)`, returning `true` if the collection contains the given elements, based on `Object.equals()`
+* `contains(Object)`, returning `true` if the collection contains the given element, based on `Object.equals()`
 * `removeIf(Predicate<? super E>)`, removing all elements matching the given condition
 * `forEach(Consumer<? super E>)` (from supertype `Iterable<E>`), as an alternative to loops (with or without the use of a `Iterable.iterator()`)
 
