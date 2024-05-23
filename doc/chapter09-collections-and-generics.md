@@ -119,7 +119,8 @@ For Sets, method `add(E)` returns `false` if the element is already in the Set.
 
 Analogously to Lists, interface `Set` has static methods `of(E...)` and `copyOf(Collection<? extends E>)`.
 
-Copying a Set to an array is similar to copying Lists to an array.
+Copying a Set to an array is similar to copying Lists to an array. After all, these methods come from supertype
+`java.util.Collection<E>`.
 
 ### Using the Queue and Deque interfaces
 
