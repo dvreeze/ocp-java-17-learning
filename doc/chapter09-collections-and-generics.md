@@ -216,7 +216,7 @@ The *merge* function works as follows:
 
 The *merge* function returns the previous mapped value or `null` otherwise.
 
-Above, `value` must be a non-`null` parameter (or else an NPE is thrown). Note that the passed *mapping function* is never
+Above, the "new value" parameter must be non-`null` (or else an NPE is thrown). Note that the passed *mapping function* is never
 called on `null` values, but it may return `null` to mark the entry for removal.
 
 Finally, the `java.util.Map<K, V>` interface has the following *looping (instance) method*:
