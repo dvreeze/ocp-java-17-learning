@@ -120,6 +120,7 @@ Two *main implementations* of interface `java.util.Set<E>` are:
   * adding elements and checking whether an element is in the Set takes constant time
 * Class `java.util.TreeSet<E>`, which under the hood stores the elements in a *sorted tree structure*
   * the Set is *ordered*, typically in natural sorting order, or otherwise in an explicitly provided sorting order
+  * this ordering is promised by interface `java.util.SortedSet<E>`, which extends interface `java.util.Set<E>`
   * adding elements and checking whether an element is in the Set takes more time than for `HashSet`
 
 For Sets, method `add(E)` returns `false` if the element is already in the Set.
@@ -166,4 +167,59 @@ better more optimized *Deque* implementation.
 
 See [java.util.Map](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html).
 
-TODO
+A *Map* is like a collection that holds *key-value pairs*, where there are *no duplicate keys* and where each key can
+map to *at most one value*. Recall that `java.util.Map<K, V>` does *not extend* the *Collection* interface.
+
+Two *main implementations* of interface `java.util.Map<K, V>` are:
+* Class `java.util.HashMap<K, V>`
+  * it uses a hash table under the hood (just like *HashSet*)
+  * it is unordered
+  * key-based lookup is in constant time
+* Class `java.util.TreeMap<K, V>`
+  * it uses a sorted tree structure under the hood (just like *TreeSet*)
+  * it is ordered (using a total ordering on the keys)
+  * this total ordering is promised by interface type `java.util.SortedMap<K, V>`, which extends interface `java.util.Map<K, V>`
+
+The static *factory methods* for *Map* creation are similar to the ones for the different collections, except that pairs of
+keys and values must be passed to the factory methods. Static methods like `java.util.Map.of(K, V, K, V, K, V)` are not very
+helpful in that regard. It is better to use static method `java.util.Map.ofEntries(Map.Entry<? extends K, ? extends V>)`
+instead, creating the (*unmodifiable*) entries with static method `java.util.Map.entry(K, V)`. Recall that "unmodifiable"
+implies non-`null` (both for keys and values in an entry as for entire Maps). Consistently with collections,
+these factory methods indeed create *unmodifiable Maps*.
+
+The `java.util.Map<K, V>` interface has the following *instance methods for querying* (this is not a complete list):
+* `containsKey(Object)`, returning `true` if the given key is in the Map
+* `containsValue(Object)`, returning `true` if the given (mapped) value is in the Map
+* `entrySet()`, returning a `Set<Map.Entry<K, V>>` containing all entries
+* `keySet()`, returning a `Set<K>` containing all keys
+* `values()`, returning a `Collection<V>` of all mapped values
+* `get(Object)`, returning the mapped value given the parameter key, if any, and `null` otherwise
+* (default method) `getOrDefault(Object, V)`, returning the mapped value given the parameter key, if any, and the provided default otherwise
+* `size()` and `isEmpty()`
+
+Note that there is no method called *contains*, unlike interfaces that extend *java.util.Collection* that do have such a method.
+
+The `java.util.Map<K, V>` interface has the following *addition/removal/update (instance) methods* (again, this is not a complete list):
+* `clear()`, with return type `void`, removing all entries from the Map
+* `put(K, V)`, adding or replacing a key-value pair, and returning the previous mapped value or `null`
+* (default method) `putIfAbsent(K, V)`, adding a key-value pair if the key is not yet present and mapped to a non-`null` value (returning `null` in this case), and otherwise returning the already existing mapped value
+* `remove(Object)`, removes an entry with the given key, and returning the previous mapped value, if any, and `null` otherwise
+* (default method) `replace(K, V)`, replacing the given value for the given key if that key is already set, and returning the original value or `null` if there is none
+* (default method) `replaceAll(BiFunction<K, V, V>)` (return type `void`), replacing each mapped value with the results of the given function
+* (default method) `merge(K, V, BiFunction<? super V, ? super V, ? extends V>)`, explained below
+
+The *merge* function works as follows:
+* if the parameter key is *not in the Map* or mapped to `null`, the given key-value pair is written to the Map without calling the mapping function
+* otherwise:
+  * if the mapping function (called on old value and new parameter value) returns `null`, the key is removed from the Map
+  * if the mapping function (called on old value and new parameter value) returns a non-`null` value, the corresponding updated entry is written to the Map
+
+The *merge* function returns the previous mapped value or `null` otherwise.
+
+Above, `value` must be a non-`null` parameter (or else an NPE is thrown). Note that the passed *mapping function* is never
+called on `null` values, but it may return `null` to mark the entry for removal.
+
+Finally, the `java.util.Map<K, V>` interface has the following *looping (instance) method*:
+* (default method) `forEach(BiConsumer<K, V>)` (return type `void`), looping through each key-value pair
+
+Obviously, some methods are convenience methods that are easily implemented in terms of other methods (e.g. `isEmpty()` and `containsKey(Object)`).
