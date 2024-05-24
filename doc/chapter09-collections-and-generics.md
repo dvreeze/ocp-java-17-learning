@@ -203,7 +203,7 @@ The `java.util.Map<K, V>` interface has the following *addition/removal/update (
 * `clear()`, with return type `void`, removing all entries from the Map
 * `put(K, V)`, adding or replacing a key-value pair, and returning the previous mapped value or `null`
 * (default method) `putIfAbsent(K, V)`, adding a key-value pair if the key is not yet present and mapped to a non-`null` value (returning `null` in this case), and otherwise returning the already existing mapped value
-* `remove(Object)`, removes an entry with the given key, and returning the previous mapped value, if any, and `null` otherwise
+* `remove(Object)`, removing an entry with the given key, and returning the previous mapped value, if any, and `null` otherwise
 * (default method) `replace(K, V)`, replacing the given value for the given key if that key is already set, and returning the original value or `null` if there is none
 * (default method) `replaceAll(BiFunction<K, V, V>)` (return type `void`), replacing each mapped value with the results of the given function
 * (default method) `merge(K, V, BiFunction<? super V, ? super V, ? extends V>)`, explained below
