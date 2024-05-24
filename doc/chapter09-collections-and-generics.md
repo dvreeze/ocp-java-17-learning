@@ -223,3 +223,17 @@ Finally, the `java.util.Map<K, V>` interface has the following *looping (instanc
 * (default method) `forEach(BiConsumer<K, V>)` (return type `void`), looping through each key-value pair
 
 Obviously, some methods are convenience methods that are easily implemented in terms of other methods (e.g. `isEmpty()` and `containsKey(Object)`).
+
+### Comparing collection types
+
+The collection types that are *unmodifiable* or that *involve sorting* do *not allow null values*.
+
+To determine the correct collection type given a problem description, first choose the *collection interface* and then
+the most appropriate *collection class* implementing that collection interface.
+
+Some old collection types that offered some thread-safety but now having much better concurrent alternatives include
+*Vector*, *Hashtable* and *Stack*.
+
+### Sorting data
+
+TODO
