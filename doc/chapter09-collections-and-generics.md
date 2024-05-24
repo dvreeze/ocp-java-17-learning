@@ -8,6 +8,8 @@ This chapter is about Java *collections* and *generics*. Thread-safe collections
 
 A *collection* is a group of objects contained in a single object.
 
+See [java.util.Collection](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html).
+
 The 4 *main collection interfaces* in the *Java Collections Framework* are:
 * Interface `java.util.List<E>`, which is an *ordered* collection allowing *duplicate elements*
 * Interface `java.util.Set<E>`, which (like a *set in mathematics*) is a collection that *does not allow any duplicate elements* (and typically is *unordered*)
@@ -22,7 +24,8 @@ The *diamond operator* allows us to write:
 // The diamond operator can (only) be used in the RHS of an assignment operation
 Map<Long, List<String>> mapOfLists = new HashMap<>();
 
-// Corner-case (that compiles, and assumes type List<Object>); indeed, the diamond operator is still used in the RHS of the assignment
+// Corner-case (that compiles, and assumes type List<Object>)
+// Indeed, the diamond operator is used in the RHS of the assignment, which is allowed
 var xs = new ArrayList<>();
 ```
 
@@ -32,13 +35,15 @@ Some common `java.util.Collection<E>` methods (whose precise semantics may depen
 * `isEmpty()` and `size()` (the latter returning the current size)
 * `clear()`, removing all elements from the collection
 * `contains(Object)`, returning `true` if the collection contains the given element, based on `Object.equals()`
-* `removeIf(Predicate<? super E>)`, removing all elements matching the given condition
-* `forEach(Consumer<? super E>)` (from supertype `Iterable<E>`), as an alternative to loops (with or without the use of a `Iterable.iterator()`)
+* (default method) `removeIf(Predicate<? super E>)`, removing all elements matching the given condition
+* `forEach(Consumer<? super E>)` (default method from supertype `Iterable<E>`), as an alternative to loops (with or without the use of a `Iterable.iterator()`)
 
 Collections have *overridden* `equals(Object)` for equality comparisons on collections. Note that Lists and Sets behave
 differently in such equality comparisons.
 
 ### Using the List interface
+
+See [java.util.List](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html).
 
 A *List* is an *ordered collection* that *can have duplicate elements*. Moreover:
 * elements can be retrieved and inserted at a specific *int index*, much like arrays
@@ -83,18 +88,18 @@ var ys = new LinkedList<String>(xs); // creating a copy of another collection
 Type `ArrayList` has an extra constructor to set the *initial capacity* without adding any elements from the List API perspective.
 
 Some specific methods for interface type *List* (mostly "index-based") are:
-* `add(int, E)`, adding an element at the given index, with return type `void`
+* `add(int, E)`, adding an element at the given index, with return type `void` (and shifting the current elements from that position on to the right)
 * `get(int)`, returning the element at the given index
 * `remove(int)`, removing the element at the given index (and moving the rest toward the front), returning the removed element
 * (default method) `replaceAll(UnaryOperator<E>)`, replacing each element in-place with the result of the operator
 * `set(int, E)`, replacing the element at the given index and returning the original element at that index
 * (default method) `sort(Comparator<? super E>)`, sorting the List in-place
 
-In these methods, indexes out-of-range lead to an `IndexOutOfBoundsException` (which is "unchecked").
+In these methods, indexes that are "out of range" lead to an `IndexOutOfBoundsException` (which is an "unchecked exception").
 
 Be careful with the overloaded `remove` methods for `List<Integer>` (recall the rules for method overloading).
 
-Copying a List to an array:
+Methods to copy a List to an array (from supertype `Collection<E>`):
 * `List.toArray()`, returning an `Object[]`
 * `List.toArray(E[])`, returning an `E[]` (`myList.toArray(new E[0])` will return an array of the right size)
 
@@ -102,13 +107,15 @@ The copy is no longer linked to the original List. Hence, the name *toArray*, in
 
 ### Using the Set interface
 
+See [java.util.Set](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html).
+
 A *Set* is a collection that *disallows duplicate elements*. The *Set* interface does not add much to the *Collection*
-interface. In particular, unlike the List API, there are no Set methods for index-based access.
+interface. In particular, unlike the List API, the Set API has no methods for index-based access (after all, most Sets are unordered).
 
 Two *main implementations* of interface `java.util.Set<E>` are:
-* Class `java.util.HashSet<E>`, which under the hood stores the elements in a *hash table*
-  * each "bucket" has one hash code value (as key in the hash table), and can quickly be found, given an element to lookup (based on its `hashCode`)
-  * clearly, *equal* elements (based on `Object.equals(Object)`) must have *equal hash codes*, because otherwise the element to find and compare to may not be found
+* Class `java.util.HashSet<E>`, which under the hood stores the elements in a *hash table* (mapping hash codes to "buckets")
+  * based on an element's `hashCode`, the corresponding "hash bucket" containing that element is found in constant time
+  * clearly, *equal* elements (based on `Object.equals(Object)`) must have *equal hash codes*, because otherwise the element to compare to for equality may not be found
   * these Sets are *unordered*
   * adding elements and checking whether an element is in the Set takes constant time
 * Class `java.util.TreeSet<E>`, which under the hood stores the elements in a *sorted tree structure*
@@ -126,7 +133,10 @@ Copying a Set to an array is similar to copying Lists to an array. After all, th
 
 A *Queue* is a collection that *holds its elements in a specific order before processing* (FIFO, LIFO etc.).
 
-It has pairs of methods where one method may throw an exception and the other method returns a special value (like
+See [java.util.Queue](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Queue.html),
+and [java.util.Deque](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Deque.html).
+
+It has pairs of methods where one method may throw an exception and the other method returns a special value instead (like
 a `boolean` or `null`). In particular:
 * method `add(e)` (from the Collection interface) throwing an exception if no space is available, versus `offer(E)`, which returns `false` if the element was not added
 * method `remove()` to remove the head, and throwing an exception if empty, versus `poll()`, returning `null` if empty
@@ -153,5 +163,7 @@ Class `LinkedList<E>` is a `Deque<E>` implementation, but if we do not need the 
 better more optimized *Deque* implementation.
 
 ### Using the Map interface
+
+See [java.util.Map](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html).
 
 TODO
