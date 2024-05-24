@@ -184,8 +184,8 @@ The static *factory methods* for *Map* creation are similar to the ones for the 
 keys and values must be passed to the factory methods. Static methods like `java.util.Map.of(K, V, K, V, K, V)` are not very
 helpful in that regard. It is better to use static method `java.util.Map.ofEntries(Map.Entry<? extends K, ? extends V>)`
 instead, creating the (*unmodifiable*) entries with static method `java.util.Map.entry(K, V)`. Recall that "unmodifiable"
-implies non-`null` (both for keys and values in an entry as for entire Maps). Consistently with collections,
-these factory methods indeed create *unmodifiable Maps*.
+implies non-`null` (both for keys and values). Consistently with collections, these factory methods indeed create
+*unmodifiable Maps*.
 
 The `java.util.Map<K, V>` interface has the following *instance methods for querying* (this is not a complete list):
 * `containsKey(Object)`, returning `true` if the given key is in the Map
