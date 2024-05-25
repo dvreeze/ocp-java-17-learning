@@ -41,11 +41,16 @@ Some common `java.util.Collection<E>` methods (whose precise semantics may depen
 Collections have *overridden* `equals(Object)` for equality comparisons on collections. Note that Lists and Sets behave
 differently in such equality comparisons.
 
+If a collection is *unmodifiable* (which is not the same as "immutable" if the element objects are mutable) all of the above
+methods that might add/remove/replace elements cause an `UnsupportedOperationException` to be thrown. Also, `null` is not
+allowed in *unmodifiable* collections.
+
 ### Using the List interface
 
 See [java.util.List](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html).
 
-A *List* is an *ordered collection* that *can have duplicate elements*. Moreover:
+A *List* is an *ordered collection* that *can have duplicate elements*. The order is "insertion order" unless elements
+are added at specific positions. Moreover:
 * elements can be retrieved and inserted at a specific *int index*, much like arrays
 * unlike arrays, the *size* of a List may change after the List has been declared
 * List is the "go to" collection (interface) data type, even if we are not interested in the element order 
@@ -130,6 +135,9 @@ Analogously to Lists, interface `Set` has static methods `of(E...)` and `copyOf(
 Copying a Set to an array is similar to copying Lists to an array. After all, these methods come from supertype
 `java.util.Collection<E>`.
 
+*Unmodifiable* Sets have the same restrictions as unmodifiable Lists. That is, the methods that may add/remove/replace
+elements throw an `UnsupportedOperationException`, and `null` is not allowed as element.
+
 ### Using the Queue and Deque interfaces
 
 A *Queue* is a collection that *holds its elements in a specific order before processing* (FIFO, LIFO etc.).
@@ -184,8 +192,8 @@ The static *factory methods* for *Map* creation are similar to the ones for the 
 keys and values must be passed to the factory methods. Static methods like `java.util.Map.of(K, V, K, V, K, V)` are not very
 helpful in that regard. It is better to use static method `java.util.Map.ofEntries(Map.Entry<? extends K, ? extends V>)`
 instead, creating the (*unmodifiable*) entries with static method `java.util.Map.entry(K, V)`. Recall that "unmodifiable"
-implies non-`null` (both for keys and values). Consistently with collections, these factory methods indeed create
-*unmodifiable Maps*.
+implies non-`null` (in this case both for keys and values), and that "mutator" methods throw an `UnsupportedOperationException`.
+Consistently with collections, these factory methods indeed create *unmodifiable Maps*.
 
 The `java.util.Map<K, V>` interface has the following *instance methods for querying* (this is not a complete list):
 * `containsKey(Object)`, returning `true` if the given key is in the Map
@@ -235,5 +243,48 @@ Some old collection types that offered some thread-safety but now having much be
 *Vector*, *Hashtable* and *Stack*.
 
 ### Sorting data
+
+There are many ways of *sorting* collections in Java. One important distinction is between interface `java.lang.Comparable<T>`
+on the one hand and `java.util.Comparator<T>` on the other hand:
+* The *Comparable* interface should be implemented by the collection member class itself, whereas the *Comparator* interface should be provided to a *sorting call*
+* Interface *Comparable* is in package `java.lang`, and interface *Comparator* is in package `java.util`
+* Interface *Comparable* has 1 abstract method, but should not be used as a functional interface, whereas *Comparator* is clearly a *functional interface*
+* Interface *Comparable* has method `compareTo(T)`, whereas interface *Comparator* has method `compare(T, T)` (both methods returning `int`)
+* When implementing *Comparable* method `compareTo(T)`, this method should be *consistent with* `equals(Object)`, whereas *Comparator* could be considered an "ad-hoc sorting order"
+* Both for *Comparable* and *Comparator*, consider whether `null` should be considered as potential data to take into consideration when sorting
+
+Note that `compareTo(T)` and `compare(T, T)` should return < 0 if the first value is less than the second value, 0 if both
+values are the same, and > 0 if the first value is greater than the second value.
+
+Also note that *unmodifiable collections* cannot be sorted in-place.
+
+Some ways to sort collections (or to obtain sorted collections):
+* *Sorting in-place* with static method `Collections.sort(List<T>)`
+* *Sorting in-place* with static method `Collections.sort(List<T>, Comparator<? super T>)`
+* *Sorting in-place* with *List* instance method `sort(Comparator<? super E>)`
+* Creating a *TreeSet* (which is a *SortedSet*) where the elements are *Comparable*
+* Creating a *TreeSet* (which is a *SortedSet*) passing an explicit *Comparator* for a custom sorting order
+* Using the *Stream* API and call `sorted()` on the Stream (turning the result into a *List*, for example)
+* Using the *Stream* API and call `sorted(Comparator<? super T>)` on the Stream (turning the result into a *List*, for example)
+
+Functional interface `Comparator<T>` has several nice methods (static methods and default instance methods) to create/enhance
+*Comparator* instances. For example:
+* Static method `comparing(Function<? super T, ? extends U>)` (where `U` is *Comparable*)
+* Static methods like `comparingLong(ToLongFunction<? super T>)` (also for `int` and `double`)
+* Static method `naturalOrder()`
+* Static method `reverseOrder()`
+* Default instance methods like `reversed()`
+* Default instance methods like `thenComparing(Function<? super T, ? extends U>)` (where `U` is *Comparable*)
+* Default instance methods like `thenComparingLong(ToLongFunction<? super T>)` (also for `int` and `double`)
+
+Before calling one of the overloaded `Collections.binarySearch` methods (with or without *Comparator* argument), make
+sure to *first have called an appropriate sorting method* on the collection. Also note that if an element is not found,
+and its index would be `idx` if inserted at the correct position (to keep the collection ordered), the `binarySearch`
+call returns `-idx -1`.
+
+Note that for example a `TreeSet.add` call may lead to a `ClassCastException` at runtime because of a failing cast to
+type `java.lang.Comparable`.
+
+### Working with generics
 
 TODO
