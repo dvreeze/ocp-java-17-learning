@@ -300,7 +300,7 @@ surrounded by *angle brackets*. For example (first ignoring bounded type paramet
 
 public record Crate<T>(T contents) { }
 
-// Using Crate, for a specific type (Elephant) being used for type parameter T
+// Using Crate, for a specific type (Elephant) filled in for type parameter T
 
 public record Elephant(String name) { }
 
@@ -309,8 +309,8 @@ Crate<Elephant> bubbasCrate = new Crate<>(new Elephant("Bubba"));
 Elephant bubba = bubbasCrate.contents();
 ```
 
-Besides classes and interfaces, *methods can also be generic*. There formal type parameters occur just before the return type.
-For example:
+Besides classes and interfaces, *methods can also be generic*. In generic methods the formal type parameters occur just before
+the return type. For example:
 
 ```java
 public class SortingUtil {
