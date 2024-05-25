@@ -330,7 +330,7 @@ In the examples above, the *generic* types and methods and their usages are *com
 
 In spite of this compile-time type-safety of generics, at runtime this generic information is lost. This is known as
 *type erasure*. Roughly, and simplified significantly, type erasure *removes generics*, generating a *class file without
-generics* (not entirely, the formal type parameters themselves are known), by:
+generics* (except for the formal type parameters themselves), by:
 * replacing references to type parameters by type `Object` (in reality it can be another type)
 * replacing generic types (in declarations and when used) by the corresponding *raw types*
 * inserting *cast operations* where needed due to this erasure process
