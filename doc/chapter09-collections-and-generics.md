@@ -330,7 +330,7 @@ In the examples above, the *generic* types and methods and their usages are *com
 
 In spite of this compile-time type-safety of generics, at runtime this generic information is lost. This is known as
 *type erasure*. Roughly, and simplified significantly, type erasure *removes generics*, generating a *class file without
-generics*, by:
+generics* (not entirely, the formal type parameters themselves are known), by:
 * replacing references to type parameters by type `Object` (in reality it can be another type)
 * replacing generic types (in declarations and when used) by the corresponding *raw types*
 * inserting *cast operations* where needed due to this erasure process
@@ -366,7 +366,7 @@ So, whereas `String[]` is a subtype of `CharSequence[]` (both "reified" at runti
 `List<CharSequence>`.
 
 The latter makes sense, when we think about it. When only *reading* from the List, we would expect `List<String>` to be a
-subtype of `List<CharSequence>`, so if all *collections and their element types were immutable*, this covariance relationship
+subtype of `List<CharSequence>`, so if all *collections and their element types were immutable*, this subtype relationship
 would make sense. Yet *List* does *not promise immutability*. When *writing* data to the List, it becomes clear why
 `List<String>` is not a subtype of `List<CharSequence>`. For if it were, we could treat the former as the latter, add
 a `StringBuilder` to the List, and thus break the `List<String>` "contract".
