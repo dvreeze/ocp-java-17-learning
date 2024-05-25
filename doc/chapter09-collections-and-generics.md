@@ -246,9 +246,9 @@ Some old collection types that offered some thread-safety but now having much be
 
 There are many ways of *sorting* collections in Java. One important distinction is between interface `java.lang.Comparable<T>`
 on the one hand and `java.util.Comparator<T>` on the other hand:
-* The *Comparable* interface should be implemented by the collection member class itself, whereas the *Comparator* interface should be provided to a *sorting call*
+* The *Comparable* interface should be implemented by the collection member class itself, whereas the *Comparator* interface should (normally) be provided to a *sorting call*
 * Interface *Comparable* is in package `java.lang`, and interface *Comparator* is in package `java.util`
-* Interface *Comparable* has 1 abstract method, but should not be used as a functional interface, whereas *Comparator* is clearly a *functional interface*
+* Interface *Comparable* has 1 abstract method, but should not be used as a functional interface, whereas *Comparator* is clearly a *functional interface* (to be instantiated with a lambda or method reference)
 * Interface *Comparable* has method `compareTo(T)`, whereas interface *Comparator* has method `compare(T, T)` (both methods returning `int`)
 * When implementing *Comparable* method `compareTo(T)`, this method should be *consistent with* `equals(Object)`, whereas *Comparator* could be considered an "ad-hoc sorting order"
 * Both for *Comparable* and *Comparator*, consider whether `null` should be considered as potential data to take into consideration when sorting
