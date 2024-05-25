@@ -287,4 +287,95 @@ type `java.lang.Comparable`.
 
 ### Working with generics
 
-TODO
+*Generics* offer a great way of reusing code when abstracting over types that have nothing in common. For example, Java
+collection types (both interfaces and classes) are not interested in the specific *collection element types*. Any element
+type will do. With generics, such generic collection types need to be written only once, and they can then be used for any
+element type, whether known or not yet known. Obviously, in such cases generics are a much better fit than inheritance.
+
+*Generic classes and interfaces* have one or more comma-separated *formal type parameters* after the class/interface name,
+surrounded by *angle brackets*. For example (first ignoring bounded type parameters):
+
+```java
+// The generic type parameter T is available anywhere within the Crate class
+
+public record Crate<T>(T contents) { }
+
+// Using Crate, for a specific type (Elephant) being used for type parameter T
+
+public record Elephant(String name) { }
+
+Crate<Elephant> bubbasCrate = new Crate<>(new Elephant("Bubba"));
+
+Elephant bubba = bubbasCrate.contents();
+```
+
+Besides classes and interfaces, *methods can also be generic*. There formal type parameters occur just before the return type.
+For example:
+
+```java
+public class SortingUtil {
+    public static <T> void sort(List<T> list) {
+        // ...
+    }
+}
+
+// Using this generic method
+
+SortingUtil.sort(new ArrayList<>(List.of(1, 5, 7, 9, 11)));
+SortingUtil.<Integer>sort(new ArrayList<>(List.of(1, 5, 7, 9, 11)));
+```
+
+In the examples above, the *generic* types and methods and their usages are *compile-time type-safe*. For example, the
+`Crate<Elephant>` works exclusively with elephants as contents.
+
+In spite of this compile-time type-safety of generics, at runtime this generic information is lost. This is known as
+*type erasure*. Roughly, and simplified significantly, type erasure *removes generics*, generating a *class file without
+generics*, by:
+* replacing references to type parameters by type `Object` (in reality it can be another type)
+* replacing generic types (in declarations and when used) by the corresponding *raw types*
+* inserting *cast operations* where needed due to this erasure process
+* and reasoning at compile-time that these *casts will succeed*
+
+One way to think about *generics in Java* is that *Java inserts the cast operations, knowing that they will succeed*.
+
+So, after erasure, we can think of the Crate example above as being reduced to:
+
+```java
+public record Crate(Object contents) { }
+
+public record Elephant(String name) { }
+
+Crate bubbasCrate = new Crate(new Elephant("Bubba"));
+
+// The compiler knows tha cast below will succeed
+Elephant bubba = (Elephant) bubbasCrate.contents();
+```
+
+Note that *type erasure* ensures that there is in principle only 1 *class file* for the compiled generic class or interface.
+
+It is very important for Java programmers to be aware of *type erasure* and its consequences. For example, *method overloading*
+does not take generic types into account, but looks at *method signatures after type erasure* instead (such as raw collection types),
+in order to determine that method signatures differ.
+
+Regarding *(instance) method overriding*, the requirement that parent and child class/interface must have the *same method signature*
+means that *generic types* must be exactly the same, including the type parameters/arguments. The requirement of *covariant return types*
+is met by type `List<CharSequence>` in the parent type and `ArrayList<CharSequence>` in the child type, but not by
+`List<CharSequence>` in the parent type and `List<String>` in the child type.
+
+So, whereas `String[]` is a subtype of `CharSequence[]` (both "reified" at runtime), `List<String>` is NOT a subtype of
+`List<CharSequence>`.
+
+The latter makes sense, when we think about it. When only *reading* from the List, we would expect `List<String>` to be a
+subtype of `List<CharSequence>`, so if all *collections and their element types were immutable*, this covariance relationship
+would make sense. Yet *List* does *not promise immutability*. When *writing* data to the List, it becomes clear why
+`List<String>` is not a subtype of `List<CharSequence>`. For if it were, we could treat the former as the latter, add
+a `StringBuilder` to the List, and thus break the `List<String>` "contract".
+
+Due to *type erasure*, there are a few things we cannot do:
+* Call a constructor on a type parameter (after all, it typically becomes `Object` after erasure, and that's not what we want to construct)
+* Create an array of a type parameter as element type (after all, that would possibly lead to creation of an `Object[]`)
+* Call `instanceof` on a generic type
+* Use a primitive type as generic type parameter (but the wrapper type can be used, of course)
+* Create a static field as generic type parameter (of the class/interface)
+
+
