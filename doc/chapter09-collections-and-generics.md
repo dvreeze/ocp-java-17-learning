@@ -4,6 +4,16 @@ See [OCP Java SE 17 Developer Study Guide](https://www.amazon.com/Oracle-Certifi
 
 This chapter is about Java *collections* and *generics*. Thread-safe collections are treated in a later chapter.
 
+For a tutorial on *generics*, see [Generics](https://docs.oracle.com/javase/tutorial/java/generics/index.html).
+
+More (generics-related) information can be found in the (more low-level)
+[Java AST API](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/package-summary.html),
+which contains links to the Java Language specification for specific language constructs.
+
+In particular, see:
+* [TypeParameterTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/TypeParameterTree.html)
+* [WildcardTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/WildcardTree.html)
+
 ### Using common collection APIs
 
 A *collection* is a group of objects contained in a single object.
@@ -287,12 +297,14 @@ type `java.lang.Comparable`.
 
 ### Working with generics
 
+#### Introduction to generics
+
 *Generics* offer a great way of reusing code when abstracting over types that have nothing in common. For example, Java
 collection types (both interfaces and classes) are not interested in the specific *collection element types*. Any element
 type will do. With generics, such generic collection types need to be written only once, and they can then be used for any
 element type, whether known or not yet known. Obviously, in such cases generics are a much better fit than inheritance.
 
-*Generic classes and interfaces* have one or more comma-separated *formal type parameters* after the class/interface name,
+*Generic classes and interfaces* have one or more comma-separated *type parameters* after the class/interface name,
 surrounded by *angle brackets*. For example (first ignoring bounded type parameters):
 
 ```java
@@ -309,8 +321,9 @@ Crate<Elephant> bubbasCrate = new Crate<>(new Elephant("Bubba"));
 Elephant bubba = bubbasCrate.contents();
 ```
 
-Besides classes and interfaces, *methods can also be generic*. In generic methods the formal type parameters occur just before
-the return type. For example:
+Besides classes and interfaces, *methods can also be generic*. In generic methods the type parameters occur just before
+the return type. As is the case for generic classes and interfaces, the type parameters are surrounded by *angle brackets*.
+For example:
 
 ```java
 public class SortingUtil {
@@ -331,9 +344,11 @@ In the examples above, the *generic* types and methods and their usages are *com
 See [Generic Types](https://docs.oracle.com/javase/tutorial/java/generics/types.html), also for the terminology used.
 In particular, it is stated there that an *invocation of a generic type* is called a *parameterized type*.
 
+#### Type erasure
+
 In spite of this compile-time type-safety of generics, at runtime this generic information is lost. This is known as
 *type erasure*. Roughly, and simplified significantly, type erasure *removes generics*, generating a *class file without
-generics* (except for the formal type parameters themselves), by:
+generics* (except for the type parameters themselves), by:
 * *replacing references to type parameters* by type `Object` (or another type if the type parameter is bounded)
 * replacing generic types (in declarations and when used) by the corresponding *raw types*
 * inserting *cast operations* where needed to retain type-safety
@@ -389,3 +404,42 @@ Due to *type erasure*, there are a few things we cannot do:
 
 For more information on these (and more) restrictions, see
 [Restrictions on Generics](https://docs.oracle.com/javase/tutorial/java/generics/restrictions.html).
+
+#### Wildcards and bounds
+
+Type parameters can be *bounded*, having a specified *upper bound* (using the `extends` keyword). This is shown in
+[Bounded Type Parameters](https://docs.oracle.com/javase/tutorial/java/generics/bounded.html).
+
+It is possible for the *type arguments* in parameterized types to be *wildcards*. The simplest wildcard is `?`, meaning
+"any (reference) type". Wildcards can be *bounded*, having an *upper bound* (e.g. `T extends CharSequence`) or *lower bound*
+(e.g. `T super String`). Wildcards therefore express *partial type knowledge*.
+
+We can think of wildcards being "sets of types". For example, `T extends CharSequence` can be regarded as a set of types
+containing `CharSequence`, `String`, `StringBuilder` etc. So, when thinking in terms of "subset relationships", the following
+makes perfect sense:
+* `List<String>` is a subtype of `List<? extends CharSequence>` (because the singleton set with type `String` is a subset of the set containing `CharSequence` and its subtypes)
+* `List<Number>` is a subtype of `List<? extends Number>` (because the singleton set with type `Number` is a subset of the set containing `Number` and its subtypes)
+* `List<? extends Integer>` is a subtype of `List<? extends Number>` (because the set of `Integer` and its subtypes is a subtype of the set of `Number` and its subtypes)
+* `List<? super Number>` is a subtype of `List<? super Integer>` (because again there is a subset relationship where only the second set contains type `Integer`)
+
+Note that wildcards trade precise (parameterized) type knowledge for the power of making code "more general". For example,
+in the code below we don't know the exact parameterized List type, but we (and the compiler) do know that each member of
+the List is a `Number` (and therefore can call method `doubleValue()`):
+
+```java
+public static double sum(List<? extends Number> numbers) {
+    return numbers.stream().mapToDouble(n -> n.doubleValue()).sum();
+}
+```
+
+This "sufficiently general" method can be called on a `List<Number>`, `List<Integer>`, `List<Long>` etc.
+
+Note that `List<? extends Number>` can be used when *only reading* from the List. Conversely, `List<? super Number>` can be used
+when *only writing* elements to the List. If we need both reading and writing, we need type `List<Number>`.
+
+Of course, type erasure applies to parameterized types containing wildcards just like it applies to code without wildcards.
+
+Sometimes you need the exact parameterized type, so in those cases wildcards are not allowed. For example, the compiler
+will NOT let us create expressions such as `new ArrayList<? extends CharSequence>()`.
+
+For more information on *wildcards*, see [Wildcards](https://docs.oracle.com/javase/tutorial/java/generics/wildcards.html).
