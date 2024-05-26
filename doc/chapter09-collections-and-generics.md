@@ -338,7 +338,7 @@ generics* (except for the formal type parameters themselves), by:
 * replacing generic types (in declarations and when used) by the corresponding *raw types*
 * inserting *cast operations* where needed to retain type-safety
 * and reasoning at compile-time that these *casts will succeed*
-* generate so-called *bridge methods* in order not to break *polymorphism* in extended generic types
+* and generating so-called *bridge methods* in order not to break *polymorphism* in extended generic types
 
 One way to think about *generics in Java* is that *Java inserts the cast operations, knowing that they will succeed*.
 
