@@ -381,7 +381,7 @@ promises that we can *add* any `CharSequence` to it (`String`, `StringBuilder` e
 
 Due to *type erasure*, there are a few things we cannot do:
 * Call a constructor on a type parameter (after all, it typically becomes `Object` after erasure, and that's not what we want to construct)
-* Create an array of a parameterized type (after all, that would possibly lead to creation of an `Object[]`)
+* Create an array of a parameterized type (after all, the type arguments would be lost after erasure)
 * Call `instanceof` on a parameterized type (so casting is also disallowed)
 * Use a primitive type as type argument (but the wrapper type can be used, of course)
 * Declare a static field whose type is a type parameter (after all, the type parameters are used at the instance level)
