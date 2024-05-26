@@ -220,14 +220,14 @@ Note that there is no method called *contains*, unlike interfaces that extend *j
 The `java.util.Map<K, V>` interface has the following *addition/removal/update (instance) methods* (again, this is not a complete list):
 * `clear()`, with return type `void`, removing all entries from the Map
 * `put(K, V)`, adding or replacing a key-value pair, and returning the previous mapped value or `null`
-* (default method) `putIfAbsent(K, V)`, adding a key-value pair if the key is not yet present and mapped to a non-`null` value (returning `null` in this case), and otherwise returning the already existing mapped value
+* (default method) `putIfAbsent(K, V)`, adding a key-value pair if the key is not yet present or if it is mapped to `null` (returning `null` in this case), and otherwise returning the already existing mapped value
 * `remove(Object)`, removing an entry with the given key, and returning the previous mapped value, if any, and `null` otherwise
 * (default method) `replace(K, V)`, replacing the given value for the given key if that key is already set, and returning the original value or `null` if there is none
 * (default method) `replaceAll(BiFunction<K, V, V>)` (return type `void`), replacing each mapped value with the results of the given function
 * (default method) `merge(K, V, BiFunction<? super V, ? super V, ? extends V>)`, explained below
 
 The *merge* function works as follows:
-* if the parameter key is *not in the Map* or mapped to `null`, the given key-value pair is written to the Map without calling the mapping function
+* if the parameter key is *not in the Map* or if it is mapped to `null`, the given key-value pair is written to the Map without calling the mapping function
 * otherwise:
   * if the mapping function (called on old value and new parameter value) returns `null`, the key is removed from the Map
   * if the mapping function (called on old value and new parameter value) returns a non-`null` value, the corresponding updated entry is written to the Map
