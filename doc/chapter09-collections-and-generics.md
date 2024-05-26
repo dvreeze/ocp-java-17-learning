@@ -337,8 +337,8 @@ generics* (except for the formal type parameters themselves), by:
 * *replacing references to type parameters* by type `Object` (or another type if the type parameter is bounded)
 * replacing generic types (in declarations and when used) by the corresponding *raw types*
 * inserting *cast operations* where needed to retain type-safety
-* and reasoning at compile-time that these *casts will succeed*
-* and generating so-called *bridge methods* in order not to break *polymorphism* in extended generic types
+* reasoning at compile-time that these *casts will succeed*
+* generating so-called *bridge methods* in order not to break *polymorphism* in extended generic types
 
 One way to think about *generics in Java* is that *Java inserts the cast operations, knowing that they will succeed*.
 
@@ -364,7 +364,7 @@ does not take parameterized types into account, but looks at *method signatures 
 in order to determine that method signatures differ.
 
 Regarding *(instance) method overriding*, the requirement that parent and child class/interface must have the *same method signature*
-means that *parameterized types* must be exactly the same, including the type parameters/arguments. The requirement of *covariant return types*
+means that *parameterized types* must be exactly the same, including the type arguments. The requirement of *covariant return types*
 is met by type `List<CharSequence>` in the parent type and `ArrayList<CharSequence>` in the child type, but not by
 `List<CharSequence>` in the parent type and `List<String>` in the child type.
 
