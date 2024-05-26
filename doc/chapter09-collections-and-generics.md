@@ -419,7 +419,7 @@ containing `CharSequence`, `String`, `StringBuilder` etc. So, when thinking in t
 makes perfect sense:
 * `List<String>` is a subtype of `List<? extends CharSequence>` (because the singleton set with type `String` is a subset of the set containing `CharSequence` and its subtypes)
 * `List<Number>` is a subtype of `List<? extends Number>` (because the singleton set with type `Number` is a subset of the set containing `Number` and its subtypes)
-* `List<? extends Integer>` is a subtype of `List<? extends Number>` (because the set of `Integer` and its subtypes is a subtype of the set of `Number` and its subtypes)
+* `List<? extends Integer>` is a subtype of `List<? extends Number>` (because the set of `Integer` and its subtypes is a subset of the set of `Number` and its subtypes)
 * `List<? super Number>` is a subtype of `List<? super Integer>` (because again there is a subset relationship where only the second set contains type `Integer`)
 
 Note that wildcards trade precise (parameterized) type knowledge for the power of making code "more general". For example,
