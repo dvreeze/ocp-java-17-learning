@@ -377,7 +377,8 @@ would make perfect sense. Yet *List* does *not promise immutability*. When *writ
 `List<String>` is not a subtype of `List<CharSequence>`. For if it were, we could treat the former as the latter, add
 a `StringBuilder` to the List, and thus break the `List<String>` "contract". Put differently, type `List<CharSequence>`
 promises that we can *add* any `CharSequence` to it (`String`, `StringBuilder` etc.), which would not be the case for
-`List<String>` etc., and therefore the latter cannot be a subtype of `List<CharSequence>`.
+`List<String>` etc., and therefore the latter cannot be a subtype of `List<CharSequence>` (it would break polymorphism,
+i.e. the Liskov substitution principle).
 
 Due to *type erasure*, there are a few things we cannot do:
 * Call a constructor on a type parameter (after all, it typically becomes `Object` after erasure, and that's not what we want to construct)
