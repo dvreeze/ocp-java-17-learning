@@ -366,7 +366,7 @@ public record Elephant(String name) { }
 
 Crate bubbasCrate = new Crate(new Elephant("Bubba"));
 
-// The compiler knows tha cast below will succeed
+// The compiler knows the cast below will succeed
 Elephant bubba = (Elephant) bubbasCrate.contents();
 ```
 
