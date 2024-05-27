@@ -2,8 +2,8 @@
 
 See [OCP Java SE 17 Developer Study Guide](https://www.amazon.com/Oracle-Certified-Professional-Developer-Study/dp/1119864585/ref=sr_1_1?crid=1GIZNHYFXHAK4&dib=eyJ2IjoiMSJ9.Mz5O0lUSaZhUZ-O1Mi__dRPfXHL9GM_CfZ3JDTz910a2d8XI7Vsfj7zwcywJAfMcubfCglH02m8PwlAk_DORk8SS5460zaDP1fskFDX4sUiFVR4pxE1Ln0VIY-g5awTQaOJKp4t0Y1HchXkrw0HtOeVSHg3dHG8Jql9TibGCj-WeXYyNdMp4zWtgM4EimHpl4wvlJZufvGpNjNEmXIObAd2B1mp1skt5k7v_B-k_Ip4.bRERgxl7gsekO5AihUKuOeT_yoO6Bsg7jHigb4sjHEM&dib_tag=se&keywords=ocp+java+se17&qid=1714573695&sprefix=ocp+java+%2Caps%2C192&sr=8-1).
 
-This chapter is about Java *streams* (and *optional*). The *Java Stream API* should not be confused with input and output
-stream in the Java I/O API. The latter is treated in another chapter.
+This chapter is about Java *streams* (and *Optional*). The *Java Stream API* should not be confused with input and output
+streams in the Java I/O API. The latter is treated in another chapter.
 
 The material (on the Java Stream API) in this chapter builds heavily on chapter 8 ("Lambdas and Functional Interfaces")
 and chapter 9 ("Collections and Generics").
@@ -63,14 +63,14 @@ stream.toList().forEach(System.out::println); // Throws an IllegalStateException
 
 Streams offer a *functional programming style* in Java, but streams themselves are not "functional objects" (unlike
 immutable records, for example). This is very important to keep in mind! Whereas streams are not reusable, *Supplier*s
-of streams or *collections* are "stream factories" are reusable. So "stream pipelines" should normally have a very local scope.
+of streams or *collections* as "stream factories" are reusable. So "stream pipelines" should normally have a *very local scope*.
 
 Put differently, with streams data is created only when needed. In other words, stream processing is an example of *lazy evaluation*.
-Data flows through the pipeline and does not come back after each "step".
+Data flows through the pipeline and does not come back after completion of each "step".
 
 A *stream pipeline* consists of (at most) 3 parts:
-1. the stream *source*, from which the stream is created
-2. *intermediate stream operations* (optional), transforming the stream into another one (filtering/mapping/flat-mapping etc.)
+1. the mandatory stream *source*, from which the stream is created
+2. zero or more *intermediate stream operations*, transforming the stream into another one (filtering/mapping/flat-mapping etc.)
 3. exactly one *terminal operation*, producing a result, after which the stream is closed and no longer available
 
 Above, *lazy evaluation* means the following:
@@ -81,7 +81,7 @@ Above, *lazy evaluation* means the following:
 Streams may be *finite* or *infinite*. This is not clearly visible from the code, but still very important to keep in mind!
 
 Some important differences between *intermediate operations* and the *terminal operation* are:
-* Each useful stream pipeline *ends with exactly 1 terminal operation*, but there can be *0 or more intermediate operations*
-* Intermediate operations *return a Stream*, whereas a terminal operation *does not return a Stream*
+* Each useful stream pipeline *ends with exactly 1 terminal operation* (a terminal operation cannot exist multiple times in a pipeline), but there can be *zero or more intermediate operations*
+* Intermediate operations *return a (transformed) Stream*, whereas a terminal operation *does not return a Stream*
 * When calling an intermediate operation, it is *not yet evaluated*, whereas *on calling the terminal operation the pipeline runs*
 * After an intermediate operation call the stream is still valid, but *after the terminal operation the stream is closed* and no longer available for processing
