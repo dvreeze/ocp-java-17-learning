@@ -134,7 +134,7 @@ Some common Stream *terminal operations* are:
   * they *do terminate* for infinite streams
 * `allMatch(Predicate<? super T>)`, `anyMatch(Predicate<? super T>)` and `noneMatch(Predicate<? super T>)`, all returning a `boolean`
   * they are not reduction operations, since they are *short-circuiting terminal operations*
-  * depending on the data and the predicate, these methods may or may not terminate for infinite streams (but `allMatch` probably always runs forever)
+  * depending on the data and the predicate, these methods may or may not terminate for infinite streams (but `allMatch` and `noneMatch` probably always run forever)
 * `forEach(Consumer<? super T>)`, with return type `void`
   * it is the "Stream equivalent of looping"
   * it is not a reduction operation, since it does not return any result but instead relies on the Consumer's side-effects
@@ -163,7 +163,7 @@ Some static *Collector factory methods* in class `Collectors` are:
 * `reducing` collectors, which look like alternatives to direct `reduce` calls instead of `collect` calls
 
 There are also *Collector factory methods* that *transform or even combine Collectors*, such as:
-* `collectingAndThen`, taking a Collector and a "post-processing function" (e.g. the collector gradually "fills" a `StringBuilder`, and the "post-processing function turns that into a `String`)
+* `collectingAndThen`, taking a Collector and a "post-processing function" (e.g. the collector gradually "fills" a `StringBuilder`, and the "post-processing function" turns that into a `String`)
 * `teeing`, creating a composite of 2 downstream collectors
 * collectors mimicking some intermediate operations, e.g.`filtering`, `mapping`, `flatMapping`
 
