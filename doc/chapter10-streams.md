@@ -228,10 +228,10 @@ stringList.stream()
     .forEach(System.out::println);
 ```
 
-When reasoning about *stream pipeline evaluation order*, do not thing in terms of "intermediate collections" (there are not
+When reasoning about *stream pipeline evaluation order*, do not think in terms of "intermediate collections" (there are not
 any), but think in terms of *lazy evaluation*, and the pipeline trying to *entirely process one Stream element at a time*,
 to the extent possible. Of course, sorting does not allow complete one-element-at-a-time processing, but to the extent
-that this is possible this will be done. This should help to get a *mental picture* of stream processing.
+that this is possible this will be done. This should help to get a *mental picture* of evaluation order in stream processing.
 
 ### Working with primitive streams
 
