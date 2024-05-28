@@ -156,16 +156,19 @@ Some static *Collector factory methods* in class `Collectors` are:
 * `toList()` and `toSet()`, which can be understood in terms of `toCollection(ArrayList::new)` and `toCollection(HashSet::new)`, respectively
 * `toCollection(Supplier<C>)` where `C` is a collection type, which can be understood in terms of direct `Collector` creation with static method `Collector.of`
 * overloads of `joining`, to produce a `String` from the Stream
-* collectors that produce primitive wrappers, such as `summingInt(ToIntFunction<? super T>)` and `averagingDouble(ToDoubleFunction<? super T>)`
+* collectors that produce primitive wrappers, such as `counting()`, `summingInt(ToIntFunction<? super T>)` and `averagingDouble(ToDoubleFunction<? super T>)` (`averagingInt` and `averagingLong` exist as well)
 * collectors that collect multiple statistics in one go (count, average, sum etc.), e.g. `summarizingDouble(ToDoubleFunction<? super T>)`
 * `maxBy(Comparator<? super T>)` etc., creating a collector that returns an `Optional<T>`
 * collectors that produce `Map` instances, such as overloads of `toMap`, `groupingBy` and `partitioningBy`
-* `reducing` collectors, which look like alternatives to direct `reduce` calls instead of `collect` calls
+* `reducing` collectors, which look like alternatives to direct `reduce` calls, coded in terms of `collect` calls
 
 There are also *Collector factory methods* that *transform or even combine Collectors*, such as:
 * `collectingAndThen`, taking a Collector and a "post-processing function" (e.g. the collector gradually "fills" a `StringBuilder`, and the "post-processing function" turns that into a `String`)
 * `teeing`, creating a composite of 2 downstream collectors
 * collectors mimicking some intermediate operations, e.g.`filtering`, `mapping`, `flatMapping`
+
+For example, `filtering` has method signature `filtering(Predicate<? super T>, Collector<? super T, A, R>)`, returning a
+`Collector<T, ?, R>`.
 
 Of course, there is always the option to create a *Collector* from scratch, with method `Collector.of`, if needed.
 
@@ -320,4 +323,133 @@ and other functional interfaces.
 
 #### Using a Spliterator
 
+A *java.util.Spliterator<T>* can be used for *traversing and partitioning elements of a source*. That source can be a
+collection or Stream, for example. The details are far from straightforward, but the most important *instance methods* are:
+* `trySplit()`, returning another `Spliterator<T>`, which ideally contains half of the data, which is removed from the current `Spliterator`
+* `tryAdvance(Consumer<? super T>)`, trying to perform the given action on one of the remaining elements (and return `true`), if there is any, and returning `false` otherwise
+* `forEachRemaining(Consumer<? super T>)` (return type `void`), trying to perform the given action on all remaining elements
 
+*Spliterators* are used under the hood as base utility for Streams, in particular parallel ones. See
+[Introduction to Spliterator in Java](https://www.baeldung.com/java-spliterator).
+
+#### Collecting results
+
+Recall that `Stream<T>` has method `collect(Collector<? super T, A, R>)`, returning an `R` (whatever that `R` is, like
+a String, collection, primitive etc.). Also recall that class `Collectors` has many static methods to create `Collector`
+instances for *mutable reduction operations*. Many of those methods have at least been briefly mentioned.
+
+Let's now zoom in on *Collectors* that produce *Map* "collections". Below it is assumed implicitly that the Collectors
+being discussed are used in a `Stream<T>` call to instance method `collect(Collector<? super T, A, R>))`.
+
+To collect data into *Map* instances, we cannot use `Collectors.toCollection(Supplier<C)` (with `C` being a `Collection` subtype).
+We do have overloaded `Collectors.toMap` static methods, though.
+
+The simplest one is `Collectors.toMap(keyMapper, valueMapper)` (giving parameter names rather than complex method signatures).
+Parameter `keyMapper` turns an element of the Stream into a key, and parameter `valueMapper` turns the element into a mapped value.
+
+For example:
+
+```java
+List<String> words = List.of("this", "is", "very", "challenging");
+
+// Creating a Map, mapping "this" to 4, "is" to 2, etc.
+Map<String, Integer> wordLengths =
+        words.stream().collect(Collectors.toMap(Function.identity(), String::length));
+```
+
+The method above will cause an `IllegalStateException` in the `collect` call if there are duplicate keys!
+
+What do we want to do if we have duplicate keys? Maybe merge the mapped values (and keep the same type)? If so,
+use the `toMap` overload `Collectors.toMap(keyMapper, valueMapper, mergeFunction)`. If we additionally want to have
+control over the runtime type of the result *Map*, consider using the most complex `toMap` overload, namely
+`Collectors.toMap(keyMapper, valueMapper, mergeFunction, mapFactory)`.
+
+For example:
+
+```java
+List<String> words = List.of("this", "is", "very", "challenging");
+
+// Creates a TreeMap containing pairs like 4 -> "this, very"
+Map<Integer, String> lengthToWordsMap =
+        words.stream().collect(Collectors.toMap(
+                String::length,
+                Function.identity(),
+                (word1, word2) -> word1 + ", " + word2,
+                TreeMap::new
+        ));
+```
+
+Let's now do something similar, namely grouping the words based on the word length as key. For that we use method
+`Collectors.groupingBy(classifier)`, where the `classifier` is a function from a stream element to a key (in our example
+a function from word to word length). The returned `Collector` produces a `Map<K, List<T>>` (where `K` is the key type).
+
+For example:
+
+```java
+List<String> words = List.of("this", "is", "very", "challenging");
+
+// Creates a Map containing pairs like 4 -> [ "this", "very" ]
+Map<Integer, List<String>> lengthToWordsMap =
+        words.stream().collect(Collectors.groupingBy(String::length));
+```
+
+Maybe we want the mapped values to be a *Set* rather than a *List*. For that we can use another `groupingBy` overload,
+namely `Collectors.groupingBy(classifier, downstreamCollector)`. The *downstream collector* processes the "mapped values"
+per key.
+
+For example:
+
+```java
+List<String> words = List.of("this", "is", "very", "challenging");
+
+// Creates a Map containing pairs like 4 -> [ "this", "very" ]
+Map<Integer, Set<String>> lengthToWordsMap =
+        words.stream().collect(Collectors.groupingBy(String::length, Collectors.toSet()));
+
+// Creates a Map containing pairs like 4 -> 2 (the latter being a word count for words of length 4)
+Map<Integer, Long> lengthToWordCountMap =
+        words.stream().collect(Collectors.groupingBy(String::length, Collectors.counting()));
+```
+
+Again, the type of *Map* can be adapted. For that we have the 3rd `groupingBy` overload, namely
+`Collectors.groupingBy(classifier, mapFactory, downstreamCollector)`.
+
+For example:
+
+```java
+List<String> words = List.of("this", "is", "very", "challenging");
+
+// Creates a Map containing pairs like 4 -> [ "this", "very" ]
+SortedMap<Integer, Set<String>> lengthToWordsMap =
+        words.stream().collect(Collectors.groupingBy(String::length, TreeMap::new, Collectors.toSet()));
+```
+
+Note that `Collectors.groupingBy` is quite powerful when it comes to "grouping data". The `toMap` Collectors above
+can undoubtedly be written in terms of `groupingBy`.
+
+Another special case of grouping is *partitioning*. Partitioning splits a stream into 2 parts, with keys `true` and
+`false`, respectively (as their wrappers). To create a "partitioning collector", we pass a *Predicate* rather than
+a "classifier function". A difference with "grouping" is that even if a partition (for `true` or `false`) is empty, it
+is still part of the result, so there are always 2 partitions.
+
+There are 2 overloads of `partitioningBy`:
+* `Collectors.partitioningBy(predicate)`
+* `Collectors.partitioningBy(predicate, downstreamCollector)`
+
+Their use is quite similar to `groupingBy`, and not shown in an example here.
+
+Another important *Collector* factory method is `Collectors.mapping(mappingFunction, downstreamCollector)`.
+Below it is used for collecting "mapped values", so we have 2 levels of "downstream collectors" in the following example:
+
+```java
+List<String> words = List.of("this", "is", "very", "challenging");
+
+// Creates a Map containing pairs like 4 -> [ "THIS", "VERY" ]
+Map<Integer, List<String>> lengthToWordsMap =
+        words.stream().collect(
+                Collectors.groupingBy(String::length, Collectors.mapping(String::toUpperCase, Collectors.toList())));
+```
+
+Finally, be aware of method `Collectors.teeing(downstreamCollector1, downstreamCollector2, mergingFunction)`.
+It allows us to go only once through the stream, but still using 2 collectors on that stream, and combine the
+collector results afterwards.
