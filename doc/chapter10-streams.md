@@ -276,3 +276,7 @@ There are also several *intermediate operations* to "hop between different kinds
 * `LongStream` has convenience method `asDoubleStream()`, and `IntStream` has convenience methods `asLongStream()` and `asDoubleStream()`
 * `Stream<T>` has methods like `flatMapToDouble(Function<? super T, ? extends DoubleStream>)` etc.
 * similarly, `Stream<T>` has methods like `mapToDouble(ToDoubleFunction<? super T>)` etc.
+
+Several terminal operations for primitive streams return "optional types" like `OptionalDouble`, `OptionalLong` and `OptionalInt`.
+These types are quite similar in their API to `Optional<T>`. The most important differences are that instead of `get()`
+there are methods like `getAsDouble()` (for `OptionalDouble`), to make clear that (specific) primitives are retrieved.
