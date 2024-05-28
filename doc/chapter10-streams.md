@@ -46,12 +46,18 @@ The methods above, except for the first one, are convenience methods. For exampl
 
 ### Using streams
 
+#### Understanding the pipeline flow
+
 A Java *stream* is a *sequence of data, that can be used only once*. So, unlike collections (especially immutable collections)
 that can be reused again and again, streams are much more *like iterators* than collections in that they are not reusable.
+
+The Stream interface type is `java.util.stream.Stream<T>`.
 
 For example:
 
 ```java
+import java.util.stream.Stream;
+
 var stream = Stream.of(1, 2, 3, 4, 5);
 
 // Ok, using the stream the first time, which will print the 5 numbers
@@ -85,3 +91,22 @@ Some important differences between *intermediate operations* and the *terminal o
 * Intermediate operations *return a (transformed) Stream*, whereas a terminal operation *does not return a Stream*
 * When calling an intermediate operation, it is *not yet evaluated*, whereas *on calling the terminal operation the pipeline runs*
 * After an intermediate operation call the stream is still valid, but *after the terminal operation the stream is closed* and no longer available for processing
+
+#### Creating stream sources
+
+*Creating finite streams*:
+* Static method `Stream.empty()`
+* Static method `Stream.of(T...)`
+* Collection instance methods `stream()` and `parallelStream()` (the latter potentially running in parallel)
+* Static method `java.util.Arrays.stream(T[])`
+
+*Creating (potentially) infinite streams*:
+* Static method `Stream.generate(Supplier<? extends T>)`
+* Static method `Stream.iterate(T, UnaryOperator<T>)`
+* Static method `Stream.iterate(T, Predicate<? super T>, UnaryOperator<t>)` (potentially finite, depending on the "loop condition")
+
+#### Using common terminal operations
+
+*Terminal operations* turn a Stream into a (non-Stream) result. A special case are *reduction operations*, where all the
+contents of the Stream are combined into a single primitive or `Object`. Typical reduction results are primitives or
+*collections*.
