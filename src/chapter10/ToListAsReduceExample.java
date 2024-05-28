@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Showing "Stream.toList()" in terms of "Stream.reduce"..
+ * Showing "Stream.toList()" in terms of "Stream.reduce".
  *
  * @author Chris de Vreeze
  */

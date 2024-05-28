@@ -110,3 +110,59 @@ Some important differences between *intermediate operations* and the *terminal o
 *Terminal operations* turn a Stream into a (non-Stream) result. A special case are *reduction operations*, where all the
 contents of the Stream are combined into a single primitive or `Object`. Typical reduction results are primitives or
 *collections*.
+
+A very powerful Stream *reduction operation*, in terms of which many terminal operations can be understood, is
+`public <U> U reduce(U identity, BiFunction<U, ? super T, U> accumulator, BinaryOperator<U> combiner)`.
+With the `identity` and `accumulator` method parameters the `reduce` method *loops* over the stream, and the `combiner`
+method parameter is useful for parallel streams (to combine partial results).
+
+Some common Stream *terminal operations* are:
+* `count()`, returning a `long`
+  * it is a *reduction operation*, and is equivalent to `reduce(0L, (acc, nextElem) -> acc + 1L, Long::sum)`
+  * it does *not terminate* for infinite streams
+* `min(Comparator<? super T>)` and `max(Comparator<? super T>)`, both returning an `Optional<T>`
+  * they are *reduction operations*, and can easily be written as equivalent (3-parameter) `reduce` calls
+  * they do *not terminate* for infinite streams
+* `findFirst()` and `findAny()`, both returning an `Optional<T>` (`findAny` may return an element that is not the first one)
+  * they are not reduction operations, since they typically return without processing all of the elements
+  * they *do terminate* for infinite streams
+* `allMatch(Predicate<? super T>)`, `anyMatch(Predicate<? super T>)` and `noneMatch(Predicate<? super T>)`, all returning a `boolean`
+  * they are not reduction operations, since they are *short-circuiting terminal operations*
+  * depending on the data and the predicate, these methods may or may not terminate for infinite streams (but `allMatch` probably always runs forever)
+* `forEach(Consumer<? super T>)`, with return type `void`
+  * it is the "Stream equivalent of looping"
+  * it is not a reduction operation, since it does not return any result but instead relies on the Consumer's side-effects
+  * it does *not terminate* for infinite streams
+* overloaded method `reduce`, e.g. the above-mentioned `reduce(U, BiFunction<U, ? super T, U>, BinaryOperator<U>)`, returning a `U`
+  * this above-mentioned overload of `reduce` is very powerful, as mentioned earlier, and many terminal operations can be understood in terms of `reduce`
+  * there are also "friendly" overloads if the type does not change, namely `reduce(T, BinaryOperator<T>)` (returning `T`) and `reduce(BinaryOperator<T>)` (returning `Optional<T>`)
+  * clearly, *reduction* processes all elements so does *not terminate* for infinite streams
+* overloaded *mutable reduction* method `collect`, e.g. `collect(Collector<? super T, A, R>)`, returning an `R`
+  * this is a special case of reduction, namely a *mutable reduction*, where the same mutable object is used while accumulating (for efficiency, typically)
+  * a simplified static method signature for obtaining a `Collector<T, R, R>` (input `T`, output `R`) is `Collector.of(Supplier<R>, BiConsumer<R, T>, BinaryOperator<R>)`
+  * looking at the signature of method `Collector.of`, note that this is indeed about side effects and *mutability*
+  * class `Collectors` contains many static methods to obtain a `Collector`, which is used to produce collections, strings (via `StringBuilder`), primitives etc.
+  * indeed, `collect` calls can be (naively) rewritten in terms of `reduce`, so *collect* is about *reduction*
+  * the other overload (where we do not pass a `Collector`) is `collect(Supplier<R>, BiConsumer<R, ? super T>, BiConsumer<R, R>)`, returning `R`
+  * clearly, *mutable reduction* processes all elements so does *not terminate* for infinite streams
+
+Some static *Collector factory methods* in class `Collectors` are:
+* `toList()` and `toSet()`, which can be understood in terms of `toCollection(ArrayList::new)` and `toCollection(HashSet::new)`, respectively
+* `toCollection(Supplier<C>)` where `C` is a collection type, which can be understood in terms of direct `Collector` creation with static method `Collector.of`
+* overloads of `joining`, to produce a `String` from the Stream
+* collectors that produce primitive wrappers, such as `summingInt(ToIntFunction<? super T>)` and `averagingDouble(ToDoubleFunction<? super T>)`
+* collectors that collect multiple statistics in one go (count, average, sum etc.), e.g. `summarizingDouble(ToDoubleFunction<? super T>)`
+* `maxBy(Comparator<? super T>)` etc., creating a collector that returns an `Optional<T>`
+* collectors that produce `Map` instances, such as overloads of `toMap`, `groupingBy` and `partitioningBy`
+* `reducing` collectors, which look like alternatives to direct `reduce` calls instead of `collect` calls
+
+There are also *Collector factory methods* that *transform or even combine Collectors*, such as:
+* `collectingAndThen`, taking a Collector and a "post-processing function"
+* `teeing`, creating a composite of 2 downstream collectors
+* collectors mimicking some intermediate operations, e.g.`filtering`, `mapping`, `flatMapping`
+
+Of course, there is always the option to create a *Collector* from scratch, with method `Collector.of`, if needed.
+
+#### Using common intermediate operations
+
+TODO
