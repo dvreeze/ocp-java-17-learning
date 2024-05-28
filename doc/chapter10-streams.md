@@ -111,8 +111,12 @@ Some important differences between *intermediate operations* and the *terminal o
 contents of the Stream are combined into a single primitive or `Object`. Typical reduction results are primitives or
 *collections*.
 
-A very powerful Stream *reduction operation*, in terms of which many terminal operations can be understood, is
-`public <U> U reduce(U identity, BiFunction<U, ? super T, U> accumulator, BinaryOperator<U> combiner)`.
+A very powerful Stream *reduction operation*, in terms of which many terminal operations can be understood, is:
+
+```java
+public <U> U reduce(U identity, BiFunction<U, ? super T, U> accumulator, BinaryOperator<U> combiner);
+```
+
 With the `identity` and `accumulator` method parameters the `reduce` method *loops* over the stream, and the `combiner`
 method parameter is useful for parallel streams (to combine partial results).
 
