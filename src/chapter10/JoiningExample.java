@@ -69,7 +69,7 @@ public class JoiningExample {
     }
 
     private static void append(StringBuilder sb, String toAppend, String delimiter, String prefix) {
-        if (!sb.toString().equals(prefix)) {
+        if (!sb.toString().equals(prefix) && !sb.isEmpty()) {
             sb.append(delimiter);
         }
         sb.append(toAppend);
