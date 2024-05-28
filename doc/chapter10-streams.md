@@ -447,7 +447,9 @@ List<String> words = List.of("this", "is", "very", "challenging");
 // Creates a Map containing pairs like 4 -> [ "THIS", "VERY" ]
 Map<Integer, List<String>> lengthToWordsMap =
         words.stream().collect(
-                Collectors.groupingBy(String::length, Collectors.mapping(String::toUpperCase, Collectors.toList())));
+                Collectors.groupingBy(
+                        String::length,
+                        Collectors.mapping(String::toUpperCase, Collectors.toList())));
 ```
 
 Finally, be aware of method `Collectors.teeing(downstreamCollector1, downstreamCollector2, mergingFunction)`.
