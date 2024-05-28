@@ -231,8 +231,47 @@ stringList.stream()
 When reasoning about *stream pipeline evaluation order*, do not think in terms of "intermediate collections" (there are not
 any), but think in terms of *lazy evaluation*, and the pipeline trying to *entirely process one Stream element at a time*,
 to the extent possible. Of course, sorting does not allow complete one-element-at-a-time processing, but to the extent
-that this is possible this will be done. This should help to get a *mental picture* of evaluation order in stream processing.
+that this is possible this will be the evaluation order. This should help to get a *mental picture* of evaluation order in
+stream processing.
 
 ### Working with primitive streams
 
-TODO
+There are no dedicated (non-generic) collections for primitive types (the type variable for the collection element type is instantiated
+with a wrapper type instead), but there are *arrays of primitives* (such as `byte[]`), and there are *Optional* types
+for primitives `int`, `long` and `double`, namely `OptionalInt`, `OptionalLong` and `OptionalDouble`.
+
+Analogously, there are non-generic *Stream types* `IntStream`, `LongStream` and `DoubleStream`. Not only are these
+custom Stream types more efficient for primitives (by avoiding lots of boxing/unboxing, at least in theory), but they
+also contain custom methods that make sense for these specific Stream types. `IntStream` is useful for primitive types
+`int`, `char`, `short` and `byte`. `DoubleStream` is useful for primitive types `double` and `float`.
+
+As an example of a "custom Stream method", interface type `DoubleStream` has method `average()`, returning an `OptionalDouble`.
+
+*Creation* of *primitive streams* is analogous to creation of *Object Streams*. For example, there is static method
+`DoubleStream.iterate(double, DoubleUnaryOperator)`, returning a `DoubleStream`. Indeed, these methods work entirely
+with primitives (in this case "double" values), and use no generics at all.
+
+For `IntStream` and `LongStream` (and NOT for `DoubleStream`) there are also static factory methods to create "ranges":
+* `range(long, Long)` and `rangeClosed(long, long)` for `LongStream`, and similar methods for `IntStream`
+
+*Terminal operations* for primitive streams are also relatively easy to predict, and quite similar to those for Object Streams.
+Some differences (other than non-generic parameter and return types) are:
+* methods `min()` and `max()` do not take any Comparator parameter, returning `OptionalDouble` for `DoubleStream` etc.
+* there are only 2 overloaded `reduce` functions, and for `DoubleStream` they are `reduce(double, DoubleBinaryOperator)` and `reduce(DoubleBinaryOperator)`, the latter returning `OptionalDouble`
+* method `collect` is not overloaded, for `DoubleStream` we have `collect(Supplier<R>, ObjDoubleConsumer<R>, BiConsumer<R, R>)`
+* as said earlier, there are some "custom terminal operations", such as (for `DoubleStream`) `average()` (returning `OptionalDouble`) and `sum()` (returning `double`)
+* in particular, there are also `summaryStatistics()` methods
+
+The *intermediate operations* that leave the "kind of stream" the same (so operations that leave a `DoubleStream` a `DoubleStream` etc.)
+are easy to predict as well, knowing the "Object stream" counterparts. For example:
+* `DoubleStream` method `flatMap(DoubleFunction<? extends DoubleStream>)` returns a `DoubleStream`, and `flatMap` for the 2 other primitive streams are quite similar
+* `DoubleStream` method `map(DoubleUnaryOperator)` returns a `DoubleStream`, and `map` for the 2 other primitive streams are quite similar
+* method `sorted()` does not have any Comparator parameter
+
+There are also several *intermediate operations* to "hop between different kinds of streams". For example:
+* `boxed()` turns a primitive stream into a stream of the corresponding primitive wrappers (as a convenience method, but it is trivial to implement in terms of `mapToObj`)
+* functions like `mapToInt`, `mapToLong` and `mapToDouble` to "hop between different kinds of primitive streams"
+* functions like `mapToObj` to "hop from primitive stream to Object stream"
+* `LongStream` has convenience method `asDoubleStream()`, and `IntStream` has convenience methods `asLongStream()` and `asDoubleStream()`
+* `Stream<T>` has methods like `flatMapToDouble(Function<? super T, ? extends DoubleStream>)` etc.
+* similarly, `Stream<T>` has methods like `mapToDouble(ToDoubleFunction<? super T>)` etc.
