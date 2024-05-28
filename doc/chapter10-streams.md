@@ -120,13 +120,15 @@ public <U> U reduce(U identity, BiFunction<U, ? super T, U> accumulator, BinaryO
 With the `identity` and `accumulator` method parameters the `reduce` method *loops* over the stream, and the `combiner`
 method parameter is useful for parallel streams (to combine partial results).
 
+*Reduction operations* process the entire Stream, and therefore do *not terminate* for *infinite streams*.
+
 Some common Stream *terminal operations* are:
 * `count()`, returning a `long`
   * it is a *reduction operation*, and is equivalent to `reduce(0L, (acc, nextElem) -> acc + 1L, Long::sum)`
-  * it does *not terminate* for infinite streams
+  * as a reduction operation, it does *not terminate* for infinite streams
 * `min(Comparator<? super T>)` and `max(Comparator<? super T>)`, both returning an `Optional<T>`
   * they are *reduction operations*, and can easily be written as equivalent (3-parameter) `reduce` calls
-  * they do *not terminate* for infinite streams
+  * as reduction operations, they do *not terminate* for infinite streams
 * `findFirst()` and `findAny()`, both returning an `Optional<T>` (`findAny` may return an element that is not the first one)
   * they are not reduction operations, since they typically return without processing all of the elements
   * they *do terminate* for infinite streams
@@ -161,7 +163,7 @@ Some static *Collector factory methods* in class `Collectors` are:
 * `reducing` collectors, which look like alternatives to direct `reduce` calls instead of `collect` calls
 
 There are also *Collector factory methods* that *transform or even combine Collectors*, such as:
-* `collectingAndThen`, taking a Collector and a "post-processing function"
+* `collectingAndThen`, taking a Collector and a "post-processing function" (e.g. the collector gradually "fills" a `StringBuilder`, and the "post-processing function turns that into a `String`)
 * `teeing`, creating a composite of 2 downstream collectors
 * collectors mimicking some intermediate operations, e.g.`filtering`, `mapping`, `flatMapping`
 
