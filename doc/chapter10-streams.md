@@ -171,4 +171,68 @@ Of course, there is always the option to create a *Collector* from scratch, with
 
 #### Using common intermediate operations
 
+*Intermediate operations* transform Streams, and are *lazily evaluated*, as explained earlier in some detail.
+
+A very powerful `Stream<T>` *intermediate operation*, in terms of which many intermediate operations can be understood, is:
+
+```java
+public <R> Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper);
+```
+
+The `flatMap` method maps each element in the stream to another stream, and then "flattens" the result (turning a stream
+of streams of `R` into a flattened stream of `R`).
+
+Note that in the "Scala world" so-called *monads* can roughly be considered *flat-mappable* data structures, and their
+power is well-known in that community (and also elsewhere, of course).
+
+Some other *intermediate operations* (that return `Stream<T>` unless said otherwise) are:
+* `filter(Predicate<? super T>)` (which is easy to understand in terms of `flatMap`)
+* `map(Function<? super T, ? extends R>)`, returning a `Stream<R>` (which is easy to understand in terms of `flatMap`)
+* `distinct()`, to remove duplicates (according to method `Object.equals`)
+* `skip(long)` and `limit(long)`, the latter potentially turning an infinite stream into a finite one
+* `sorted()` and `sorted(Comparator<? super T>)` (take care not to call these methods on infinite streams)
+* `peek(Consumer<? super T>)`
+  * it is like "forEach as intermediate operation" that does not alter the stream
+  * therefore it is great for debugging, provided we do not change the data in the Consumer
+
+As said, some intermediate operations can be understood in terms of `flatMap`. For example:
+
+```java
+var xs = Stream.iterate(0L, n -> n <= 100, n -> n + 1).toList();
+
+// The following 2 variables are equal
+var divisibleBy10 = xs.stream().filter(n -> n % 10 == 0).toList();
+var alsoDivisibleBy10 = xs.stream().flatMap(n -> (n % 10 == 0) ? Stream.of(n) : Stream.empty()).toList();
+
+// The following 2 variables are equal
+var timesTwo = xs.stream().map(n -> n * 2).toList();
+var alsoTimesTwo = xs.stream().flatMap(n -> Stream.of(n * 2)).toList();
+```
+
+*Stream concatenation* can be achieved with static method `Stream.concat(Stream<? extends T>, Stream<? extends T>)`.
+
+#### Putting together the pipeline
+
+*Stream pipelines* express *intent*. That is, they express the *WHAT* rather than the *HOW*, which is a good thing.
+They support *functional programming* (not according to purists, though), and many intermediate operations are conceptually
+*HOFs* (i.e. *higher-order functions*).
+
+For example, look at how the following example (from the book) indeed shows *intent*, and consider what the code would look
+like without streams but with loops etc.:
+
+```java
+stringList.stream()
+    .filter(s -> s.length() <= 4)
+    .sorted()
+    .limit(2)
+    .forEach(System.out::println);
+```
+
+When reasoning about *stream pipeline evaluation order*, do not thing in terms of "intermediate collections" (there are not
+any), but think in terms of *lazy evaluation*, and the pipeline trying to *entirely process one Stream element at a time*,
+to the extent possible. Of course, sorting does not allow complete one-element-at-a-time processing, but to the extent
+that this is possible this will be done. This should help to get a *mental picture* of stream processing.
+
+### Working with primitive streams
+
 TODO
