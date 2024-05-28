@@ -111,7 +111,7 @@ Some important differences between *intermediate operations* and the *terminal o
 contents of the Stream are combined into a single primitive or `Object`. Typical reduction results are primitives or
 *collections*.
 
-A very powerful Stream *reduction operation*, in terms of which many terminal operations can be understood, is:
+A very powerful `Stream<T>` *reduction operation*, in terms of which many terminal operations can be understood, is:
 
 ```java
 public <U> U reduce(U identity, BiFunction<U, ? super T, U> accumulator, BinaryOperator<U> combiner);
@@ -122,7 +122,7 @@ method parameter is useful for parallel streams (to combine partial results).
 
 *Reduction operations* process the entire Stream, and therefore do *not terminate* for *infinite streams*.
 
-Some common Stream *terminal operations* are:
+Some common `Stream<T>` *terminal operations* are:
 * `count()`, returning a `long`
   * it is a *reduction operation*, and is equivalent to `reduce(0L, (acc, nextElem) -> acc + 1L, Long::sum)`
   * as a reduction operation, it does *not terminate* for infinite streams
