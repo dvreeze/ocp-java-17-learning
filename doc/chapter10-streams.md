@@ -160,7 +160,7 @@ Some static *Collector factory methods* in class `Collectors` are:
 * collectors that collect multiple statistics in one go (count, average, sum etc.), e.g. `summarizingDouble(ToDoubleFunction<? super T>)`
 * `maxBy(Comparator<? super T>)` etc., creating a collector that returns an `Optional<T>`
 * collectors that produce `Map` instances, such as overloads of `toMap`, `groupingBy` and `partitioningBy`
-* `reducing` collectors, which look like alternatives to direct `reduce` calls, coded in terms of `collect` calls
+* `reducing` collectors, which look like alternatives to direct `reduce` calls, but used in `collect` calls
 
 There are also *Collector factory methods* that *transform or even combine Collectors*, such as:
 * `collectingAndThen`, taking a Collector and a "post-processing function" (e.g. the collector gradually "fills" a `StringBuilder`, and the "post-processing function" turns that into a `String`)
