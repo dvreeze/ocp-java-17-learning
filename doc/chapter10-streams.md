@@ -238,7 +238,8 @@ stream processing.
 
 There are no dedicated (non-generic) collections for primitive types (the type variable for the collection element type is instantiated
 with a wrapper type instead), but there are *arrays of primitives* (such as `byte[]`), and there are *Optional* types
-for primitives `int`, `long` and `double`, namely `OptionalInt`, `OptionalLong` and `OptionalDouble`.
+for primitives `int`, `long` and `double`, namely `OptionalInt`, `OptionalLong` and `OptionalDouble`. There are also
+"custom" *functional interface* types for primitives, as we have seen. For example: `LongPredicate`, `IntToDoubleFunction`.
 
 Analogously, there are non-generic *Stream types* `IntStream`, `LongStream` and `DoubleStream`. Not only are these
 custom Stream types more efficient for primitives (by avoiding lots of boxing/unboxing, at least in theory), but they
