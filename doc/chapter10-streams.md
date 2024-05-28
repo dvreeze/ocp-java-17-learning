@@ -280,3 +280,44 @@ There are also several *intermediate operations* to "hop between different kinds
 Several terminal operations for primitive streams return "optional types" like `OptionalDouble`, `OptionalLong` and `OptionalInt`.
 These types are quite similar in their API to `Optional<T>`. The most important differences are that instead of `get()`
 there are methods like `getAsDouble()` (for `OptionalDouble`), to make clear that (specific) primitives are retrieved.
+
+### Working with advanced stream pipeline concepts
+
+#### Linking streams to the underlying data
+
+Recall that stream pipelines are executed no earlier than *when the terminal operation is called*. So the following returns 3:
+
+```java
+var people = new ArrayList<String>();
+people.addAll(List.of("Alex", "Bjorn", "Chris"));
+
+// The stream pipeline is not yet executed
+var peopleStream = people.stream().filter(s -> s.startsWith("A"));
+
+people.addAll(List.of("Andre", "Amy", "Christina"));
+
+// Only now the stream pipeline will run, and the underlying List is still the same object in memory
+var filteredPeopleCount = peopleStream.count();
+
+// Prints 3, not 1
+System.out.println(filteredPeopleCount);
+```
+
+#### Chaining Optionals
+
+For type `java.util.Optional<T>` there are methods like `filter`, `map` and `flatMap`. For example:
+* `flatMap(Function<? super T, ? extends Optional<? extends U>>)`, returning an `Optional<U>`.
+
+This is quite convenient. It prevents us from having to transform "optionals" using the Stream API. It is also safe,
+because these "Optional method chains" work exclusively with `Optional`, thus preventing us from having to call functions
+like `findFirst()`.
+
+Note that these "higher-order functions" exist for `Optional<T>`, but NOT for `OptionalDouble`, `OptionalLong` and `OptionalInt`.
+
+A side-note on *functional interfaces and checked exceptions*: most functional interfaces do not declare any checked exceptions.
+A strategy that works in these cases is to wrap checked exceptions in unchecked exceptions in code that is used in Suppliers
+and other functional interfaces.
+
+#### Using a Spliterator
+
+
