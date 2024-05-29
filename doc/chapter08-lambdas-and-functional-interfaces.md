@@ -64,7 +64,7 @@ Note, however, that the following methods do not count as abstract methods, rega
 After all, these `java.lang.Object` instance methods are implemented by all Java objects, whether overridden or not. Mind
 the exact method signatures when checking the abstract method count!
 
-If an interface is intended to be a functional interface, it makes sense to use the `FunctionalInterface` annotation
+If an interface is intended to be a functional interface, it makes sense to use the `java.lang.FunctionalInterface` annotation
 to make that intention clear to the compiler (and readers of the code), leading to a compilation error if the interface
 is not a functional interface.
 
