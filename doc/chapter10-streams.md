@@ -264,6 +264,9 @@ custom Stream types more efficient for primitives (by avoiding lots of boxing/un
 also contain custom methods that make sense for these specific Stream types. `IntStream` is useful for primitive types
 `int`, `char`, `short` and `byte`. `DoubleStream` is useful for primitive types `double` and `float`.
 
+Below, wherever it makes sense, and unless stated otherwise, whatever is said about one primitive stream type (e.g.
+`DoubleStream`) also holds for the other 2 primitive stream types.
+
 As an example of a "custom Stream method", interface type `DoubleStream` has method `average()`, returning an `OptionalDouble`.
 
 *Creation* of *primitive streams* is analogous to creation of *Object Streams*. For example, there is static method
