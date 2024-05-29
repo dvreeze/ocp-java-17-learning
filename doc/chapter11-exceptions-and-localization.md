@@ -95,8 +95,8 @@ These helpful exception messages can be disabled in the `java` command by JVM op
 
 Some *checked exceptions* to know by heart are:
 * `java.io.IOException`, thrown programmatically when there is a problem reading or writing a file
-  * `java.io.FileNotFoundException`, thrown programmatically when referencing a file that does not exist
-  * `java.io.NotSerializableException`, thrown when attempting to (de)serialize a non-serializable class
+  * subtype `java.io.FileNotFoundException`, thrown programmatically when referencing a file that does not exist
+  * subtype `java.io.NotSerializableException`, thrown when attempting to (de)serialize a non-serializable class
 * `java.text.ParseException`, which indicates an input parsing problem
 * `java.sql.SQLException`, which is an exception related to database access (the JDBC API)
 
