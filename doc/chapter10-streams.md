@@ -176,6 +176,17 @@ For example, `filtering` has method signature `filtering(Predicate<? super T>, C
 
 Of course, there is always the option to create a *Collector* from scratch, with method `Collector.of`, if needed.
 
+Clearly, the "Collector system" is very powerful for *mutable Stream reductions*. Mutable reduction operations on streams
+can also be understood (more verbosely) in terms of applying collectors. For example:
+
+```java
+List<Integer> intRange = IntStream.range(0, 20).boxed().toList();
+
+// Below, max1 and max2 are equal according to the "equals" method
+Optional<Integer> max1 = intRange.stream().max(Comparator.naturalOrder());
+Optional<Integer> max2 = intRange.stream().collect(Collectors.maxBy(Comparator.naturalOrder()));
+```
+
 #### Using common intermediate operations
 
 *Intermediate operations* transform Streams, and are *lazily evaluated*, as explained earlier in some detail.
