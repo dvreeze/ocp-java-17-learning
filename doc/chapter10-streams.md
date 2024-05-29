@@ -138,7 +138,7 @@ Some common `Stream<T>` *terminal operations* are:
   * they *do terminate* for infinite streams
 * `allMatch(Predicate<? super T>)`, `anyMatch(Predicate<? super T>)` and `noneMatch(Predicate<? super T>)`, all returning a `boolean`
   * they are not reduction operations, since they are *short-circuiting terminal operations*
-  * depending on the data and the predicate, these methods may or may not terminate for infinite streams (but `allMatch` and `noneMatch` probably always run forever)
+  * depending on the data and the predicate, these methods may or may not terminate for infinite streams
 * `forEach(Consumer<? super T>)`, with return type `void`
   * it is the "Stream equivalent of looping"
   * it is not a reduction operation, since it does not return any result but instead relies on the Consumer's side-effects
