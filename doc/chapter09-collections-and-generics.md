@@ -240,7 +240,7 @@ called on `null` values, but it may return `null` to mark the entry for removal.
 Finally, the `java.util.Map<K, V>` interface has the following *looping (instance) method*:
 * (default method) `forEach(BiConsumer<K, V>)` (return type `void`), looping through each key-value pair
 
-Obviously, some methods are convenience methods that are easily implemented in terms of other methods (e.g. `isEmpty()` and `containsKey(Object)`).
+Obviously, some methods are convenience methods that are easily implemented (naively) in terms of other methods (e.g. `isEmpty()` and `containsKey(Object)`).
 
 ### Comparing collection types
 
