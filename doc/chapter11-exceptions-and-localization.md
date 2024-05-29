@@ -31,9 +31,9 @@ about that.
 
 There are 2 kinds of exceptions:
 * *Checked exceptions*; their type is or extends `java.lang.Exception`, but not its subtype `java.lang.RuntimeException`
-* *Unchecked exceptions* (or *runtime exceptions*); their type is or extends `java.lang.RuntimeException`
+* *Unchecked exceptions* (or *runtime exceptions*); their type is or extends `java.lang.RuntimeException` (which extends `java.lang.Exception`)
 
-For *checked exceptions* (and only for checked exceptions) we hava the *handle or declare rule*. That is, if a method
+For *checked exceptions* (and only for checked exceptions) we have the *handle or declare rule*. That is, if a method
 throws a checked exception, it must:
 * either *handle* the exception itself, in a *try-catch block*
 * or *declare in the method declaration that it may throw the exception* (using keyword `throws`, as opposed to `throw` which is used for throwing exceptions)
