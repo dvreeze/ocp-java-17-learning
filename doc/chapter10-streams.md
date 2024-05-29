@@ -233,7 +233,7 @@ var alsoTimesTwo = xs.stream().flatMap(n -> Stream.of(n * 2)).toList();
 
 *Stream pipelines* express *intent*. That is, they express the *WHAT* rather than the *HOW*, which is a good thing.
 They support *functional programming* (not according to purists, though), and many intermediate operations are conceptually
-*HOFs* (i.e. *higher-order functions*).
+*HOFs* (i.e. *higher-order functions*, which are functions that take and/or return functions).
 
 For example, look at how the following example (from the book) indeed shows *intent*, and consider what the code would look
 like without streams but with loops etc.:
