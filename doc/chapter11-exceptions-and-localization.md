@@ -98,7 +98,7 @@ Some *checked exceptions* to know by heart are:
   * `java.io.FileNotFoundException`, thrown programmatically when referencing a file that does not exist
   * `java.io.NotSerializableException`, thrown when attempting to (de)serialize a non-serializable class
 * `java.text.ParseException`, which indicates an input parsing problem
-* `java.sql.SQLException`, which is a database-access-related exception
+* `java.sql.SQLException`, which is an exception related to database access (the JDBC API)
 
 Some *error* types are:
 * `java.lang.ExceptionInInitializerError`, thrown when a static initializer throws an unhandled exception
