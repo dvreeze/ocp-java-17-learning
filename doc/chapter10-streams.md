@@ -473,3 +473,20 @@ Map<Integer, List<String>> lengthToWordsMap =
 Finally, be aware of method `Collectors.teeing(downstreamCollector1, downstreamCollector2, mergingFunction)`.
 It allows us to go only once through the stream, but still using 2 collectors on that stream, and combine the
 collector results afterwards.
+
+### Check lists
+
+How to quickly check *stream pipelines*:
+* Is the stream pipeline *sound and complete* in terms of the use of intermediary and terminal operations?
+  * So don't we *erroneously reuse an already closed stream*?
+  * Do we have 0 or more *intermediate operations* followed by at most *one terminal operation*?
+  * Indeed, do we have *exactly one terminal operation at the end*, for else the pipeline does not run?
+  * Are stream pipeline results picked up or ignored?
+* Especially for *infinite streams*, reason correctly about *evaluation order* of the stream pipeline (once the terminal operation is called)
+  * In particular, *think in terms of one stream element processed (completely) at a time*, to the extent possible (sorting complicates this, of course)
+  * So do *not think in terms of intermediate collections, for there aren't any* in a single stream pipeline (with one terminal operation at the end)
+  * Of course, keep *short-circuiting* behaviour in mind (for `allMatch` etc.)
+* Mind the *types of streams and results* in a stream pipeline, and the operations that are allowed
+  * Mind correct "hopping between primitive and non-primitive streams"
+  * Especially with "primitive streams", mind the operations that are and are not allowed (e.g. you cannot pass a `Collector` to a `collect` call in primitive streams)
+* Mind the difference between *throwing an exception* and *returning an exception as lambda result*
