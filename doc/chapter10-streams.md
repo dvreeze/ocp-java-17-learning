@@ -103,7 +103,7 @@ Some important differences between *intermediate operations* and the *terminal o
 *Creating (potentially) infinite streams*:
 * Static method `Stream.generate(Supplier<? extends T>)`
 * Static method `Stream.iterate(T, UnaryOperator<T>)`
-* Static method `Stream.iterate(T, Predicate<? super T>, UnaryOperator<t>)` (potentially finite, depending on the "loop condition")
+* Static method `Stream.iterate(T, Predicate<? super T>, UnaryOperator<T>)` (potentially finite, depending on the "loop condition")
 
 #### Using common terminal operations
 
