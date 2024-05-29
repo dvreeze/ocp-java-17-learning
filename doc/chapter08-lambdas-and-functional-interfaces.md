@@ -221,6 +221,10 @@ For *primitives* (`double`, `int`, `long`, and in one case `boolean`) there are 
   * `DoubleConsumer` with SAM signature `accept(double)` and return type `void`; analogous functional interfaces for `int` and `long`
   * `ObjDoubleConsumer<T>` with SAM signature `accept(T, double)` and return type `void`; analogous functional interfaces for `int` and `long`
 
+Note that above we do not have any functional interfaces where the abstract method has 3 or more parameters. On the other
+hand, Java offers *records*, thus making the creation of ad-hoc data structures quite practical, also for "compound method
+parameters". This illustrates that modern Java (with its language features and standard API) "hangs well together".
+
 ### Working with variables in lambdas
 
 From a *lambda body* inside a method we can access:
