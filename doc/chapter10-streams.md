@@ -88,7 +88,7 @@ Streams may be *finite* or *infinite*. This is not clearly visible from the code
 
 Some important differences between *intermediate operations* and the *terminal operation* are:
 * Each useful stream pipeline *ends with exactly 1 terminal operation* (a terminal operation cannot exist multiple times in a stream pipeline), but there can be *zero or more intermediate operations*
-* Intermediate operations *return a (transformed) Stream*, whereas a terminal operation *does not return a Stream*
+* Intermediate operations *return a (transformed) Stream*, whereas a terminal operation *does not return a Stream*, so *the return type of the operation clearly separates intermediate from terminal operations*
 * When calling an intermediate operation, it is *not yet evaluated*, whereas *on calling the terminal operation the pipeline runs*
 * After an intermediate operation call the stream is still valid, but *after the terminal operation the stream is closed* and no longer available for processing
 
