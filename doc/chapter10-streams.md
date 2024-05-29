@@ -490,3 +490,5 @@ How to quickly check *stream pipelines*:
   * Mind correct "hopping between primitive and non-primitive streams"
   * Especially with "primitive streams", mind the operations that are and are not allowed (e.g. you cannot pass a `Collector` to a `collect` call in primitive streams)
 * Mind the difference between *throwing an exception* and *returning an exception as lambda result*
+
+And, as always, read questions and answers carefully!
