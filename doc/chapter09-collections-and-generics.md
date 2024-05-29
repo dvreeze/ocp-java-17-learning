@@ -69,7 +69,7 @@ Two *main implementations* of interface `java.util.List<E>` are:
 * Class `java.util.ArrayList<E>`
   * It is like a *resizable array*, growing when elements are added
   * It is optimized for (index-based) element lookup (which takes constant time)
-* Class `java.util.LinkedList<E>`, which implements collection interfaces `java.util.List<E>` and `java.util.Deque<T>`
+* Class `java.util.LinkedList<E>`, which implements collection interfaces `java.util.List<E>` and `java.util.Deque<E>`
   * Adding elements to beginning and end (or removing elements at beginning and end) takes constant time (using this List as a Deque)
   * Yet looking up elements based on an int index takes linear time
 
