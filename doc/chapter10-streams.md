@@ -280,7 +280,7 @@ For `IntStream` and `LongStream` (and NOT for `DoubleStream`) there are also sta
 Some differences (other than non-generic parameter and return types) are:
 * methods `min()` and `max()` do not take any Comparator parameter, returning `OptionalDouble` for `DoubleStream` etc.
 * there are only 2 overloaded `reduce` functions, and for `DoubleStream` they are `reduce(double, DoubleBinaryOperator)` and `reduce(DoubleBinaryOperator)`, the latter returning `OptionalDouble`
-* method `collect` is not overloaded, for `DoubleStream` we have `collect(Supplier<R>, ObjDoubleConsumer<R>, BiConsumer<R, R>)`
+* method `collect` is not overloaded, and for `DoubleStream` we just have `collect(Supplier<R>, ObjDoubleConsumer<R>, BiConsumer<R, R>)`
 * as said earlier, there are some "custom terminal operations", such as (for `DoubleStream`) `average()` (returning `OptionalDouble`) and `sum()` (returning `double`)
 * in particular, there are also `summaryStatistics()` methods
 
