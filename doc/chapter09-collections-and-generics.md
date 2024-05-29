@@ -244,7 +244,7 @@ Obviously, some methods are convenience methods that are easily implemented (nai
 
 ### Comparing collection types
 
-The collection types that are *unmodifiable* or that *involve sorting* do *not allow null values*.
+The collection types that are *unmodifiable* (created with method `List.copyOf` etc.) or that *involve sorting* do *not allow null values*.
 
 To determine the correct collection type given a problem description, first choose the *collection interface* and then
 the most appropriate *collection class* implementing that collection interface.
