@@ -120,6 +120,10 @@ public <U> U reduce(U identity, BiFunction<U, ? super T, U> accumulator, BinaryO
 With the `identity` and `accumulator` method parameters the `reduce` method *loops* over the stream, and the `combiner`
 method parameter is useful for parallel streams (to combine partial results).
 
+Ignoring the `combiner` parameter and parallel stream processing for the moment, method `reduce` *recursively creates
+an accumulated result*, by starting with `identity` and then repeatedly calling function `accumulator`, passing the next
+element in the stream as second argument to that function, until the end of the stream has been reached.
+
 *Reduction operations* process the entire Stream, and therefore do *not terminate* for *infinite streams*.
 
 Some common `Stream<T>` *terminal operations* are:
