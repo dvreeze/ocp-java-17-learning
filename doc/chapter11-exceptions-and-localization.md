@@ -242,4 +242,54 @@ There is one exception to the rule that the finally-clause runs, and that is if 
 
 ### Automatic resource management
 
-TODO
+*Resources* like database connections should *not leak*. So we should close them in time, preferably *in the same code*
+that opened the connection (ignoring the topic of connection pooling for now).
+
+Try-statements do help, but correctly coding this resource management can become quite verbose and cumbersome, especially
+if there are more resources (e.g. besides a database connection in JDBC, a prepared statement and result set). This is
+where *try-with-resources statements* come in. They perform *automatic resource management*.
+
+The idea is that any class that implements interface `java.lang.AutoCloseable` (or in particular `java.io.Closeable`)
+can be treated as a *resource* in a try-with-resources statement. For example, in the following code the `FileInputStream`
+is automatically closed before leaving this try-with-resources statement:
+
+```java
+// FileInputStream is a Closable and therefore AutoCloseable
+try (var is = new FileInputStream("myfile.txt")) {
+    doSomeFileStuff(is);
+} catch (IOException e) {
+    handleIOException(e);
+}
+```
+
+Yet a `String` is NOT an `AutoCloseable` and can therefore not be used as a resource in a try-with-resources statement.
+
+Under the hood, the Java compiler turns this into a regular try-statement. The "hidden" finally-clause will close the
+resource. It is still possible to add our own finally-clause, but that one would run after the compiler-generated
+hidden one.
+
+If multiple resources are created in a try-with-resources statement, they will be closed *in reverse order*.
+
+The syntax of a try-with-resources statement is as follows:
+
+```
+tryWithResourcesStatement:
+    "try" resourceSpecification block { catchClause } [ "finally" block ]
+
+resourceSpecification:
+    "(" resource { ";" resource } [ ";" ] ")"
+
+resource:
+    localVariableDeclaration
+    variableAccess
+
+variableAccess:
+    expressionName
+    fieldAccess
+
+catchClause:
+    "catch" "(" catchFormalParameter ")" block
+```
+
+Note that before the ending parenthesis of the resource specification, the semicolon there is optional. The semicolon
+is required between the resources, though.
