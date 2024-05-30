@@ -186,4 +186,60 @@ try {
 }
 ```
 
+To show that the *finally-clause, if any, is always executed*, see the following examples, where an exception is thrown
+as a result of the try-statement, but still the finally-clause runs before the try-statement is finished:
 
+```java
+// This will print 1 and 3, and throw an IllegalStateException
+try {
+    System.out.println(1);
+    throw new IllegalStateException();
+} catch (IllegalArgumentException e) {
+    System.out.println(2);
+} finally {
+    System.out.println(3);
+}
+```
+
+```java
+// This will print 1, 2 and 3, and throw an IllegalStateException("Exception handler throwing exception")
+try {
+    System.out.println(1);
+    throw new IllegalStateException();
+} catch (RuntimeException e) {
+    System.out.println(2);
+    throw new IllegalStateException("Exception handler throwing exception");
+} finally {
+    System.out.println(3);
+}
+```
+
+In the following example, the finally-clause determines the value returned:
+
+```java
+int tryThis() {
+    try {
+        System.out.println(1);
+        var randomBoolean = new Random().nextBoolean();
+        if (randomBoolean) throw new IllegalStateException();
+        return -1;
+    } catch (IllegalStateException e) {
+        System.out.println(2);
+        return -2;
+    } finally {
+        System.out.println(3);
+        return -3;
+    }
+}
+
+// This will return -3, and either print 1 and 3 or 1, 2 and 3
+System.out.println(tryThis());
+```
+
+A finally-clause itself may also throw an exception, although typically that is not what is wanted.
+
+There is one exception to the rule that the finally-clause runs, and that is if `System.exit(int)` is called before that.
+
+### Automatic resource management
+
+TODO
