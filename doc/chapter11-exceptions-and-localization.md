@@ -249,7 +249,7 @@ Try-statements do help, but correctly coding this resource management can become
 if there are more resources (e.g. besides a database connection in JDBC, a prepared statement and result set). This is
 where *try-with-resources statements* come in. They perform *automatic resource management*.
 
-The idea is that any class that implements interface `java.lang.AutoCloseable` (or in particular `java.io.Closeable`)
+The idea is that any class that implements interface `java.lang.AutoCloseable` (or in particular its subtype `java.io.Closeable`)
 can be treated as a *resource* in a try-with-resources statement. For example, in the following code the `FileInputStream`
 is automatically closed before leaving this try-with-resources statement:
 
