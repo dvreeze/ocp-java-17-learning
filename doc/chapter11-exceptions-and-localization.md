@@ -112,11 +112,11 @@ Some *error* types are:
 ### Handling exceptions
 
 Java separates the logic that throws an exception from the logic that handles the exception. The latter is done in
-*try statements*. Java 7 introduced "try-with-resources" statements, so I dub the try-statements before Java 7
-"Java 6 try-statements". The syntax is as follows:
+*try statements*. Java 7 introduced "try-with-resources" statements, so I dub the other try-statements "regular try statements".
+The syntax is as follows:
 
 ```
-tryStatementInJava6:
+regularTryStatement:
     "try" block catchClause { catchClause }
     "try" block { catchClause } "finally" block
 
