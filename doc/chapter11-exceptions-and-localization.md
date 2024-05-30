@@ -19,7 +19,7 @@ In particular, see:
 
 When an *exception* is thrown, the *happy path* in the flow is abandoned. After that:
 * either the exception is *handled* by the method itself
-* or the handling of the exception is made the responsibility of the *method caller* (and so on, typically until handled at some point)
+* or the handling of the exception is made the responsibility of the *method caller* (which may make it the responsibility of its caller, and so on)
 
 Exception types are *Java classes*. So it is allowed to store exceptions in variables, for instance. Also, just like is the
 case for all class instances, an exception constructor is invoked with the `new` keyword.
@@ -36,7 +36,7 @@ There are 2 kinds of exceptions:
 For *checked exceptions* (and only for checked exceptions) we have the *handle or declare rule*. That is, if a method
 throws a checked exception, it must:
 * either *handle* the exception itself, in a *try-catch block*
-* or *declare in the method declaration that it may throw the exception* (using keyword `throws`, as opposed to `throw` which is used for throwing exceptions)
+* or *declare in the method declaration that it may throw the exception* (using keyword `throws`, as opposed to `throw` which is used for actually throwing exceptions)
 
 Hence, it is important to *recognize checked exceptions* and violations of the "handle or declare rule" for those exceptions.
 
@@ -49,7 +49,8 @@ It is allowed for a method to declare that it can throw an exception (of a certa
 *Throwable* (and *Error*) instances that are not `Exception` instances are typically never thrown from application code.
 Neither are they typically caught in application code.
 
-Besides code *explicitly throwing an exception* it is quite possible that *exceptions are thrown implicitly*. For example:
+Besides code *explicitly throwing an exception* in application code or third party libraries it is quite possible that
+*exceptions are thrown by the Java platform*. For example:
 * trying to access an object where the *reference is a null pointer*
 * trying to access an array member at an *index that is out of bounds*
 * *dividing by zero*
