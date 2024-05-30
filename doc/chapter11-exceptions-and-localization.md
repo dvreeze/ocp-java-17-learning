@@ -300,7 +300,7 @@ try-block is consistent with the fact that the resource is closed before running
 after that!
 
 If resources are created ahead of time, and only referenced in the "resource specification" as variable name (without
-type), they *must be final of effectively final*.
+type), they *must be final or effectively final*.
 
 #### Understanding suppressed exceptions
 
