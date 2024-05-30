@@ -13,6 +13,9 @@ In particular, see:
 * [TryTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/TryTree.html)
 * [ThrowTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ThrowTree.html)
 
+Below, (simplified) grammars of "try" statements are given. Different alternatives in a grammar rule occur on different lines,
+`{}` means zero-or-more, and `[]` means zero-or-one. Terminal symbols (including keywords) are enclosed in double-quotes.
+
 ### Understanding exceptions
 
 *Exceptions* signal that "something is wrong", which could be a programming error, invalid input, network connection problems etc.
@@ -108,4 +111,79 @@ Some *error* types are:
 
 ### Handling exceptions
 
-TODO
+Java separates the logic that throws an exception from the logic that handles the exception. The latter is done in
+*try statements*. Java 7 introduced "try-with-resources" statements, so I dub the try-statements before Java 7
+"Java 6 try-statements". The syntax is as follows:
+
+```
+tryStatementInJava6:
+    "try" block catchClause { catchClause }
+    "try" block { catchClause } "finally" block
+
+catchClause:
+    "catch" "(" catchFormalParameter ")" block
+```
+
+Recall that a *block* is a *statement that is surrounded by a pair of curly braces*. A block may itself contain many
+statements, such as expression statements that end with a semicolon. So in a try-statement there is a try-block, with
+mandatory enclosing curly braces. The catch-blocks and finally-block, if any, are also blocks, so they too have mandatory
+surrounding curly braces.
+
+Recall that *non-abstract method bodies are also blocks* (so also need the surrounding curly braces), whereas while-loops and
+if-statements do not require the statements within them (i.e. the loop body and the if-branch and else-branch) to be blocks.
+
+The *catchFormalParameter* is typically an exception type followed by a variable name. The scope of that variable is only
+that specific catch-clause. It is a compile-time error for the exception type(s) not to be `Throwable` or a subclass.
+
+Note that there must be at least one catch-clause or finally-clause, and there can be no more than one finally-clause
+(and the finally-clause must come after the catch-clauses, if any).
+
+Processing is as follows in a try-statement:
+1. the try-block runs
+2. either an exception is thrown in the try-block, or it runs successfully (in the latter case the flow "jumps to the finally-clause", if any)
+3. if an exception has been thrown in the try-block, the flow searches for the first catch-clause that can handle the exception
+4. if such a catch-clause has been found, it runs, and the flow goes to the finally-clause, if any, or else processing of the try-statement has finished
+5. in all cases (success or thrown exception, whether handled by a catch-clause or not), at the end the finally-clause runs, if there is any
+
+So in a try-statement, any exception thrown in the try-block is handled by *at most one catch-clause* (or *exception handler*),
+namely the first one that can handle the exception, if there is any.
+
+It is important to recognize *checked and unchecked exceptions*, because of the "handle-or-declare rule", but it is also
+important to recognize *subtype relationships between exception types*. The latter is also important for recognizing
+unreachable catch-clauses (which are treated as a compilation error). For example:
+
+```java
+try {
+    doSomeFileStuff();
+} catch (IOException e) {
+    handleIOException(e);
+} catch (FileNotFoundException e) {
+    handleFileNotFoundException(e); // Unreachable code
+}
+```
+
+It is possible for a catch-clause to be a *multi-catch clause* ("multi-catch block"). For example:
+
+```java
+try {
+    doSomeStuff();
+} catch (IOException | NumberFormatException | ArrayIndexOutOfBoundsException e) {
+    handleIOException(e);
+}
+```
+
+So in this case the *catchFormalParameter* (in the grammar above) has the form `ExcType1 | ExcType2 | ExcType3 excVariable`,
+where the number of exception types can be 2 or more. The different exception types should be unrelated, and should not
+be subtypes of one another, regardless of the order.
+
+So this leads to a compilation error:
+
+```java
+try {
+    doSomeStuff();
+} catch (FileNotFoundException | IOException e) {
+    handleIOException(e);
+}
+```
+
+
