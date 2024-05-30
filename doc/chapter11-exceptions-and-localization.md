@@ -293,3 +293,19 @@ catchClause:
 
 Note that before the ending parenthesis of the resource specification, the semicolon there is optional. The semicolon
 is required between the resources, though.
+
+The *scope of a resource* is only the try-block itself, and not any catch-clauses or optional finally-clause after that!
+The curly braces of the try-block indeed suggest that as well. The fact that the scope of a resource is limited to the
+try-block is consistent with the fact that the resource is closed before running any catch-clauses or finally-clause
+after that!
+
+If resources are created ahead of time, and only referenced in the "resource specification" as variable name (without
+type), they *must be final of effectively final*.
+
+#### Understanding suppressed exceptions
+
+TODO
+
+### Formatting values
+
+TODO
