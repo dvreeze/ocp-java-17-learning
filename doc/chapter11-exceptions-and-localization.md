@@ -308,7 +308,7 @@ type), they *must be final or effectively final*.
 
 It was said before that in a regular try-statement, if the finally-clause throws an exception, that exception "wins" and
 all other exceptions thrown earlier in the try-statement are lost. The same is true for try-with-resources statements
-with explicit finally clause. (Here we ignore the use of method `addSuppressed(Throwable)`, and assume that method is not called.)
+with explicit finally clause. (Here we ignore the use of method `addSuppressed(Throwable)`, and assume that this method is not called.)
 
 Yet what happens if in a try-with-resources statement the try-block throws an exception, and the resource `AutoCloseable.close()`
 methods throw exceptions as well? Then the exception thrown from the try-block is known as the *primary exception*, and
