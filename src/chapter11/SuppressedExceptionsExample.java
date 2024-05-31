@@ -76,47 +76,47 @@ public class SuppressedExceptionsExample {
         }
     }
 
-    public static void throwTwice1() throws Exception {
+    public static void throwMultipleTimes1() throws Exception {
         try {
             throw new Exception("Exception from try-block");
         } finally {
-            throw new Exception("Exception from finally block");
+            if (isAlwaysTrue()) throwExceptionFromFinallyBlock();
         }
     }
 
-    public static void throwTwice2() throws Exception {
+    public static void throwMultipleTimes2() throws Exception {
         try {
             throw new Exception("Exception from try-block");
         } catch (Exception e) {
             throw new Exception("Exception from catch-block");
         } finally {
-            throw new Exception("Exception from finally block");
+            if (isAlwaysTrue()) throwExceptionFromFinallyBlock();
         }
     }
 
-    public static void throwTwice3() throws Exception {
+    public static void throwMultipleTimes3() throws Exception {
         try (var myCloseable = new MyCloseable(1)) {
             myCloseable.run();
         }
     }
 
-    public static void throwTwice4() throws Exception {
+    public static void throwMultipleTimes4() throws Exception {
         try (var myCloseable = new MyCloseable(1)) {
             myCloseable.run();
             throw new Exception("Exception from try-block");
         }
     }
 
-    public static void throwTwice5() throws Exception {
+    public static void throwMultipleTimes5() throws Exception {
         try (var myCloseable = new MyCloseable(1)) {
             myCloseable.run();
             throw new Exception("Exception from try-block");
         } finally {
-            throw new Exception("Exception from finally block");
+            if (isAlwaysTrue()) throwExceptionFromFinallyBlock();
         }
     }
 
-    public static void throwTwice6() throws Exception {
+    public static void throwMultipleTimes6() throws Exception {
         try (var myCloseable1 = new MyCloseable(1);
              var myCloseable2 = new MyCloseable(2)) {
             myCloseable1.run();
@@ -125,7 +125,7 @@ public class SuppressedExceptionsExample {
         }
     }
 
-    public static void throwTwice7() throws Exception {
+    public static void throwMultipleTimes7() throws Exception {
         try (var myCloseable1 = new MyCloseable2(1);
              var myCloseable2 = new MyCloseable2(2)) {
             myCloseable1.run();
@@ -137,7 +137,7 @@ public class SuppressedExceptionsExample {
         }
     }
 
-    public static void throwTwice8() throws Exception {
+    public static void throwMultipleTimes8() throws Exception {
         try (var myCloseable1 = new MyCloseable2(1);
              var myCloseable2 = new MyCloseable2(2)) {
             myCloseable1.runUnsuccessfully();
@@ -145,11 +145,13 @@ public class SuppressedExceptionsExample {
         }
     }
 
-    public static void throwTwice9() throws Exception {
+    public static void throwMultipleTimes9() {
         try (var myCloseable1 = new MyCloseable2(1);
-             var myCloseable2 = new MyCloseable2(2)) {
+             var myCloseable2 = new MyCloseable2(2);
+             var myCloseable3 = new MyCloseable2(3)) {
             myCloseable1.run();
             myCloseable2.run();
+            myCloseable3.run();
         }
     }
 
@@ -172,15 +174,23 @@ public class SuppressedExceptionsExample {
         }
     }
 
+    private static boolean isAlwaysTrue() {
+        return true;
+    }
+
+    private static void throwExceptionFromFinallyBlock() throws Exception {
+        throw new Exception("Exception from finally block");
+    }
+
     public static void main(String[] args) {
-        handleException(SuppressedExceptionsExample::throwTwice1, "Running throwTwice1:");
-        handleException(SuppressedExceptionsExample::throwTwice2, "Running throwTwice2:");
-        handleException(SuppressedExceptionsExample::throwTwice3, "Running throwTwice3:");
-        handleException(SuppressedExceptionsExample::throwTwice4, "Running throwTwice4:");
-        handleException(SuppressedExceptionsExample::throwTwice5, "Running throwTwice5:");
-        handleException(SuppressedExceptionsExample::throwTwice6, "Running throwTwice6:");
-        handleException(SuppressedExceptionsExample::throwTwice7, "Running throwTwice7:");
-        handleException(SuppressedExceptionsExample::throwTwice8, "Running throwTwice8:");
-        handleException(SuppressedExceptionsExample::throwTwice9, "Running throwTwice9:");
+        handleException(SuppressedExceptionsExample::throwMultipleTimes1, "Running throwMultipleTimes1:");
+        handleException(SuppressedExceptionsExample::throwMultipleTimes2, "Running throwMultipleTimes2:");
+        handleException(SuppressedExceptionsExample::throwMultipleTimes3, "Running throwMultipleTimes3:");
+        handleException(SuppressedExceptionsExample::throwMultipleTimes4, "Running throwMultipleTimes4:");
+        handleException(SuppressedExceptionsExample::throwMultipleTimes5, "Running throwMultipleTimes5:");
+        handleException(SuppressedExceptionsExample::throwMultipleTimes6, "Running throwMultipleTimes6:");
+        handleException(SuppressedExceptionsExample::throwMultipleTimes7, "Running throwMultipleTimes7:");
+        handleException(SuppressedExceptionsExample::throwMultipleTimes8, "Running throwMultipleTimes8:");
+        handleException(SuppressedExceptionsExample::throwMultipleTimes9, "Running throwMultipleTimes9:");
     }
 }
