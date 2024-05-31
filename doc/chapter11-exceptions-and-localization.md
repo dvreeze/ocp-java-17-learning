@@ -319,9 +319,10 @@ statement, or "masked" by an exception thrown from the explicit finally-block).
 The *primary exception* knows about the *suppressed exceptions*, which are returned as an array of `Throwable` by method
 `getSuppressed()`.
 
-What happens if in a try-with-resources statement there are multiple resources, all throwing an exception in the `close()`
-method, and no exceptions being thrown from the try-block? In that case the closing of the last resource, which is the
-first one to be automatically closed, will throw the *primary exception*, and the other ones will be *suppressed exceptions*.
+What happens if in a try-with-resources statement there are multiple resources, some or all of them throwing an exception
+in the `close()` method, and no exceptions being thrown from the try-block? In that case the closing of the last declared
+resource, which is the first one to be automatically closed, will throw the *primary exception*, and the other ones will be
+*suppressed exceptions*.
 
 ### Formatting values
 
