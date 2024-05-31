@@ -78,7 +78,7 @@ When printing an exception, we can:
 Some own remarks about exceptions:
 * printing a stack trace or exception message is not really *handling the exception*; the question is: can we *still reason about program state*?
 * very many exceptions *cannot be successfully handled*; that's often ok, let them ripple up to some outer ("framework") layer
-* exceptions should match the "abstraction layer"; this may mean wrapping exceptions in other exceptions may be appropriate
+* exceptions should match the "abstraction layer"; this may mean wrapping exceptions in other exceptions may be appropriate; the wrapped exception can be retrieved with method `getCause()`
 
 ### Recognizing exception classes
 
@@ -237,6 +237,8 @@ System.out.println(tryThis());
 ```
 
 A finally-clause itself may also throw an exception, although typically that is not what is wanted.
+If the finally-clause does throw an exception, this will be the exception thrown by the try-statement, and the other exceptions
+thrown in try-block and/or catch-blocks will be "forgotten".
 
 There is one exception to the rule that the finally-clause runs, and that is if `System.exit(int)` is called before that.
 
@@ -304,7 +306,22 @@ type), they *must be final or effectively final*.
 
 #### Understanding suppressed exceptions
 
-TODO
+It was said before that in a regular try-statement, if the finally-clause throws an exception, that exception "wins" and
+all other exceptions thrown earlier in the try-statement are lost. The same is true for try-with-resources statements
+with explicit finally clause. (Here we ignore the use of method `addSuppressed(Throwable)`, and assume that method is not called.)
+
+Yet what happens if in a try-with-resources statement the try-block throws an exception, and the resource `AutoCloseable.close()`
+methods throw exceptions as well? Then the exception thrown from the try-block is known as the *primary exception*, and
+exceptions thrown from the `AutoCloseable.close()` methods of the resources are *suppressed exceptions*. It is the
+*primary exception* that will be thrown as a result (possibly handled by a subsequent catch-block in that try-with-resources
+statement, or "masked" by an exception thrown from the explicit finally-block).
+
+The *primary exception* knows about the *suppressed exceptions*, which are returned as an array of `Throwable` by method
+`getSuppressed()`.
+
+What happens if in a try-with-resources statement there are multiple resources, all throwing an exception in the `close()`
+method, and no exceptions being thrown from the try-block? In that case the closing of the last resource, which is the
+first one to be automatically closed, will throw the *primary exception*, and the other ones will be *suppressed exceptions*.
 
 ### Formatting values
 
