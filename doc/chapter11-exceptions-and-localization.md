@@ -394,7 +394,7 @@ The 2 main *instance methods* of `DateTimeFormatter` are:
 * `parse(CharSequence)`, returning a `TemporalAccessor` (throwing an unchecked `DateTimeParseException`, a subtype of `DateTimeException`, if unsuccessful)
 
 For convenience, the date/time classes such as `LocalDateTime`, `ZonedDateTime`, `LocalDate`, `LocalTime` have:
-* instance method `format(DateTimeFormatter)`, retuning a `String`, and delegating the call to the `DateTimeFormatter`
+* instance method `format(DateTimeFormatter)`, returning a `String`, and delegating the call to the `DateTimeFormatter`
 * static method `parse(CharSequence, DateTimeFormatter)`, delegating the call to the `DateTimeFormatter`
 
 If we use static method `DateTimeFormatter.ofPattern(String)` or `DateTimeFormatter.ofPattern(String, Locale)` it is
