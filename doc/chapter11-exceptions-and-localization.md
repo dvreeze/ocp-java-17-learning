@@ -391,7 +391,7 @@ instance that is appropriate for the date/time objects to format or parse. An in
 
 The 2 main *instance methods* of `DateTimeFormatter` are:
 * `format(TemporalAccessor)`, returning a `String` and otherwise throwing a `DateTimeException` (where `TemporalAccessor` is a common supertype for all mentioned date/time classes)
-* `parse(CharSequence)`, returning a `TemporalAccessor` (throwing an unchecked `DateTimeParseException` subtype of `DateTimeException` if unsuccessful)
+* `parse(CharSequence)`, returning a `TemporalAccessor` (throwing an unchecked `DateTimeParseException`, a subtype of `DateTimeException`, if unsuccessful)
 
 For convenience, the date/time classes such as `LocalDateTime`, `ZonedDateTime`, `LocalDate`, `LocalTime` have:
 * instance method `format(DateTimeFormatter)`, retuning a `String`, and delegating the call to the `DateTimeFormatter`
