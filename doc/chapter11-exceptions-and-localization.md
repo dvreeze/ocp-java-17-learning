@@ -397,7 +397,7 @@ For convenience, the date/time classes such as `LocalDateTime`, `ZonedDateTime`,
 * instance method `format(DateTimeFormatter)`, retuning a `String`, and delegating the call to the `DateTimeFormatter`
 * static method `parse(CharSequence, DateTimeFormatter)`, delegating the call to the `DateTimeFormatter`
 
-If we use static method `DateTimeFormatter.ofPatterh(String)` or `DateTimeFormatter.ofPattern(String, Locale)` it is
+If we use static method `DateTimeFormatter.ofPattern(String)` or `DateTimeFormatter.ofPattern(String, Locale)` it is
 important to understand the date/time symbols we can use.
 
 They are straightforward for years, months, days, hours, minutes and seconds, with the following additions:
