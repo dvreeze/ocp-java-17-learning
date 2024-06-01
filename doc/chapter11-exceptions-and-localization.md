@@ -449,7 +449,8 @@ Locales can be obtained in the following ways:
 
 #### Localizing numbers
 
-Let's now obtain a `java.text.NumberFormat` for an explicit or the default `Locale`, and use that for formatting and parsing.
+Let's now obtain a `java.text.NumberFormat` for an explicit `Locale` or for the default `Locale`, and use that for formatting
+and parsing.
 
 Abstract class `NumberFormat` has pairs of static methods (one taking a `Locale` and one using the default `Locale`) for
 formatting/parsing numbers, currencies, percentages etc. For example:
