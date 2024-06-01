@@ -326,7 +326,7 @@ resource, which is the first one to be automatically closed, will throw the *pri
 
 ### Formatting values
 
-Recall static `String` method `format(String, Object...)` and `format(Locale, String, Object...)`. These methods allow for
+Recall static `String` methods `format(String, Object...)` and `format(Locale, String, Object...)`. These methods allow for
 formatting strings containing numbers, dates, times etc. See class `java.util.Formatter`.
 
 Sometimes we may need more fine-grained control. Package `java.text` contains a lot of support for (advanced) formatting
@@ -339,7 +339,7 @@ For dates and times it is much better to use the *immutable thread-safe* `DateTi
 #### Formatting numbers
 
 We can obtain an instance of `java.text.NumberFormat` through one of its static factory methods, such as
-`NumberFormat.getInstance()` or `NumberFormat.getInstance(Locale)`. If we want direct control over the patter used,
+`NumberFormat.getInstance()` or `NumberFormat.getInstance(Locale)`. If we want direct control over the pattern used,
 we can use a constructor of subclass `DecimalFormat`, however, for example `DecimalFormat(String)` where we pass the
 pattern.
 
