@@ -326,4 +326,93 @@ resource, which is the first one to be automatically closed, will throw the *pri
 
 ### Formatting values
 
+Recall static `String` method `format(String, Object...)` and `format(Locale, String, Object...)`. These methods allow for
+formatting strings containing numbers, dates, times etc. See class `java.util.Formatter`.
+
+Sometimes we may need more fine-grained control. Package `java.text` contains a lot of support for (advanced) formatting
+and parsing, for example abstract class `java.text.NumberFormat` (as the abstract base class for all number formats).
+
+These formatters are mutable and not thread-safe, while still being somewhat "expensive" to create at runtime.
+
+For dates and times it is much better to use the *immutable thread-safe* formatters in package `java.time.format`.
+
+#### Formatting numbers
+
+We can obtain an instance of `java.text.NumberFormat` through one of its static factory methods, such as
+`NumberFormat.getInstance()` or `NumberFormat.getInstance(Locale)`. If we want direct control over the patter used,
+we can use a constructor of subclass `DecimalFormat`, however, for example `DecimalFormat(String)` where we pass the
+pattern.
+
+There are 2 formatting characters we need to know for `DecimalFormat`:
+* `#`, meaning that the position must be omitted if there is no digit for it
+* `0`, meaning that a `0` must be put in that position if no digit exists for it
+
+For example (taken from the book):
+
+```java
+import java.text.*;
+
+double d = 1234.567;
+
+NumberFormat f1 = new DecimalFormat("###,###,###.0");
+System.out.println(f1.format(d)); // 1,234.6 (note the rounding)
+
+// Leading and trailing zeroes
+NumberFormat f2 = new DecimalFormat("000,000,000.00000");
+System.out.println(f2.format(d)); // 000,001,234.56700
+
+// The next example may not work well with negative numbers
+NumberFormat f3 = new DecimalFormat("Your balance $#,###,###.##");
+System.out.println(f3.format(d)); // Your balance $1,234.57
+```
+
+#### Formatting dates and times
+
+As said above, formatting (and parsing) dates and times is best done with the support for it in package `java.time.format`.
+The formatters are immutable and thread-safe, like the objects formatted (dates and times). Recall that it is important
+to know whether the object to format:
+* has a date component, e.g. `LocalDate`, `LocalDateTime`, `ZonedDateTime`
+* has a time component, e.g. `LocalTime`, `LocalDateTime`, `ZonedDateTime`
+* has a timezone (as opposed to being a "local" date/time), e.g. `ZonedDateTime`
+
+Also recall that `Instant` is the time passed since the epoch (1970-01-01T00:00:00Z), and can easily be converted to a
+`ZonedDateTime`.
+
+Date and time formatting and parsing is done with a `java.time.format.DateTimeFormatter`. It is important to obtain an
+instance that is appropriate for the date/time objects to format or parse. An instance can be obtained in several ways:
+* Predefined formatters:
+  * For example: `DateTimeFormatter.ISO_LOCAL_DATE`, for dates without an offset
+  * For example: `DateTimeFormatter.ISO_LOCAL_TIME`, for times without an offset
+  * For example: `DateTimeFormatter.ISO_LOCAL_DATE_TIME`, for date-times without an offset
+  * For example: `DateTimeFormatter.ISO_ZONED_DATE_TIME`, for date-times with offset and zone
+* Formatters obtained with a static factory method:
+  * For example, `ofPattern(String)`, `ofPattern(String, Locale)`, `ofLocalizedDateTime(FormatStyle)`
+* Using a `DateTimeFormatterBuilder`, which gives maximum control to create formatters
+
+The 2 main *instance methods* of `DateTimeFormatter` are:
+* `format(TemporalAccessor)`, returning a `String` and otherwise throwing a `DateTimeException` (where `TemporalAccessor` is a common supertype for all mentioned date/time classes)
+* `parse(CharSequence)`, returning a `TemporalAccessor` (throwing an unchecked `DateTimeParseException` subtype of `DateTimeException` if unsuccessful)
+
+For convenience, the date/time classes such as `LocalDateTime`, `ZonedDateTime`, `LocalDate`, `LocalTime` have:
+* instance method `format(DateTimeFormatter)`, retuning a `String`, and delegating the call to the `DateTimeFormatter`
+* static method `parse(CharSequence, DateTimeFormatter)`, delegating the call to the `DateTimeFormatter`
+
+If we use static method `DateTimeFormatter.ofPatterh(String)` or `DateTimeFormatter.ofPattern(String, Locale)` it is
+important to understand the date/time symbols we can use.
+
+They are straightforward for years, months, days, hours, minutes and seconds, with the following additions:
+* "M" is months, and "m" is minutes
+* "s" is seconds, and "S" is fraction-of-second
+* "a" is AM or PM
+* "z" is time zone name, and "Z" is time zone offset (e.g. "-400")
+* custom text we would like to add (like "at") should be enclosed in pairs of single quotes
+  * a single quote itself as part of the custom text can be obtained with 2 single quotes next to each other
+* also, repeating the same symbol influences the formatting
+  * for example, "M" outputs the minimum number of characters for a month, like "1" for January
+  * "MM" always outputs 2 digits for the month, like "01" for January
+  * "MMM" prints three-letter abbreviations for the month, like "Jul" for July
+  * "MMMM" prints the full month name, like "July"
+
+### Supporting internationalization and localization
+
 TODO
