@@ -376,7 +376,7 @@ to know whether the object to format:
 * has a timezone (as opposed to being a "local" date/time), e.g. `ZonedDateTime`
 
 Also recall that `Instant` is the time passed since the epoch (1970-01-01T00:00:00Z), and can easily be converted to a
-`ZonedDateTime`.
+`ZonedDateTime` (with instance method `atZone(ZoneId)`).
 
 Date and time formatting and parsing is done with a `java.time.format.DateTimeFormatter`. It is important to obtain an
 instance that is appropriate for the date/time objects to format or parse. An instance can be obtained in several ways:
