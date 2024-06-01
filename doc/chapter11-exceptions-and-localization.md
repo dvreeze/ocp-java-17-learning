@@ -415,4 +415,125 @@ They are straightforward for years, months, days, hours, minutes and seconds, wi
 
 ### Supporting internationalization and localization
 
+A `java.util.Locale` represents a language, or the combination of a language and country. A Locale can also contain
+a so-called variant, but that's ignored here.
+
+The current Locale can be found with static method `Locale.getDefault()`. Locales created using a constructor can be
+nonsensical, but Java will not complain about that. Method `Locale.setDefault(Locale)` only changes the default Locale
+in the current JVM (so in the same OS process).
+
+For example (for some predefined Locales):
+
+```java
+import java.util.Locale;
+
+var localeEnglish = Locale.ENGLISH;
+System.out.println(localeEnglish.toString()); // "en" (just the language code in this example)
+System.out.println(localeEnglish.getLanguage()); // "en" (lowercase 2-letter language code)
+System.out.println(localeEnglish.getCountry()); // "" (no country code in this example)
+System.out.println(new Locale("en").equals(localeEnglish)); // true
+
+var localeUs = Locale.US;
+// "en_US" (lowercase language, then an underscore, then the uppercase country code)
+System.out.println(localeUs.toString()); // "en_US"
+System.out.println(localeUs.getLanguage()); // "en" (lowercase 2-letter language code)
+System.out.println(localeUs.getCountry()); // "US" (uppercase 2-letter country code)
+System.out.println(new Locale("en", "US").equals(localeUs)); // true
+```
+
+Locales can be obtained in the following ways:
+* There are some predefined Locales, such as the ones we saw above
+* There are `Locale` constructors, for setting the language, or setting language and country, etc.
+* It is even possible to create a `Locale` by using a `Locale.Builder`
+  * e.g. `new Locale.Builder().setRegion("US").setLanguage("en").build()`
+
+#### Localizing numbers
+
+Let's now obtain a `java.text.NumberFormat` for an explicit or the default `Locale`, and use that for formatting and parsing.
+
+Abstract class `NumberFormat` has pairs of static methods (one taking a `Locale` and one using the default `Locale`) for
+formatting/parsing numbers, currencies, percentages etc. For example:
+* `getInstance` for getting a general-purpose formatter
+* `getNumberInstance`, which is the same as `getInstance`
+* `getCurrencyInstance`, for formatting monetary amounts
+* `getPercentInstance`, for formatting percentages
+* `getIntegerInstance`, rounding decimal values before displaying
+* `getCompactNumberInstance`, either having no parameters, or having a `Locale` and `Style` as parameters
+
+These formatters are *not thread-safe*.
+
+For example:
+
+```java
+import java.text.NumberFormat;
+
+// $2.15 (note that we don't use type double for monetary amounts here)
+var usDollarAmount = NumberFormat.getCurrencyInstance(Locale.US).format(new BigDecimal("2.15"));
+
+// 2,15 € (note that we don't use type double for monetary amounts here)
+var euroAmount = NumberFormat.getCurrencyInstance(Locale.GERMANY).format(new BigDecimal("2.15"));
+```
+
+Note that instance method `NumberFormat.parse(String)`, which returns a `java.lang.Number`, may throw a checked
+`java.text.ParseException`.
+
+Let's have a brief look at formatters obtained with static method `getCompactNumberInstance` (available since Java 12):
+
+```java
+import java.text.NumberFormat;
+
+var shortDeFormatter = NumberFormat.getCompactNumberInstance(Locale.GERMANY, NumberFormat.Style.SHORT);
+var longDeFormatter = NumberFormat.getCompactNumberInstance(Locale.GERMANY, NumberFormat.Style.LONG);
+
+System.out.println(shortDeFormatter.format(7_123_456)); // "7 Mio."
+System.out.println(longDeFormatter.format(7_123_456)); // "7 Millionen"
+```
+
+#### Localizing dates
+
+Let's localize dates/times using `java.time.format.DateTimeFormatter`. We can obtain appropriate formatters with static
+factory methods like:
+* `ofLocalizedDate(FormatStyle)`
+* `ofLocalizedTime(FormatStyle)`
+* `ofLocalizedDateTime(FormatStyle)` and `ofLocalizedDateTime(FormatStyle, FormatStyle)` (the latter to choose format styles for dates and for times)
+
+Here `java.time.format.FormatStyle` has possible values SHORT, MEDIUM, LONG and FULL. Here's an example of how to use
+these formatters for localized formatting:
+
+```java
+import java.time.*;
+import java.time.format.*;
+
+// Note that the Locale is set explicitly
+var formatter =
+        DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
+                .withLocale(Locale.FRANCE);
+
+var now = LocalDateTime.now();
+
+// For example: "2 juin 2024, 01:38:04"
+var formattedDt = formatter.format(now);
+```
+
+#### Specifying a Locale Category
+
+For more fine-grained control over the use of a default Locale, it is possible to specify a `Locale.Category`. The values
+are:
+* `Locale.Category.DISPLAY`, for displaying data about a `Locale`
+* `Locale.Category.FORMAT`, for formatting dates, numbers or currencies
+
+The default Locale for displaying or formatting can be set independently. For example:
+
+```java
+Locale.setDefault(Locale.Category.DISPLAY, Locale.GERMANY);
+
+var displayLang = Locale.getDefault().getDisplayLanguage(); // Englisch
+
+Locale.setDefault(Locale.GERMANY);
+
+var displayLang2 = Locale.getDefault().getDisplayLanguage(); // Deutsch
+```
+
+### Loading properties with resource bundles
+
 TODO
