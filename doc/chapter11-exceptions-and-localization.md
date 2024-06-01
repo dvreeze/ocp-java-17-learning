@@ -334,7 +334,7 @@ and parsing, for example abstract class `java.text.NumberFormat` (as the abstrac
 
 These formatters are mutable and not thread-safe, while still being somewhat "expensive" to create at runtime.
 
-For dates and times it is much better to use the *immutable thread-safe* formatters in package `java.time.format`.
+For dates and times it is much better to use the *immutable thread-safe* `DateTimeFormatter` in package `java.time.format`.
 
 #### Formatting numbers
 
