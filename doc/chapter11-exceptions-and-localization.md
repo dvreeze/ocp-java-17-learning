@@ -581,7 +581,7 @@ to look up texts, with instance method `ResourceBundle.getString(String)`.
 This will look only in the found resource bundle, then in its parent, if any, etc. For example, if resource
 `Zoo_en_US.properties` was found, the string will be looked up in:
 1. first `Zoo_en_US.properties`
-2. then, if not found, `Zoo_en.properties`
-3. then, if not found, `Zoo.properties`
+2. then, if not found, parent `Zoo_en.properties`
+3. then, if not found, parent `Zoo.properties`
 
 TODO Formatting messages, and Properties class
