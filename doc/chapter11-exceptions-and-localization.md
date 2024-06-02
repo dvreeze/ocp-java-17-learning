@@ -552,7 +552,7 @@ These property files have names that clearly match a `Locale`. For example, if t
 * `Zoo_fr.properties` (for Locale "fr")
 * `Zoo.properties` (fallback resource bundle property file)
 
-A locale-specific `java.util.ResourceBundle` for bundle "Zoo" can be obtained as follows:
+A locale-specific `java.util.ResourceBundle` for resource bundle family "Zoo" can be obtained as follows:
 
 ```java
 import java.util.Locale;
