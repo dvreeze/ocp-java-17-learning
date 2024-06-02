@@ -578,6 +578,7 @@ searched in the following order (assuming property files are used), until a matc
 
 Once this best matching bundle has been found with method `ResourceBundle.getResource(String, Locale)` or
 `ResourceBundle.getResource(String)`, it can be used to look up texts, with instance method `ResourceBundle.getString(String)`.
+If method `getString` does not find the text string for a given key, a `MissingResourceException` is thrown.
 
 This will look only in the found resource bundle, then in its *parent bundle*, if any, etc. For example, if resource
 `Zoo_en_US.properties` was found, the string will be looked up in:
