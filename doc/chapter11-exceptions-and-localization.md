@@ -537,4 +537,51 @@ var displayLang2 = Locale.getDefault().getDisplayLanguage(); // Deutsch
 
 ### Loading properties with resource bundles
 
-TODO
+To *internationalize* a program, *resource bundles* are used. They can be understood as *Maps* with key-value pairs,
+where the `Locale` is part of the key, and the mapped values are `String` texts matching the language (and country) of
+the `Locale`.
+
+Resource bundles are typically created using *property files*, separating key from value using symbol `=` or `:`.
+These property files have names that clearly match a `Locale`. For example, if the resource bundle is called "Zoo",
+the following are valid property file names for that resource bundle:
+* `Zoo_en_US.properties` (for Locale "en_US")
+* `Zoo_en_CA.properties` (for Locale "en_CA")
+* `Zoo_fr_CA.properties` (for Locale "fr_CA")
+* `Zoo_en.properties` (for Locale "en")
+* `Zoo_fr.properties` (for Locale "fr")
+* `Zoo.properties` (fallback resource bundle property file)
+
+A `java.util.ResourceBundle` for bundle "Zoo" can be obtained as follows:
+
+```java
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+var localeUs = Locale.US;
+var resourceBundleUs = ResourceBundle.getBundle("Zoo", localeUs);
+
+// Using the default Locale
+var resourceBundle = ResourceBundle.getBundle("Zoo");
+```
+
+If the resource bundle is missing, an unchecked `java.util.MissingResourceException` is thrown.
+
+Suppose the default locale is "en_US" and the requested locale is "fr_FR". Then the best matching "Zoo" resource bundle is
+searched in the following order:
+1. `Zoo_fr_FR.properties`
+2. `Zoo_fr.properties`
+3. `Zoo_en_US.properties`
+4. `Zoo_en.properties`
+5. `Zoo.properties`
+6. if not found, a `MissingResourceException` is thrown
+
+Once this best matching bundle has been found with method `ResourceBundle.getResource(String, Locale)`, it can be used
+to look up texts, with instance method `ResourceBundle.getString(String)`.
+
+This will look only in the found resource bundle, then in its parent, if any, etc. For example, if resource
+`Zoo_en_US.properties` was found, the string will be looked up in:
+1. first `Zoo_en_US.properties`
+2. then, if not found, `Zoo_en.properties`
+3. then, if not found, `Zoo.properties`
+
+TODO Formatting messages, and Properties class
