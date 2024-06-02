@@ -36,6 +36,10 @@ There are 2 kinds of exceptions:
 * *Checked exceptions*; their type is or extends `java.lang.Exception`, but not its subtype `java.lang.RuntimeException`
 * *Unchecked exceptions* (or *runtime exceptions*); their type is or extends `java.lang.RuntimeException` (which extends `java.lang.Exception`)
 
+Generalized to supertype `java.lang.Throwable`, and regarding the *handle or declare rule* mentioned below:
+* Each `java.lang.Throwable` that is neither a `java.lang.RuntimeException` nor a `java.lang.Error` is also considered a "checked exception"
+* Like `java.lang.RuntimeException`, each `java.lang.Error` is also considered an "unchecked exception"
+
 For *checked exceptions* (and only for checked exceptions) we have the *handle or declare rule*. That is, if a method
 throws a checked exception, it must:
 * either *handle* the exception itself, in a *try-catch block*
@@ -419,7 +423,7 @@ A `java.util.Locale` represents a language, or the combination of a language and
 a so-called variant, but that's ignored here.
 
 The current Locale can be found with static method `Locale.getDefault()`. Locales created using a constructor can be
-nonsensical, but Java will not complain about that. Method `Locale.setDefault(Locale)` only changes the default Locale
+nonsensical, but Java *will not complain about that*. Method `Locale.setDefault(Locale)` only changes the default Locale
 in the current JVM (so in the same OS process).
 
 For example (for some predefined Locales):
