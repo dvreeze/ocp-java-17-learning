@@ -537,13 +537,14 @@ var displayLang2 = Locale.getDefault().getDisplayLanguage(); // Deutsch
 
 ### Loading properties with resource bundles
 
-To *internationalize* a program, *resource bundles* are used. They can be understood as *Maps* with key-value pairs,
-where the `Locale` is part of the key, and the mapped values are `String` texts matching the language (and country) of
-the `Locale`.
+To *internationalize* a program, *families of resource bundles* are used. Resource bundles can be understood as
+`Locale`-specific *Maps* with key-value pairs, where the `String` keys uniquely identify locale-specific objects, which
+are the mapped values. Typically, but not necessarily, the mapped objects are `String` texts. (Below `String` objects
+are assumed.)
 
 Resource bundles are typically created using *property files*, separating key from value using symbol `=` or `:`.
-These property files have names that clearly match a `Locale`. For example, if the resource bundle is called "Zoo",
-the following are valid property file names for that resource bundle:
+These property files have names that clearly match a `Locale`. For example, if the resource bundle family has *base name*
+"Zoo", the following are valid property file names for resource bundles in that resource bundle family:
 * `Zoo_en_US.properties` (for Locale "en_US")
 * `Zoo_en_CA.properties` (for Locale "en_CA")
 * `Zoo_fr_CA.properties` (for Locale "fr_CA")
@@ -551,7 +552,7 @@ the following are valid property file names for that resource bundle:
 * `Zoo_fr.properties` (for Locale "fr")
 * `Zoo.properties` (fallback resource bundle property file)
 
-A `java.util.ResourceBundle` for bundle "Zoo" can be obtained as follows:
+A locale-specific `java.util.ResourceBundle` for bundle "Zoo" can be obtained as follows:
 
 ```java
 import java.util.Locale;
@@ -567,7 +568,7 @@ var resourceBundle = ResourceBundle.getBundle("Zoo");
 If the resource bundle is missing, an unchecked `java.util.MissingResourceException` is thrown.
 
 Suppose the default locale is "en_US" and the requested locale is "fr_FR". Then the best matching "Zoo" resource bundle is
-searched in the following order:
+searched in the following order (assuming property files are used), until a matching property file has been found:
 1. `Zoo_fr_FR.properties`
 2. `Zoo_fr.properties`
 3. `Zoo_en_US.properties`
@@ -575,13 +576,25 @@ searched in the following order:
 5. `Zoo.properties`
 6. if not found, a `MissingResourceException` is thrown
 
-Once this best matching bundle has been found with method `ResourceBundle.getResource(String, Locale)`, it can be used
-to look up texts, with instance method `ResourceBundle.getString(String)`.
+Once this best matching bundle has been found with method `ResourceBundle.getResource(String, Locale)` or
+`ResourceBundle.getResource(String)`, it can be used to look up texts, with instance method `ResourceBundle.getString(String)`.
 
-This will look only in the found resource bundle, then in its parent, if any, etc. For example, if resource
+This will look only in the found resource bundle, then in its *parent bundle*, if any, etc. For example, if resource
 `Zoo_en_US.properties` was found, the string will be looked up in:
-1. first `Zoo_en_US.properties`
-2. then, if not found, parent `Zoo_en.properties`
-3. then, if not found, parent `Zoo.properties`
+1. bundle `Zoo_en_US.properties`
+2. then, if not found, in its parent bundle `Zoo_en.properties`
+3. then, if not found, in its parent bundle `Zoo.properties`
 
-TODO Formatting messages, and Properties class
+Hence, the parent bundle of a bundle for a `Locale` with language and country is the bundle for the `Locale` containing
+only the language (and not the country), and the parent bundle of the latter bundle is the "default fallback" bundle.
+
+Abstract class `ResourceBundle` (being "a kind of Map") also has methods like `keySet()` and `containsKey(String)`.
+
+The resource bundle strings may contain "parameters" like `{0}`, `{1}` etc. These parameters can be filled in with
+static method `java.text.MessageFormat.format(String, Object...)`, taking the "parameterized resource bundle string"
+as the first parameter (i.e. the "pattern").
+
+Property files are often used with class `java.util.Properties`, which is a kind of "Map from strings to strings",
+and which can be loaded from property files. Methods `getProperty(String)` and `getProperty(String, String)` can be
+used to retrieve a property, the latter method providing a default value if not found. Method `setProperty(String, String)`
+is used to set a property in the `Properties` object.
