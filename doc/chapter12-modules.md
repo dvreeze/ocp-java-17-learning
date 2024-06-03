@@ -65,7 +65,7 @@ in Maven or Gradle projects):
 * direct subdirectories for the individual modules
 * these module subdirectories contain Java sources in that directory as source tree (for packages there are corresponding subtrees, according to the rules for Java package directory trees)
 * these module subdirectories also contain the "*.class" files produced by the compiler (also in the appropriate subdirectories following the package structure)
-* there is a "mods" subdirectory (which is a sibling directory of the module-specific subdirectories)
+* there is a "mods" subdirectory (which is a sibling directory of the module-specific subdirectories), containing packaged modules
 
 Suppose the "dto" module's Java sources are in package "com.test.myproject.dto". Then we can compile this module as follows:
 
