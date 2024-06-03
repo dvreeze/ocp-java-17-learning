@@ -63,15 +63,15 @@ Below, assume we have the following simplistic directory structure (which we wou
 in Maven or Gradle projects):
 * some "top level" directory, from which we run commands to compile code, package modules etc.
 * direct subdirectories for the individual modules
-* these module subdirectories contain Java sources in that directory as source tree (for packages there are corresponding subtrees)
+* these module subdirectories contain Java sources in that directory as source tree (for packages there are corresponding subtrees, according to the rules for Java package directory trees)
 * these module subdirectories also contain the "*.class" files produced by the compiler (also in the appropriate subdirectories following the package structure)
 * there is a "mods" subdirectory (which is a sibling directory of the module-specific subdirectories)
 
 Suppose the "dto" module's Java sources are in package "com.test.myproject.dto". Then we can compile this module as follows:
 
 ```shell
-javac --module-path mods \\
-    -d dto \\
+javac --module-path mods \
+    -d dto \
     dto/com/test/myproject/dto/*.java dto/module-info.java
 ```
 
@@ -79,8 +79,8 @@ The "--module-path" option is used to locate custom module files. It can be thou
 in a modular program. This option can be abbreviated to "-p". So the following command is equivalent:
 
 ```shell
-javac -p mods \\
-    -d dto \\
+javac -p mods \
+    -d dto \
     dto/com/test/myproject/dto/*.java dto/module-info.java
 ```
 
@@ -100,7 +100,7 @@ Also assume we have compiled and packaged the module, as described above, but fo
 run the "MyTask" program as follows:
 
 ```shell
-java --module-path mods \\
+java --module-path mods \
     --module com.test.myproject.console/com.test.myproject.console.MyTask
 ```
 
@@ -109,7 +109,7 @@ So the module to run has format `module-name/fully-qualified-class-name`.
 We can abbreviate option "--module" to "-m", so we could more briefly achieve the same as follows:
 
 ```shell
-java -p mods \\
+java -p mods \
     -m com.test.myproject.console/com.test.myproject.console.MyTask
 ```
 
