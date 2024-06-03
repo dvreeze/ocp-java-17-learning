@@ -50,4 +50,70 @@ Modules are designed to solve the following problems:
 
 ### Creating and running a modular program
 
-TODO
+Each *module* has exactly one `module-info.java` source file. It must occur at top-level in the source tree, as if it has
+the "default package". The module declaration starts with keyword `module`. That keyword is followed by the *module name*,
+which follows the naming rules for package names , so they cannot contain any dashes. For example:
+
+```java
+module com.test.myproject.dto {
+}
+```
+
+Below, assume we have the following simplistic directory structure (which we would not use in practice, and certainly not
+in Maven or Gradle projects):
+* some "top level" directory, from which we run commands to compile code, package modules etc.
+* direct subdirectories for the individual modules
+* these module subdirectories contain Java sources in that directory as source tree (for packages there are corresponding subtrees)
+* these module subdirectories also contain the "*.class" files produced by the compiler (also in the appropriate subdirectories following the package structure)
+* there is a "mods" subdirectory (which is a sibling directory of the module-specific subdirectories)
+
+Suppose the "dto" module's Java sources are in package "com.test.myproject.dto". Then we can compile this module as follows:
+
+```shell
+javac --module-path mods \\
+    -d dto \\
+    dto/com/test/myproject/dto/*.java dto/module-info.java
+```
+
+The "--module-path" option is used to locate custom module files. It can be thought of as replacing the "--class-path" option
+in a modular program. This option can be abbreviated to "-p". So the following command is equivalent:
+
+```shell
+javac -p mods \\
+    -d dto \\
+    dto/com/test/myproject/dto/*.java dto/module-info.java
+```
+
+After compiling we can package the module as module JAR file:
+
+```shell
+jar -cvf mods/com.test.myproject.dto.jar -C dto/ .
+```
+
+With options "-cvf" we create a JAR file with the given JAR file name. With option "-C" we specify the "root directory"
+to copy the JAR file contents from. Don't forget the "." at the end, to specify that we want to copy all files from that
+"root directory" into the JAR file. Also note that the name of the JAR file matches the module name exactly.
+
+Suppose we have another module called "com.test.myproject.console", with the sources under the "console" subdirectory of
+the current directory. Assume we have Java program "com.test.myproject.console.MyTask" in that source tree.
+Also assume we have compiled and packaged the module, as described above, but for the module mentioned here. Then we can
+run the "MyTask" program as follows:
+
+```shell
+java --module-path mods \\
+    --module com.test.myproject.console/com.test.myproject.console.MyTask
+```
+
+So the module to run has format `module-name/fully-qualified-class-name`.
+
+We can abbreviate option "--module" to "-m", so we could more briefly achieve the same as follows:
+
+```shell
+java -p mods \\
+    -m com.test.myproject.console/com.test.myproject.console.MyTask
+```
+
+In reality, we would use a build tool instead of entering these commands, but we still need to know how to do that.
+So let's assume that after each time we touch any module's source code, we rerun compilation and packaging as shown above.
+
+Let's now turn our attention to the module declaration again.
