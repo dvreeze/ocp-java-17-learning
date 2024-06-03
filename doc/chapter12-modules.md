@@ -113,7 +113,8 @@ java -p mods \
     -m com.test.myproject.console/com.test.myproject.console.MyTask
 ```
 
-In reality, we would use a build tool instead of entering these commands, but we still need to know how to do that.
-So let's assume that after each time we touch any module's source code, we rerun compilation and packaging as shown above.
+In reality, we would use a build tool instead of entering these commands, but we still need to know how to achieve the
+same without the help of build tools. So let's assume that after each time we touch any module's source code, we rerun
+compilation and packaging as shown above, so that we don't have to mention that anymore.
 
 Let's now turn our attention to the module declaration again.
