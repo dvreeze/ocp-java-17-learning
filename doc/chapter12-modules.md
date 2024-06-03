@@ -28,8 +28,10 @@ JPMS includes:
 * Partitioning of the JDK info modules
 * Additional command-line options for Java tools
 
-A *module* is a group of one or more Java packages plus a `module-info.java` *module descriptor* file. The contents of
-that file are known as the *module declaration*. Via the module declarations the *dependencies* between modules are specified.
+A *module* is a group of one or more Java packages plus a `module-info.java` file. The contents of that file are known as
+the *module declaration*. Via the module declarations the *dependencies* between modules are specified.
+
+The compiled version of `module-info.java` is called the *module descriptor*.
 
 Important note: the term *dependency* in JPMS is different from the same term in for example Apache Maven. There dependencies
 include a version, and there are no Java language constructs for Maven dependencies. As it turns out, JPMS and Maven
