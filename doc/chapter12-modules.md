@@ -33,8 +33,8 @@ the *module declaration*. Via the module declarations the *dependencies* between
 
 The compiled version of `module-info.java` is called the *module descriptor*.
 
-Important note: the term *dependency* in JPMS is different from the same term in for example Apache Maven. There dependencies
-include a version, and there are no Java language constructs for Maven dependencies. As it turns out, JPMS and Maven
+Important note: the term *dependency* in JPMS is different from the same term in for example Apache Maven. Maven dependencies
+include a version, and there are no Java language constructs in the JDK for Maven dependencies. As it turns out, JPMS and Maven
 (and by extension Gradle etc.) are quite complementary.
 
 Modules are designed to solve the following problems:
