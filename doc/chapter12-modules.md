@@ -42,7 +42,7 @@ Modules are designed to solve the following problems:
 * *Clearer dependency management*, enabling Java to already detect a missing JAR during program startup instead of later when it is first accessed
 * *Custom Java builds*, creating Java runtimes that contain only the relevant parts of the JDK instead of "everything"
 * *Improved security*, because of omitting parts of the JDK that are not used, and therefore also not worrying about vulnerabilities in those parts
-* *Improved performance*, again because of using only relevant parts of the JDK, and this improving startup time, for example
+* *Improved performance*, again because of using only relevant parts of the JDK, and this leading to improved startup times, for example
 * *Unique package enforcement*, because Java ensures that each package comes from only one module (because of modules specifying exposed packages)
 
 ### Creating and running a modular program
