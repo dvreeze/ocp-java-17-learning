@@ -25,7 +25,7 @@ that we are familiar with.
 
 JPMS includes:
 * A format for module JAR files
-* Partitioning of the JDK info modules
+* Partitioning of the JDK into modules
 * Additional command-line options for Java tools
 
 A *module* is a group of one or more Java packages plus a `module-info.java` file. The contents of that file are known as
