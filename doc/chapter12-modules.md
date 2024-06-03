@@ -92,7 +92,8 @@ jar -cvf mods/com.test.myproject.dto.jar -C dto/ .
 
 With options "-cvf" we create a JAR file with the given JAR file name. With option "-C" we specify the "root directory"
 to copy the JAR file contents from. Don't forget the "." at the end, to specify that we want to copy all files from that
-"root directory" into the JAR file. Also note that the name of the JAR file matches the module name exactly.
+"root directory" into the JAR file. Also note that the name of the JAR file has been chosen to match the module name exactly,
+although that is not required.
 
 Suppose we have another module called "com.test.myproject.console", with the sources under the "console" subdirectory of
 the current directory. Assume we have Java program "com.test.myproject.console.MyTask" in that source tree.
@@ -118,3 +119,14 @@ same without the help of build tools. So let's assume that after each time we to
 compilation and packaging as shown above, so that we don't have to mention that anymore.
 
 Let's now turn our attention to the module declaration again.
+
+The `module-info.java` file of the "com.test.myproject.dto" module is adapted to make the "com.test.myproject.dto" Java
+package available to other modules. In other words, we *export* that package:
+
+```java
+module com.test.myproject.dto {
+    exports com.test.myproject.dto;
+}
+```
+
+Mind the semicolon at the end. Also mind keyword `exports` and not "export".
