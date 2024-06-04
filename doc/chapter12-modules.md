@@ -139,7 +139,7 @@ of the latter. It may also expose its own abstract API. This would lead to a `mo
 
 ```java
 module com.test.myproject.dao {
-    exports com.test.myproject.dao; // containing the DAO API, not the implementations
+    exports com.test.myproject.dao;
 
     requires com.test.myproject.dto;
 }
@@ -149,7 +149,7 @@ A "com.test.myproject.service" module may then have a `module-info.java` content
 
 ```java
 module com.test.myproject.service {
-    exports com.test.myproject.service; // containing the DAO API, not the implementations
+    exports com.test.myproject.service;
 
     requires com.test.myproject.dto;
     requires com.test.myproject.dao;
@@ -165,8 +165,6 @@ module com.test.myproject.web {
     requires com.test.myproject.service;
 }
 ```
-
-This way we have ensured that *at the package level modules depend only on each other's public APIs*.
 
 ### Diving into the module declaration
 
