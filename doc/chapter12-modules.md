@@ -507,7 +507,7 @@ So far we have considered only so-called *named modules*. There are 3 types of *
   * and contain a `module-info.java` file, where the name inside that file is the name of the module
 * *Automatic modules*:
   * appear on the *module path* (not on the classpath)
-  * and does NOT contain a `module-info.java` file
+  * and do NOT contain a `module-info.java` file
   * instead, the name of the automatic module is *automatically determined*
   * *all packages* are exported
 * *Unnamed modules*, which is a bit of a misnomer:
