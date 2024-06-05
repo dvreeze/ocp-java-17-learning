@@ -482,7 +482,7 @@ Command-line options for `java` we need to know:
 
 Command-line options for `jar` we need to know:
 * Creating a new JAR: `--create`, `-c`
-* Prints details when working with JAR files ("verbose"): `--verbose`, `-v`
+* Prints details when working with JAR files: `--verbose`, `-v`
 * JAR file name: `--file`, `-f`
 * Directory containing the files to be used to create a JAR file: `-C`
 * Describing details of a module: `--describe-module`, `-d`
