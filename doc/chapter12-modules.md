@@ -497,6 +497,8 @@ Command-line options for `jlink` we need to know:
 * List of modules to package: `--add-modules`
 * Name of output directory: `--output`
 
+There is also a `jmod` command to create another file format than JAR if that is unavoidable, like when having native libraries.
+
 ### Comparing types of modules
 
 TODO
