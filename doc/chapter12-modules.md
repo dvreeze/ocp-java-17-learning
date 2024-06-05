@@ -501,4 +501,45 @@ There is also a `jmod` command to create another file format than JAR if that is
 
 ### Comparing types of modules
 
-TODO
+So far we have considered only so-called *named modules*. There are 3 types of *modules*:
+* *Named modules*:
+  * appear on the *module path* (not on the classpath)
+  * and contain a `module-info.java` file, where the name inside that file is the name of the module
+* *Automatic modules*:
+  * appear on the *module path* (not on the classpath)
+  * and does NOT contain a `module-info.java` file
+  * instead, the name of the automatic module is *automatically determined*
+  * *all packages* are exported
+* *Unnamed modules*, which is a bit of a misnomer:
+  * appear on the *classpath* (not on the module path)
+  * it is irrelevant whether there is a `module-info.java` file or not; if there is one, it is ignored
+
+The algorithm for determining the name of an *automatic module* is as follows:
+1. If the "META-INF/MANIFEST.MF" file specifies an "Automatic-Module-Name", that name is used. Otherwise, proceed with the rules below.
+2. Remove the file extension from the JAR file name.
+3. Remove any version information (such as "-1.0.0" or "-1.0-RC) from the end of the name.
+4. Replace any remaining characters other than letters and numbers with dots.
+5. Replace any sequence of dots with a single dot.
+6. Remove the dot if it is the first or last character of the result.
+
+Important note:
+* Code on the *classpath* can access the *module path*
+* But conversely, code on the *module path* CAN NOT access the *classpath*
+
+### Migrating an application
+
+To migrate an application to the use of modules, first we need to know the structure of packages and libraries.
+So first draw a *directed dependency graph*, with arrows from "projects" that requires a dependency to "projects" that
+make the dependency available. So roughly the arrows go from `requires <A>` to `exports <A>`.
+
+Depending on the result of that exercise, and on who owns what part of the code base and its dependencies, choose a
+*migration strategy*, either *bottom-up* or else *top-down*.
+
+In a *bottom-up* migration strategy (this is preferred if feasible) already migrated projects live on the *module path*
+and the still-to-migrate projects are still on the classpath. In this approach there is *no pollution* of the module path.
+
+In a *top-down* migration strategy (typically needed if we do not own all code) first all projects are moved to the module
+path as *automatic modules*. Then from top to bottom those automatic modules are turned into *named modules*.
+
+JPMS will detect *circular dependencies* between modules and will *not allow it*. That's much of the point of a module
+system in the first place. Often a circular dependency can be solved by introducing *another module with shared code*.
