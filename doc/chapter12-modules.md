@@ -17,11 +17,19 @@ In particular, see:
   * [UsesTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/UsesTree.html)
   * [OpensTree](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/OpensTree.html)
 
+A good explanation of Java 9 modules is [understanding-java-9-modules](https://www.oracle.com/corporate/features/understanding-java-9-modules.html).
+
+An official specification of (packages and) modules can be found in chapter 7 of the Java Language Specification, at
+[Packages and Modules](https://docs.oracle.com/javase/specs/jls/se17/html/jls-7.html).
+
 ### Introducing modules
 
 *JPMS* groups code at a high level. It is like a system for "packaging Java packages". Modules provide groups of related
 packages that offer a particular set of functionality. This cannot be expressed with the more fine-grained *access modifiers*
 that we are familiar with.
+
+Put differently, before Java 9 individual *classes* could be designed to offer *strong encapsulation*. With modules,
+*strong encapsulation can be enforced at the level of Java packages*.
 
 JPMS includes:
 * A format for module JAR files
@@ -50,9 +58,10 @@ Modules are designed to solve the following problems:
 
 ### Creating and running a modular program
 
-Each *module* has exactly one `module-info.java` source file. It must occur at top-level in the source tree, as if it has
-the "default package". The module declaration starts with keyword `module`. That keyword is followed by the *module name*,
-which follows the naming rules for package names , so they cannot contain any dashes. For example:
+Each *module* has exactly one `module-info.java` source file (this is not entirely accurate, but we'll get back to that later).
+It must occur at top-level in the source tree, as if it has the "default package". The module declaration starts with keyword
+`module`. That keyword is followed by the *module name*, which follows the naming rules for package names , so they cannot
+contain any dashes. For example:
 
 ```java
 module com.test.myproject.dto {
@@ -167,5 +176,251 @@ module com.test.myproject.web {
 ```
 
 ### Diving into the module declaration
+
+In a module declaration, the *order of directives is irrelevant* and can freely be chosen.
+
+What does *exporting a package* mean exactly? It means that all *top-level classes/interfaces/enums/records* of that package
+are exported and *therefore visible to other modules*. Any *public and protected members* of those top-level type declarations
+are *visible* to code in other modules (assuming that the export was to all other modules).
+
+Hence, this does not change anything w.r.t. the *access modifiers*. It only adds extra restrictions/encapsulation at the
+level of *packages* and their visibility *across module boundaries*.
+
+In other words, given a top-level class/interface declaration and its containing package:
+* `protected` members of that class/interface:
+  * *within their module*: are available only within same package or to subclasses, as we already know
+  * *outside their module*: are available to subclasses only *if the package is exported*
+* `public` members of that class/interface:
+  * *within their module*: are available to all classes, as we already know
+  * *outside their module*: are accessible only *if the package is exported*
+
+Obviously `private` and package-private members are not accessible to other modules.
+
+Packages can be exported to specific modules, with syntax `exports <some-package> to <some-module>`.
+
+A `requires` directive specifies *both a compile-time and runtime dependency on a given module*.
+
+A `requires transitive <moduleName>` directive offers *implied readability*. That is, each module depending on this module
+will automatically also depend on module `<moduleName>`. This `requires transitive` directive often makes sense, especially
+when we know that compilation will not succeed for some module if it does not explicitly require module `<moduleName>` as
+well. In that case it's better to use `requires transitive`, to prevent other modules from having to explicitly require
+that module `<moduleName>`.
+
+This also cleans up an earlier example given above significantly. It now becomes:
+
+```java
+module com.test.myproject.dto {
+    exports com.test.myproject.dto;
+}
+```
+
+```java
+module com.test.myproject.dao {
+    exports com.test.myproject.dao;
+
+    requires transitive com.test.myproject.dto;
+}
+```
+
+```java
+module com.test.myproject.service {
+    exports com.test.myproject.service;
+
+    requires transitive com.test.myproject.dao;
+}
+```
+
+```java
+module com.test.myproject.web {
+    requires com.test.myproject.service;
+}
+```
+
+It's not an error to still explicitly require module "com.test.myproject.dto" in all other modules, but there is no need
+to do so. It is an error, though, to mix `requires <moduleName>` and `requires transitive <moduleName>`, because Java does
+not allow us to repeat the same module in a `requires` clause. For example, the following does not compile:
+
+```java
+module bad.module {
+    requires com.test.myproject.dto;
+    requires transitive com.test.myproject.dto; // causes compilation error
+}
+```
+
+Sometimes we want to allow other modules to *only have runtime access and not compile-time access* to certain packages,
+typically to use *Java reflection* on code in those packages. For this we need to *open the package* for only runtime access
+in other modules rather than both compile-time and runtime access, which "exporting" would do.
+
+Opening packages is done in one of 3 ways:
+* directive `opens <packageName>`
+* directive `opens <packageName> to <moduleName>`
+* opening the entire module: `open module <thisModule>`, opening all packages for reflection
+
+Again, *opening* a package or the entire module *only gives runtime access*.
+
+In a way, "opening" a package is more dangerous and powerful than "exporting" a package. When *exporting* a package,
+reflective access cannot circumvent the guarantees made by *access modifiers*. So private members of exported "package
+members" cannot be reflected on. On the other hand, when *opening* a package, even private members of non-public "package
+members" can be reflected on (which is needed by many commonly used open source Java libraries). See the Java Language
+Specification, in particular [7.7.2. Exported and Opened Packages](https://docs.oracle.com/javase/specs/jls/se9/html/jls-7.html#jls-7.7.2).
+
+Note the 2 different keywords `opens` and `open`. It is a (compilation) error to use `open` and `opens` together.
+
+By the way, the keywords in module declarations are so-called *restricted keywords*. They are keywords only in module
+declarations, and can be used as identifiers elsewhere in the code base.
+
+### Creating a service
+
+Consider a neatly *layered* application where Java modules are used to separate the layers, and to enforce an
+*acyclic directed module dependency graph*. It would be useful if layers depended only on *public APIs* and not on
+"service implementation" classes. The latter can be achieved with what the Java platform calls *services*.
+
+Let's consider a very simple example of a *service* that returns a "quote of the day". The *public API* consists of:
+* A `Quote` record as the *model* ("DTOs", or data transfer objects)
+* A `QuoteService` *interface* as the *service* API, without implementation; it depends on the `Quote` record type
+* Code to *look up* the `QuoteService`, without knowing anything about the implementation
+
+The implementation of the service is "hidden", but found by Java, as shown below.
+
+Let's have the following *modules* in this example:
+* `quote.service` containing and exporting the `QuoteService` API and *model* types, in this case the `Quote` record
+* `quote.servicelocator`, for looking up the quote service, without exposing any service implementations
+* `quote.serviceimpl`, containing the implementation of the quote service
+* `quote.console`, containing a console program to lookup quotes
+
+The `quote.service` module contains the following code, in subdirectory "quote/service" of the source tree:
+
+```java
+package quote.service;
+
+public record Quote(String attributedTo, String text) { }
+```
+
+```java
+package quote.service;
+
+public interface QuoteService {
+    Quote findQuoteOfTheDay(); // recall that "public" and "abstract" are implied
+}
+```
+
+The module contains the following straightforward `module-info.java`, in the root of the source tree:
+
+```java
+module quote.service {
+    exports quote.service;
+}
+```
+
+Having compiled and deployed this module, we turn our attention to the module to locate the service:
+
+```java
+package quote.service.locator;
+
+import java.util.ServiceLoader;
+import quote.service.QuoteService;
+
+public class QuoteServiceFinder {
+
+    public static QuoteService findQuoteService() {
+        ServiceLoader<QuoteService> loader = ServiceLoader.load(QuoteService.class);
+        for (QuoteService service : loader) {
+            return service;
+        }
+        return null;
+    }
+}
+```
+
+Generic type `java.util.ServiceLoader` is provided by the Java platform. Some things we need to know about this class are:
+* Class `java.util.ServiceLoader<T>` can locate services of type `T`, where the latter type is an *interface* or *abstract class* (a concrete class is allowed but not recommended)
+* Type `java.util.ServiceLoader<T>` extends `java.lang.Iterable<T>`, so we can use it in an *enhanced for-loop* to iterate over the service implementations
+* One static method we need to know is `public static <S> ServiceLoader<S> load(Class<S> service)`
+* One instance method we need to know is `public Stream<ServlceLoader.Provider<S>> stream()`
+* Type `ServlceLoader.Provider<S>` extends `Supplier<S>`, so it has instance method `public S get()` to obtain the service
+
+This "locator" module contains the following `module-info.java`, in the root of the source tree:
+
+```java
+module quote.servicelocator {
+    exports quote.service.locator;
+    requires transitive quote.service;
+    uses quote.service.QuoteService;
+}
+```
+
+Note the `uses <serviceInterface>` directive, making explicit to the Java module system that service type `QuoteService`
+is referenced. Without it, lookup would not work. The use of a `requires` directive does not achieve that, although it is
+still needed in order to have access to the `QuoteService` API. So `requires` is needed for successful compilation, and
+`uses` is needed for successful service lookup.
+
+If this module is also compiled and deployed, we do not have to compile and deploy again after creating and deploying
+implementations of the service!
+
+Let's turn to module `quote.console` to use the service, even without yet having an implementation.
+
+Suppose we use the service in package `quote.console`, via the lookup code in module `quote.servicelocator`. Then the
+"console" module may contain the following straightforward `module-info.java`, in the root of the source tree:
+
+```java
+module quote.console {
+    requires quote.service;
+    requires quote.servicelocator;
+}
+```
+
+That is, this module needs no more than the modules making up the public service API. It also exports nothing.
+
+Let's turn to the `quote.serviceimpl` module, containing the *service provider*.
+
+Suppose the service implementation of interface `QuoteService` is in package `quote.service.impl`. Then the
+service provider module may contain the following `module-info.java`, in the root of the source tree:
+
+```java
+module quote.serviceimpl {
+    requires quote.service;
+    provides quote.service.QuoteService with quote.service.impl.QuoteServiceImpl;
+}
+```
+
+As intended, this module does not export the service implementation. It is a *service provider* because of the `provides`
+directive, mentioning the service API and the provided implementation of that service API. This module depends on the
+service API module, but not on the lookup part of the public API. Most importantly, this module declaration tells the
+module system that it provides the given implementation of the `QuoteService` service API. If we deploy this module, this
+service implementation will be found by the service lookup code in module `quote.servicelocator`.
+
+Note that this arrangement allows for *application layers* to depend as much as possible on *public APIs* rather than
+implementations, thus offering *loose coupling* between layers while enforcing a layered architecture.
+
+In summary:
+* The service provider interface:
+  * is part of the service's public API
+  * and requires directives `exports`
+* The service provider (i.e. service implementation):
+  * is NOT part of the service's public API
+  * and requires directives `requires` and `provides`
+* The service locator:
+  * is part of the service's public API
+  * and requires directives `exports`, `requires` and `uses`
+* The service consumers:
+  * are obviously NOT part of the service's public API
+  * and require directive `requires`
+
+Summarizing the directives themselves:
+* Making packages available outside this module:
+  * `exports <package>`
+  * `exports <package> to <module>`
+* Specifying a dependency on another module:
+  * `requires <module>`
+  * `requires transitive <module>`
+* Allowing a package to be used at runtime with reflection, even giving access to private members of non-public package members:
+  * `opens <package>`
+  * `opens <package> to <module>`
+* Making a service implementation available:
+  * `provides <serviceInterface> with <serviceImplementation>`
+* Referencing a service:
+  * `uses <serviceInterface>`
+
+### Discovering modules
 
 TODO
