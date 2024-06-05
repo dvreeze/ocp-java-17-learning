@@ -386,7 +386,7 @@ module quote.serviceimpl {
 
 As intended, this module does not export the service implementation. It is a *service provider* because of the `provides`
 directive, mentioning the service API and the provided implementation of that service API. This module depends on the
-service API module, but not on the lookup part of the public API. Most importantly, this module declaration tells the
+service API module, but not on the lookup part of the public API. More importantly, this module declaration tells the
 module system that it provides the given implementation of the `QuoteService` service API. If we deploy this module, this
 service implementation will be found by the service lookup code in module `quote.servicelocator`.
 
