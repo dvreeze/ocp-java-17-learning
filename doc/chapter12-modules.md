@@ -59,7 +59,7 @@ Modules are designed to solve the following problems:
 ### Creating and running a modular program
 
 Each *module* has exactly one `module-info.java` source file (this is not entirely accurate, but we'll get back to that later).
-It must occur at top-level in the source tree, as if it has the "default package". The module declaration starts with keyword
+It must occur at top-level in the source tree, in the "default package" directory. The module declaration starts with keyword
 `module`. That keyword is followed by the *module name*, which follows the naming rules for package names , so they cannot
 contain any dashes. For example:
 
