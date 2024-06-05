@@ -530,7 +530,7 @@ Important note:
 
 To migrate an application to the use of modules, first we need to know the structure of packages and libraries.
 So first draw a *directed dependency graph*, with arrows from "projects" that requires a dependency to "projects" that
-make the dependency available. So roughly the arrows go from `requires <A>` to `exports <A>`.
+make the dependency available. So conceptually the arrows go from `requires <A>` to `exports <A>` (had we finished the migration).
 
 Depending on the result of that exercise, and on who owns what part of the code base and its dependencies, choose a
 *migration strategy*, either *bottom-up* or else *top-down*.
