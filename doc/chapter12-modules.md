@@ -414,7 +414,7 @@ Summarizing the directives themselves:
 * Specifying a dependency on another module:
   * `requires <module>`
   * `requires transitive <module>`
-* Allowing a package to be used at runtime with reflection, even giving access to private members of non-public package members:
+* Allowing a package to be used at runtime with reflection, even giving reflective access to private members of non-public package members:
   * `opens <package>`
   * `opens <package> to <module>`
 * Making a service implementation available:
