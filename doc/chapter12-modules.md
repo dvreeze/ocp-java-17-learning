@@ -475,7 +475,7 @@ Command-line options for `javac` we need to know:
 
 Command-line options for `java` we need to know:
 * Location of JARs in modular program: `--module-path <path>`, `-p <path>`
-* Module name to run: `--module <moduleName>`, `-m <moduleName>`
+* Module-specific fully qualified class name to run: `--module <moduleName/fullyQualifiedClassName>`, `-m <moduleName/fullyQualifiedClassName>`
 * Describing details of a module: `--describe-module`, `-d`
 * Listing observable modules without running a program: `--list-modules`
 * Showing modules when running a program: `--show-module-resolution`
