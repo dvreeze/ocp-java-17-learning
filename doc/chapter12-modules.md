@@ -199,6 +199,7 @@ Obviously `private` and package-private members are not accessible to other modu
 Packages can be exported to specific modules, with syntax `exports <some-package> to <some-module>`.
 
 A `requires` directive specifies *both a compile-time and runtime dependency on a given module*.
+(A `requires static` directive, specifies only a compile-time dependency on a module.)
 
 A `requires transitive <moduleName>` directive offers *implied readability*. That is, each module depending on this module
 will automatically also depend on module `<moduleName>`. This `requires transitive` directive often makes sense, especially
