@@ -424,4 +424,79 @@ Summarizing the directives themselves:
 
 ### Discovering modules
 
+To get a feel for the available modules in the JDK itself, run `java --list-modules`.
+To exclude the APIs that are internal to the JDK, run `java --list-modules | grep "java\."`.
+
+To get a description of a module, in particular "java.base" which is always available, run
+`java --describe-module java.base`.
+
+We need to be able to recognize most of the output of these specific commands.
+
+There are several commands we need to be able to use. In particular:
+* Compiling non-modular code:
+  * `javac --class-path <classpath> -d <outputDirectory> <classesToCompile>`
+  * abbreviated: `javac -classpath <classpath> -d <outputDirectory> <classesToCompile>`
+  * abbreviated: `javac -cp <classpath> -d <outputDirectory> <classesToCompile>`
+* Running non-modular code:
+  * `java --class-path <classpath> <fullyQualifiedClassName>`
+  * abbreviated: `java -classpath <classpath> <fullyQualifiedClassName>`
+  * abbreviated: `java -cp <classpath> <fullyQualifiedClassName>`
+* Compile a module (where "the classes to compile" must include the `module-info.java` source file):
+  * `javac --module-path <moduleFolderName> -d <outputDirectory> <classesToCompile>`
+  * abbreviated: `javac -p <moduleFolderName> -d <outputDirectory> <classesToCompile>`
+* Run a module:
+  * `java --module-path <moduleFolderName> --module <moduleName/fullyQualifiedClassName>`
+  * abbreviated: `java -p <moduleFolderName> -m <moduleName/fullyQualifiedClassName>`
+* Describe a module (note that `-d` means something else entirely than for `javac`):
+  * `java --module-path <moduleFolderName> --describe-module <moduleName>`
+  * abbreviated: `java -p <moduleFolderName> -d <moduleName>`
+  * `jar --file <jarName> --describe-module`
+  * abbreviated: `jar -f <jarName> -d`
+* List available modules:
+  * `java --module-path <moduleFolderName> --list-modules`
+  * abbreviated: `java -p <moduleFolderName> --list-modules`
+  * listing only JDK modules: `java --list-modules`
+* View dependencies (note that it is `-summary` with only one dash in front):
+  * `jdeps -summary --module-path <moduleFolderName> <jarName>`
+  * somewhat abbreviated: `jdeps -s --module-path <moduleFolderName> <jarName>`
+  * `jdeps --jdk-internals <jarName>`
+  * `jdeps -jdkinternals <jarName>`
+* Show module resolution while starting to run a program:
+  * `java --show-module-resolution --module-path <moduleFolderName> --module <moduleName/fullyQualifiedClassName>`
+  * abbreviated: `java --show-module-resolution -p <moduleFolderName> -m <moduleName/fullyQualifiedClassName>`
+* Create runtime JAR:
+  * `jlink --module-path <moduleFolderName> --add-modules <moduleName> --output <outputAppName>`
+  * abbreviated: `jlink -p <moduleFolderName> --add-modules <moduleName> --output <outputAppName>`
+
+Command-line options for `javac` we need to know:
+* Location of JARs in non-modular program: `-cp <classpath>`, `-classpath <classpath>`, `--class-path <classpath>`
+* Compiler output directory, for the generated class files: `-d <outputDir>`
+* Location of JARs in modular program: `--module-path <path>`, `-p <path>`
+
+Command-line options for `java` we need to know:
+* Location of JARs in modular program: `--module-path <path>`, `-p <path>`
+* Module name to run: `--module <moduleName>`, `-m <moduleName>`
+* Describing details of a module: `--describe-module`, `-d`
+* Listing observable modules without running a program: `--list-modules`
+* Showing modules when running a program: `--show-module-resolution`
+
+Command-line options for `jar` we need to know:
+* Creating a new JAR: `--create`, `-c`
+* Prints details when working with JAR files ("verbose"): `--verbose`, `-v`
+* JAR file name: `--file`, `-f`
+* Directory containing the files to be used to create a JAR file: `-C`
+* Describing details of a module: `--describe-module`, `-d`
+
+Command-line options for `jdeps` we need to know:
+* Location of JARs in modular program (no abbreviation): `--module-path <path>`
+* Summarizes output: `-summary` (note the single dash), `-s`
+* Lists uses of internal APIs: `--jdk-internals`, `-jdkinternals`
+
+Command-line options for `jlink` we need to know:
+* Location of JARs in modular program: `--module-path <path>`, `-p <path>`
+* List of modules to package: `--add-modules`
+* Name of output directory: `--output`
+
+### Comparing types of modules
+
 TODO
