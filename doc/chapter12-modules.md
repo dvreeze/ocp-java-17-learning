@@ -464,7 +464,7 @@ There are several commands we need to be able to use. In particular:
 * Show module resolution while starting to run a program:
   * `java --show-module-resolution --module-path <moduleFolderName> --module <moduleName/fullyQualifiedClassName>`
   * abbreviated: `java --show-module-resolution -p <moduleFolderName> -m <moduleName/fullyQualifiedClassName>`
-* Create runtime JAR:
+* Create (smaller) runtime JAR:
   * `jlink --module-path <moduleFolderName> --add-modules <moduleName> --output <outputAppName>`
   * abbreviated: `jlink -p <moduleFolderName> --add-modules <moduleName> --output <outputAppName>`
 
