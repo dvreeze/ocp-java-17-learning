@@ -186,13 +186,13 @@ to code in other modules (assuming that the export was to all other modules).
 Hence, this does not change anything w.r.t. the *access modifiers*. It only *adds extra restrictions/encapsulation at the
 level of packages* and their visibility *across module boundaries*.
 
-In other words, given a top-level class/interface declaration and its containing package:
+In other words, given a `public` top-level class/interface declaration and its containing package:
 * `protected` members of that class/interface:
   * *within their module*: are available only within same package or to subclasses, as we already know
-  * *outside their module*: are available to subclasses only *if the package is exported* (and therefore `public`)
+  * *outside their module*: are available to subclasses only *if the package is exported*
 * `public` members of that class/interface:
   * *within their module*: are available to all classes, as we already know
-  * *outside their module*: are accessible only *if the package is exported* (and therefore `public`)
+  * *outside their module*: are accessible only *if the package is exported*
 
 Obviously `private` and package-private members are not accessible to other modules.
 
