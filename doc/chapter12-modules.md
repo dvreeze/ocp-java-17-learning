@@ -337,8 +337,8 @@ Generic type `java.util.ServiceLoader` is provided by the Java platform. Some th
 * Class `java.util.ServiceLoader<T>` can locate services of type `T`, where the latter type is an *interface* or *abstract class* (a concrete class is allowed but not recommended)
 * Type `java.util.ServiceLoader<T>` extends `java.lang.Iterable<T>`, so we can use it in an *enhanced for-loop* to iterate over the service implementations
 * One static method we need to know is `public static <S> ServiceLoader<S> load(Class<S> service)`
-* One instance method we need to know is `public Stream<ServlceLoader.Provider<S>> stream()`
-* Type `ServlceLoader.Provider<S>` extends `Supplier<S>`, so it has instance method `public S get()` to obtain the service
+* One instance method we need to know is `public Stream<ServiceLoader.Provider<S>> stream()`
+* Type `ServiceLoader.Provider<S>` extends `Supplier<S>`, so it has instance method `public S get()` to obtain the service
 
 This "locator" module contains the following `module-info.java`, in the root of the source tree:
 
