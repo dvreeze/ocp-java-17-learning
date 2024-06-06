@@ -179,20 +179,20 @@ module com.test.myproject.web {
 
 In a module declaration, the *order of directives is irrelevant* and can freely be chosen.
 
-What does *exporting a package* mean exactly? It means that all *top-level classes/interfaces/enums/records* of that package
-are exported and *therefore visible to other modules*. Any *public and protected members* of those top-level type declarations
-are *visible* to code in other modules (assuming that the export was to all other modules).
+What does *exporting a package* mean exactly? It means that all *public top-level classes/interfaces/enums/records* of that
+package are *visible to other modules*. Any *public and protected members* of those top-level type declarations are *visible*
+to code in other modules (assuming that the export was to all other modules).
 
-Hence, this does not change anything w.r.t. the *access modifiers*. It only adds extra restrictions/encapsulation at the
-level of *packages* and their visibility *across module boundaries*.
+Hence, this does not change anything w.r.t. the *access modifiers*. It only *adds extra restrictions/encapsulation at the
+level of packages* and their visibility *across module boundaries*.
 
 In other words, given a top-level class/interface declaration and its containing package:
 * `protected` members of that class/interface:
   * *within their module*: are available only within same package or to subclasses, as we already know
-  * *outside their module*: are available to subclasses only *if the package is exported*
+  * *outside their module*: are available to subclasses only *if the package is exported* (and therefore `public`)
 * `public` members of that class/interface:
   * *within their module*: are available to all classes, as we already know
-  * *outside their module*: are accessible only *if the package is exported*
+  * *outside their module*: are accessible only *if the package is exported* (and therefore `public`)
 
 Obviously `private` and package-private members are not accessible to other modules.
 
