@@ -61,14 +61,23 @@ public class StopwatchUsingThreadPool {
             };
             executorService.schedule(canceller, startSeconds, TimeUnit.SECONDS);
 
-            // Blocking wait, or else the program flow does not proceed
-            // Even an "executorService.awaitTermination" after "executorService.shutdown" does not change that
+            // Blocking wait, or else the "executorService" is shut down far too early, before making any progress in the "count-down".
+            // After all, without this blocking wait the main thread would almost terminate, long before the first second has passed.
+            // Note that after shutdown no new tasks are submitted, including the tasks running after 1 second, 2 seconds, 3 seconds etc.
             future.get();
         } catch (CancellationException e) {
             System.out.println("Cancelled, as expected");
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         } finally {
+            // For the sake of argument, let's assume that the "future.get()" call above had been removed from the code.
+            // This "shutdown" does not wait for previously submitted tasks to complete execution, but that's ok.
+            // After all, terminating the main thread before the currently running tasks complete is not a problem here.
+            // The threads in the application are not daemon threads, so they will finish their work.
+            // So calling "awaitTermination" after "shutdown" does not buy us much.
+            // The issue is different, like mentioned above.
+            // The issue is that no tasks will be started after 1 second, 2 seconds, etc. (if the "get" call was not done).
+            // Also note that the cancellation task had already started, so that one will finish in any case.
             executorService.shutdown();
         }
     }
