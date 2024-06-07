@@ -81,7 +81,7 @@ A *system thread* is created by the JVM and runs in the background. The *garbage
 
 A *user-defined thread* is created by the application developer. Maybe most programs do not create any user thread,
 leaving only one user thread, namely the one calling the `main(String[])` method. We call such programs *single-threaded*,
-although technically that is not correct.
+although technically that is not entirely correct.
 
 System and user-defined threads can be created as *daemon threads*. These are threads that will not prevent the JVM from
 exiting when the program finishes. In other words, a Java program ends when the only remaining threads are daemon threads.
@@ -105,18 +105,18 @@ The 3 "pausing" thread states are:
   * When subsequently access to the "monitor lock" has been granted, the thread becomes runnable again
 * *Waiting*, so waiting indefinitely to be *notified*
   * When a thread is runnable and calls instance method `Object.wait()`, it enters this state
-  * When subsequently instance method `Object.notify()` is called, the thread becomes runnable again
+  * When subsequently in another thread instance method `Object.notify()` is called on the same object, the thread becomes runnable again
 * *Timed_waiting*, so waiting a specified time
-  * When a thread is runnable and calls static method `Thread.sleep()` (among other calls), it enters this state
+  * For example, when a thread is runnable and calls static method `Thread.sleep()`, it enters this state
   * When the sleep time has passed, the thread becomes runnable again
 
 Not all possible thread state changes are mentioned above. For example, an interrupted thread in state *Timed_waiting*
 will go straight back to state *Runnable*.
 
-Thread methods `wait()`, `notify()` and `join()` are beyond the scope of the exam. They should not be used anyway.
+Methods `Object.wait()`, `Object.notify()` and `Thread.join()` are beyond the scope of the exam. They should not be used anyway.
 The concurrency API should be used instead.
 
-The thread state can be queried with method `getState()`, returning an enumeration value from enum `Thread.State`.
+The thread state can be queried with method `Thread.getState()`, returning an enumeration value from enum `Thread.State`.
 
 #### Polling with sleep
 
