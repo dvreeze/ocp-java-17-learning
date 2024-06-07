@@ -107,7 +107,7 @@ The 3 "pausing" thread states are:
   * When a thread is runnable and calls instance method `Object.wait()`, it enters this state
   * When subsequently in another thread instance method `Object.notify()` is called on the same object, the thread becomes runnable again
 * *Timed_waiting*, so waiting a specified time
-  * For example, when a thread is runnable and calls static method `Thread.sleep()`, it enters this state
+  * For example, when a thread is runnable and calls static method `Thread.sleep(long)`, passing a sleep time in milliseconds, it enters this state
   * When the sleep time has passed, the thread becomes runnable again
 
 Not all possible thread state changes are mentioned above. For example, an interrupted thread in state *Timed_waiting*
