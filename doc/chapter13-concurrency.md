@@ -203,8 +203,143 @@ RUNNABLE again, triggering a checked `java.lang.InterruptedException`. The threa
 needs to acquire a "monitor lock".
 
 If the thread on which method `interrupt()` is called is already RUNNABLE, its state is not affected. On the other hand,
-a RUNNABLE thread can still "cooperate" by periodically checking the `Thread.isInterrupted()` boolean value.
+a RUNNABLE thread can still "be cooperative" by periodically checking the `Thread.isInterrupted()` boolean value.
 
 ### Creating threads with the concurrency API
+
+Java contains the *Java Concurrency API*, which is offered by package `java.util.concurrent` and sub-packages.
+It should almost always be used instead of creating threads ourselves.
+
+The main interface is `java.util.concurrent.ExecutorService` (which extends interface `java.util.concurrent.Executor`).
+An `ExecutorService` can be used to submit work to. Typically, but not always, an `ExecutorService` is backed by
+a *thread pool*.
+
+An `ExecutorService` can be obtained from *factory class* `java.util.concurrent.Executors`, through one of its static
+methods.
+
+#### Introducing the single-thread executor
+
+We can get a single-thread executor with static method `Executors.newSingleThreadExecutor()`. After this call,
+there are 2 user-defined threads, namely the main thread and the "executor" thread, both running simultaneously.
+Because of the single "executor" thread, all tasks submitted to the executor will run sequentially in order of submission.
+Yet the order between work on the main thread and work in the "executor" thread is undefined and up to the thread scheduler.
+
+Consider the following example:
+
+```java
+ExecutorService executor = Executors.newSingleThreadExecutor();
+try {
+    executor.execute(runnable1);
+    executor.execute(runnable2);
+    executor.execute(runnable3);
+} finally {
+    executor.shutdown();
+}
+```
+
+The following is true about this example:
+* The 3 runnable tasks will be run sequentially in order of submission to the single-thread executor
+* It is quite likely that shutdown is called before the 3 tasks have completed, but they will not be cancelled in this "orderly shutdown"
+* So it is likely that the main thread terminates before the single executor thread finishes
+* That is ok, though, because the single executor thread is a non-daemon thread, so it keeps running after the main thread terminates
+
+#### Shutting down a thread executor
+
+The *life cycle* of an `ExecutorService` is as follows:
+1. On creation, the `ExecutorService` is immediately *active*:
+   * the `ExecutorService` accepts new tasks, and starts executing already submitted tasks
+   * methods `isShutdown()` and `isTerminated()` both return `false`
+   * when calling `shutdown()`, the `ExecutorService` transfers to state "shutting down"
+2. After a `shutdown()` call, the `ExecutorService` is *shutting down*:
+   * new tasks are rejected, throwing an unchecked `RejectedExecutionException`
+   * but already submitted tasks are still executing (on a thread pool non-daemon thread, regardless of whether the main thread still runs)
+   * method `isShutdown()` returns `true`, but `isTerminated` may initially still return `false`
+   * when after shutting down all tasks have finished, the `ExecutorService` transfers to state "terminated"
+3. After *all tasks have finished* following a call to `shutdown()`, the `ExecutorService` has *terminated*:
+   * new tasks are rejected and no tasks are running
+   * methods `isShutdown()` and `isTerminated()` both return `true`
+   * the `ExecutorService` cannot be used anymore
+
+A `ThreadExecutor` creates a non-daemon thread on the first executed task, so if we fail to call `shutdown()`, the application
+will *never terminate*. Method `shutdownNow()` does try to stop all running tasks (and discard any tasks that have not yet
+started).
+
+An `ExecutorService` is not an `AutoCloseable`, so it cannot be used as resource in a try-with-resources statement.
+Still, it must be used in a try-finally statement, as shown above, in order to prevent memory leaks.
+
+#### Submitting tasks
+
+Tasks can be submitted to an `ExecutorService` as `Runnable` or `Callable`, using one of the following instance methods:
+* `public void execute(Runnable task)`, inherited from supertype `Executor`
+* `public Future<?> submit(Runnable task)`
+* `public <T> Future<T> submit(Callable<T> task)`
+* `public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)`
+* `public <T> T invokeAny(Collection<? extends Callable<T>> tasks)`
+
+Method `execute` is really "fire-and-forget". It returns `void`, so gives no handle to checks the task's progress, etc.
+It is usually better to use a `submit` call instead.
+
+Both `submit` methods (one taking a `Runnable` and the other one taking a `Callable<T>`) return a `Future<T>` (or `Future<?>`)
+which can be used to track the result. With a `Future` we can do a blocking wait until the result is available, for example.
+
+Method `invokeAll` returns a collection of `Future` instances in the same order as the original collection of `Callable`
+instances.
+
+Method `invokeAny` executes the given tasks but waits for at least one to complete.
+
+#### Waiting for results
+
+*Interface* `Future<T>` has the following methods we need to know about:
+* `public boolean isDone()`
+  * it returns `true` if the task was completed, threw an exception or was cancelled
+* `public boolean isCancelled()`
+  * it returns `true` if the task was cancelled before completing normally
+* `public boolean cancel(boolean mayInterruptIfRunning)`
+  * attempts to cancel execution of the task, returning `true` if it was successfully cancelled or `false` if it could not be cancelled or is complete
+* `public T get()`
+  * retrieves result of the task, *waiting endlessly* if the result is not yet available
+* `public T get(long timeout, TimeUnit unit)`
+  * retrieves result of the task, *waiting the specified amount of time*; if the result is not yet available after the timeout period, a checked `TimeoutException` is thrown
+
+Our earlier "CheckResults" program could become as follows, using the Java Concurrency API:
+
+```java
+public class CheckResults {
+    // Not thread-safe
+    private static int counter = 0;
+
+    public static void main(String[] args) {
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        try {
+            Future<?> result = service.submit(() -> {
+                for (int i = 0; i < 1_000_000; i++) counter++;
+            });
+            result.get(10, TimeUnit.SECONDS); // returns null for Runnable
+            System.out.println("Reached!");
+        } catch (TimeoutException e) {
+            System.out.println("Not reached in time");
+        } finally {
+            service.shutdown();
+        }
+    }
+}
+```
+
+For `TimeUnit`, we can choose NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS, MINUTES, HOURS and DAYS.
+
+*Functional interface* `Callable<T>` is like `Runnable`, but it has a non-`void` generic return type, and may throw
+a checked exception:
+
+```java
+@FunctionalInterface
+public interface Callable<T> {
+    T call() throws Exception;
+}
+```
+
+If after calling `shutdown()` we would like to wait for the results, without needing the results themselves (as method
+`get()` would give us), consider using `ExecutorService` method `awaitTermination(long, TimeUnit)`.
+
+#### Scheduling tasks
 
 TODO
