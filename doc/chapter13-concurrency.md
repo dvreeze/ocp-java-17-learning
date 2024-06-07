@@ -337,8 +337,8 @@ public interface Callable<T> {
 }
 ```
 
-If after calling `shutdown()` we would like to wait for the results, without needing the results themselves (as method
-`get()` would give us), consider using `ExecutorService` method `awaitTermination(long, TimeUnit)`.
+If after calling `shutdown()` we would like to wait for the results, without needing the results themselves (as `Future`
+instance method `get()` would give us), consider using `ExecutorService` method `awaitTermination(long, TimeUnit)`.
 
 #### Scheduling tasks
 
