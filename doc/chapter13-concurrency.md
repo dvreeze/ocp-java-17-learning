@@ -91,27 +91,27 @@ By default, user-defined threads are not daemon threads, so the program will wai
 #### Managing a thread's life cycle
 
 A created `Thread` can be in one of 6 states. The 3 "non-pausing" thread states are:
-* *New*
+* *NEW*
   * This is the state of a thread that has been created but not yet started
-* *Runnable*, which means that the thread either runs or is able to run
+* *RUNNABLE*, which means that the thread either runs or is able to run
   * The first time the thread is in this state is after calling `start()` on a freshly created thread
-  * A thread can go from "runnable" to one of the 3 "pausing" states mentioned below, and back from those states to "runnable"
-* *Terminated*
+  * A thread can go from RUNNABLE to one of the 3 "pausing" states mentioned below, and back from those states to RUNNABLE
+* *TERMINATED*
   * This is the end state of the thread, when the `run()` method completes or an uncaught exception is thrown
 
 The 3 "pausing" thread states are:
-* *Blocked*, so waiting to enter a *synchronized block*
-  * When a thread is runnable and starts waiting for a "monitor lock", it enters this state
-  * When subsequently access to the "monitor lock" has been granted, the thread becomes runnable again
-* *Waiting*, so waiting indefinitely to be *notified*
-  * When a thread is runnable and calls instance method `Object.wait()`, it enters this state
-  * When subsequently in another thread instance method `Object.notify()` is called on the same object, the thread becomes runnable again
-* *Timed_waiting*, so waiting a specified time
-  * For example, when a thread is runnable and calls static method `Thread.sleep(long)`, passing a sleep time in milliseconds, it enters this state
-  * When the sleep time has passed, the thread becomes runnable again
+* *BLOCKED*, so waiting to enter a *synchronized block*
+  * When a thread is RUNNABLE and starts waiting for a "monitor lock", it enters this state
+  * When subsequently access to the "monitor lock" has been granted, the thread becomes RUNNABLE again
+* *WAITING*, so waiting indefinitely to be *notified*
+  * When a thread is RUNNABLE and calls instance method `Object.wait()`, it enters this state
+  * When subsequently in another thread instance method `Object.notify()` is called on the same object, the thread becomes RUNNABLE again
+* *TIMED_WAITING*, so waiting a specified time
+  * For example, when a thread is RUNNABLE and calls static method `Thread.sleep(long)`, passing a sleep time in milliseconds, it enters this state
+  * When the sleep time has passed, the thread becomes RUNNABLE again
 
-Not all possible thread state changes are mentioned above. For example, an interrupted thread in state *Timed_waiting*
-will go straight back to state *Runnable*.
+Not all possible thread state changes are mentioned above. For example, an interrupted thread in state *TIMED_WAITING*
+will go straight back to state *RUNNABLE*.
 
 Methods `Object.wait()`, `Object.notify()` and `Thread.join()` are beyond the scope of the exam. They should not be used anyway.
 The concurrency API should be used instead.
@@ -165,9 +165,9 @@ public class CheckResultsWithSleep {
 }
 ```
 
-At least the "main" thread alternates a lot between state Runnable and Timed_waiting, spending most time in the latter state.
+At least the "main" thread alternates a lot between state RUNNABLE and TIMED_WAITING, spending most time in the latter state.
 But the program is still not thread-safe, in that the static `counter` variable can have an invalid or unexpected value,
-because 2 threads may manipulate that variable at the same time.
+because 2 threads may access that variable at the same time.
 
 #### Interrupting a thread
 
@@ -198,12 +198,12 @@ public class CheckResultsWithSleepAndInterrupt {
 }
 ```
 
-Calling instance method `Thread.interrupt()` on a thread in the Timed_waiting or Waiting state causes that thread to become
-Runnable again, triggering a checked `java.lang.InterruptedException`. The thread may also go to the Blocked state if it
+Calling instance method `Thread.interrupt()` on a thread in the TIMED_WAITING or WAITING state causes that thread to become
+RUNNABLE again, triggering a checked `java.lang.InterruptedException`. The thread may also go to the BLOCKED state if it
 needs to acquire a "monitor lock".
 
-If the thread on which method `interrupt()` is called is already Runnable, its state is not affected. On the other hand,
-a Runnable thread can still "cooperate" by periodically checking the `Thread.isInterrupted()` boolean value.
+If the thread on which method `interrupt()` is called is already RUNNABLE, its state is not affected. On the other hand,
+a RUNNABLE thread can still "cooperate" by periodically checking the `Thread.isInterrupted()` boolean value.
 
 ### Creating threads with the concurrency API
 
