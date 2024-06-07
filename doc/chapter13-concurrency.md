@@ -120,11 +120,90 @@ The thread state can be queried with method `Thread.getState()`, returning an en
 
 #### Polling with sleep
 
-TODO
+Let's start with the following example of a counter in another thread (copied from the book), and stopping when the count
+has been reached:
+
+```java
+public class CheckResults {
+    // Not thread-safe
+    private static int counter = 0;
+
+    public static void main(String[] args) {
+        new Thread(() -> {
+                for (int i = 0; i < 1_000_000; i++) counter++;
+        }).start();
+        while (counter < 1_000_000) {
+            System.out.println("Not reached yet");
+        }
+        System.out.println("Reached: " + counter);
+    }
+}
+```
+
+This program unnecessarily uses a lot of CPU resources. Let's improve on that, by *polling*, which is the process of
+intermittently checking data at some interval:
+
+```java
+public class CheckResultsWithSleep {
+    // Not thread-safe
+    private static int counter = 0;
+
+    public static void main(String[] args) {
+        new Thread(() -> {
+                for (int i = 0; i < 1_000_000; i++) counter++;
+        }).start();
+        while (counter < 1_000_000) {
+            System.out.println("Not reached yet");
+            try {
+                Thread.sleep(1_000); // 1 second
+            } catch (InterruptedException e) {
+                System.out.println("Interrupted!");
+            }
+        }
+        System.out.println("Reached: " + counter);
+    }
+}
+```
+
+At least the "main" thread alternates a lot between state Runnable and Timed_waiting, spending most time in the latter state.
+But the program is still not thread-safe, in that the static `counter` variable can have an invalid or unexpected value,
+because 2 threads may manipulate that variable at the same time.
 
 #### Interrupting a thread
 
-TODO
+The preceding program still may take almost a second too long. Why not *interrupt* the main thread once the program is
+done counting? So we get:
+
+```java
+public class CheckResultsWithSleepAndInterrupt {
+    // Not thread-safe
+    private static int counter = 0;
+
+    public static void main(String[] args) {
+        final var mainThread = Thread.currentThread();
+        new Thread(() -> {
+                for (int i = 0; i < 1_000_000; i++) counter++;
+                mainThread.interrupt();
+        }).start();
+        while (counter < 1_000_000) {
+            System.out.println("Not reached yet");
+            try {
+                Thread.sleep(1_000); // 1 second
+            } catch (InterruptedException e) {
+                System.out.println("Interrupted!");
+            }
+        }
+        System.out.println("Reached: " + counter);
+    }
+}
+```
+
+Calling instance method `Thread.interrupt()` on a thread in the Timed_waiting or Waiting state causes that thread to become
+Runnable again, triggering a checked `java.lang.InterruptedException`. The thread may also go to the Blocked state if it
+needs to acquire a "monitor lock".
+
+If the thread on which method `interrupt()` is called is already Runnable, its state is not affected. On the other hand,
+a Runnable thread can still "cooperate" by periodically checking the `Thread.isInterrupted()` boolean value.
 
 ### Creating threads with the concurrency API
 
