@@ -353,7 +353,7 @@ Some remarks about methods `scheduleAtFixedRate` and `scheduleWithFixedDelay`:
 * These 2 methods *create a new task repeatedly* (at the given rate or after the given delay, respectively)
 * This also means that if the main thread quickly calls `shutdown` and then terminates, any "new tasks" (after 1st delay, 2nd delay etc.) will not be started!
 * These 2 methods return a `ScheduledFuture`, representing pending completion of the series of repeated tasks
-* The repeated tasks will run forever, unless cancelled
+* The "repeated task loop" will run forever, unless cancelled
 * Cancellation can be implemented as a scheduled task that calls `ScheduledFuture.cancel` on the returned `ScheduledFuture`, leading to an unchecked `CancellationException`
 * The `ScheduledFuture.get` calls will never return normally
 * Method `scheduleAtFixedRate` is problematic when each task consistently takes longer than the execution interval
