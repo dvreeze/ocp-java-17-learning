@@ -712,7 +712,50 @@ When possible, prefer the concurrent collection implementations mentioned above.
 
 ### Identifying threading problems
 
-TODO
+We have learned how to solve potential thread-safety issues with "synchronisation mechanisms" requiring some form of
+locking (if we have to deal with *shared mutable state*), but the other side of the coin is the potential for "threading
+problems", in particular *liveness problems*. These are problems in which an application becomes unresponsive or appear
+to be "stuck", due to threads being "stuck", waiting for resources that require a lock.
+
+The following *liveness problems* are important to know about:
+* *deadlock*
+* *starvation*
+* *livelock*
+
+Even the use of the Java Concurrency API cannot completely prevent these issues.
+
+*Deadlock* occurs when 2 threads block each other. It is often the consequence of threads trying to get locks in the opposite
+order. For example, see this pattern where deadlock may occur:
+
+```java
+// One thread running this code
+synchronized(resource1) {
+    // Assume the thread is at this point
+    synchronized(resource2) {
+        // do something ...
+    }
+}
+
+// And the other thread running this code,
+// trying to acquire locks in the opposite order
+synchronized(resource2) {
+    // Assume the thread is at this point
+    synchronized(resource1) {
+        // do something ...
+    }
+}
+```
+
+*Starvation* happens when a thread hardly gets a chance to acquire a lock that is claimed continuously by other threads.
+
+*Livelock* occurs when 2 or more threads are *conceptually blocked,* although they are still active. *Failed deadlock
+recovery* is a good example of livelock.
+
+*Race conditions* occur when 2 tasks that should run sequentially run at the same time and interfere with each other.
+For example, 2 users are trying to create an account with the same username at the same time.
+
+What we certainly do not want to happen in that case is that both users get the same username. One or both users getting
+an error message is better, and does not affect the (data) integrity of the system.
 
 ### Working with parallel streams
 
