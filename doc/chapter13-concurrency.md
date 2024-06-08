@@ -383,4 +383,188 @@ All these methods have overloads that take an extra parameter of *interface* typ
 
 ### Writing thread-safe code
 
-TODO
+*Thread-safety* is a property of an *object* that it can safely be used in a multithreaded environment *without its state
+being corrupted* as a consequence of interfering threads.
+
+To make classes thread-safe, we need to explicitly use *techniques* to protect data in a multithreaded environment.
+
+My personal take on *strategies* for achieving *thread-safety*, which is foremost about protecting *shared mutable state*:
+* *Don't share* the data among threads (e.g. in a servlet application data is typically created in the context of handling 1 HTTP request in 1 request handling thread, without sharing the data)
+* *Don't mutate* the data; this is the most scalable (and maybe underrated) approach: make data *deeply immutable*, and thread-safety concerns disappear right away
+* *Don't mutate shared data at the same time*; many of the "synchronisation mechanisms" below fall in this category
+
+Unfortunately, the Java platform does not really have the features to prevent thread-safety concerns early on in application design.
+Again, disciplined use of *deep immutability* goes a long way in preventing thread-safety issues.
+
+#### Understanding thread-safety
+
+Even a `++` (pre-/post-)increment operation is *not atomic* when the data can be accessed simultaneously by multiple
+threads. For example, the following program (from the book) can have quite different outputs in different runs, with
+duplicated numbers and/or mixed up order of the numbers. Clearly this program is not thread-safe, foremost because it
+suffers from *lost updates*.
+
+```java
+public class SheepManager {
+    // Not thread-safe
+    private int sheepCount = 0;
+    private void incrementAndReport() {
+        System.out.println((++sheepCount) + "");
+    }
+    public static void main(String[] args) {
+        ExecutorService service = Executors.newFixedThreadPool(20);
+        try {
+            SheepManager manager = new SheepManager();
+            for (int i = 0; i < 10; i++) {
+                service.submit(() -> manager.incrementAndReport());
+            }
+        } finally {
+            service.shutdown();
+        }
+    }
+}
+```
+
+Indeed, even a small operation like `++` is *not atomic*, and increments may get lost, caused by `++` being 2 operations,
+namely a read and a write operation. For example, the following order of events is possible when 2 threads try to increment
+the same variable at the same time:
+1. Thread A reads variable `sheepCount` as 1
+2. Thread B reads variable `sheepCount` as 1
+3. Thread A writes variable `sheepCount` as 2
+4. Thread B writes variable `sheepCount` as 2
+
+This unexpected result of 2 tasks running at the same time is called a *race condition*.
+
+#### Accessing data with volatile
+
+Keyword `volatile` in a variable declaration ensures that only 1 thread at a time updates the variable at one time and that
+data read among multiple threads is consistent. This does not solve the thread-safety problem above, however, because we
+still have the problem that `++` is not atomic but 2 operations instead. With keyword `volatile` we do not fix that:
+
+```java
+// Not good enough
+private volatile int sheepCount = 0;
+```
+
+#### Protecting data with atomic classes
+
+An operation is called *atomic* when it can be carried out as a single unit of execution without any interference from
+another thread, instead making the other thread wait for this operation to end.
+
+The Concurrency API offers support for *atomic operations*, in the `java.util.concurrent.atomic` package. In that package
+we find classes like `AtomicBoolean`, `AtomicInteger`, `AtomicLong` and `AtomicReference<V>`, offering atomic updates.
+
+Let's list some of the methods of class `AtomicInteger`. Some `AtomicInteger` *instance methods* are:
+* `get()`, returning the current (int) value
+* `set(int)`, atomically setting a new value, equivalent to assignment (`=`)
+* `getAndSet(int)`, like `set()` but also returning the old value
+* `incrementAndGet()` and `getAndIncrement()`, atomically incrementing and returning the new value and old value, respectively
+* `decrementAndGet()` and `getAndDecrement()`, atomically decrementing and returning the new value and old value, respectively
+
+Class `AtomicLong` is analogous, but for primitive type `long` instead of `int`. Class `AtomicBoolean` is analogous, but
+for `boolean` and without the increment/decrement operations.
+
+Class `AtomicReference<V>` is analogous to `AtomicBoolean`, but for reference types instead of `boolean`. It also has methods:
+* `getAndUpdate(UnaryOperator<V>)`, to perform the given "update operation" atomically and returning the old value
+* `updateAndGet(UnaryOperator<V>)`, to perform the given "update operation" atomically and returning the new value
+
+Classes `AtomicInteger` and `AtomicLong` have similar methods.
+
+Using `AtomicInteger` we could adapt the problematic program above by declaring variable `sheepCount` as follows:
+
+```java
+private AtomicInteger sheepCount = new AtomicInteger(0);
+```
+
+The statement with the "increment" would then become:
+
+```java
+System.out.println(sheepCount.incrementAndGet() + "");
+```
+
+The result would be that duplicate numbers would no longer occur, but the order of numbers in the output is still unknown.
+
+#### Improving access with synchronized blocks
+
+What if we need to safely update 2 atomic variables at the same time? Then we might use a *monitor*, also known as *lock*.
+This *monitor* supports *mutual exclusion*, which means that only one thread can execute a certain code segment at the
+same time.
+
+Any Java `Object` can be used as monitor. For example (taken from the book):
+
+```java
+var manager = new SheepManager();
+synchronized(manager) {
+    // Code segment to be executed by one thread at a time
+}
+```
+
+Only 1 thread can obtain the monitor at each moment in time. If one thread has obtained the lock and is in the process
+of running the code segment, another thread trying to acquire the lock transitions to the BLOCKED state, until the lock
+becomes available again.
+
+Note that synchronisation only works when synchronizing on *the same Java Object*.
+
+We can use keyword `synchronized` as modifier of *instance methods*. The semantics are the same as synchronizing on the
+`this` reference, scoped to the entire method body.
+
+We can even use keyword `synchronized` as modifier of *static methods*. There the lock is on Object `MyClass.class`.
+
+#### Understanding the Lock framework
+
+A more powerful monitor/lock is offered by *interface* `java.util.concurrent.locks.Lock` and its `ReentrantLock` implementation.
+
+The following code snippets are equivalent:
+
+```java
+Object object = new Object();
+synchronized (object) {
+    // Protected code
+}
+```
+
+and
+
+```java
+Lock lock = new ReentrantLock();
+try {
+    lock.lock();
+    // Protected code
+} finally {
+    lock.unlock();
+}
+```
+
+This try-finally pattern with `ReentrantLock` is a best practice, because we must make sure that locks are *obtained and
+released exactly the same number of times*, in the right order. Only *release a lock that you have*, or else an unchecked
+`java.lang.IllegalMonitorStateException` is thrown.
+
+The following `Lock` interface *instance methods* are important to know:
+* `public void lock()`, requesting a lock and blocking until a lock is acquired
+* `public void unlock()`, releasing a lock
+* `public boolean tryLock()`, requesting a lock but returning immediately without blocking; returns true if the lock was successfully acquired
+* `public boolean tryLock(long timeout, TimeUnit unit)`, requesting a lock and blocking for the specified time or until the lock is acquired; returns true if the lock was successfully acquired
+
+A safe pattern to use with `tryLock` is the following pattern:
+
+```java
+Lock lock = new ReentrantLock();
+if (lock.tryLock()) {
+    try {
+        // Code executed if we have acquired the lock
+    } finally {
+        lock.unlock(); // Only releasing a lock we have acquired
+    }
+} else {
+    // Code executed if we have not acquired the lock
+}
+```
+
+Like the use of keyword `synchronized`, a `ReentrantLock` can obtain an *exclusive lock*, doing a *blocking wait* if the
+lock is not yet available.
+
+In addition, a `ReentrantLock` can do the following:
+* request a lock without blocking (see above)
+* request a lock while blocking for a specified amount of time (see above)
+* create a `ReentrantLock` with a "fairness" property, granting the lock to threads in the order of lock requests
+
+There is also a `ReentrantReadWriteLock`, which is quite useful but not necessary to know about for the exam.
