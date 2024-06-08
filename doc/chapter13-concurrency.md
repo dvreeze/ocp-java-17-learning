@@ -390,7 +390,7 @@ To make classes thread-safe, we need to explicitly use *techniques* to protect d
 
 My personal take on *strategies* for achieving *thread-safety*, which is foremost about protecting *shared mutable state*:
 * *Don't share* the data among threads (e.g. in a servlet application data is typically created in the context of handling 1 HTTP request in 1 request handling thread, without sharing the data)
-* *Don't mutate* the data; this is the most scalable (and maybe underrated) approach: make data *deeply immutable*, and thread-safety concerns disappear right away
+* *Don't mutate* the data; this is in many cases the most scalable (and maybe underrated) approach: make data *deeply immutable*, and thread-safety concerns disappear right away
 * *Don't mutate shared data at the same time*; many of the "synchronisation mechanisms" below fall in this category
 
 Unfortunately, the Java platform does not really have the features to prevent thread-safety concerns early on in application design.
