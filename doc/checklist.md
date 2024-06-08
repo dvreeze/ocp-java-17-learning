@@ -1,5 +1,11 @@
 # Checklist
 
+When confronted with a *code snippet*, we typically need to check:
+1. whether it *compiles*
+2. if so, whether it *runs successfully* (without throwing an exception, without running forever, etc.)
+
+That's the main topic of this checklist.
+
 ### Quickly checking whether a code snippet compiles successfully
 
 Does a code snippet *compile successfully*? It might help to quickly follow these steps:
