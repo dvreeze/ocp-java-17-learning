@@ -342,4 +342,45 @@ instance method `get()` would give us), consider using `ExecutorService` method 
 
 #### Scheduling tasks
 
+With static factory method `Executors.newSingleThreadScheduledExecutor()` we get a `ScheduledExecutorService`.
+*Interface* `java.util.concurrent.ScheduledExecutorService` extends interface `ExecutorService`, adding the following methods:
+* `schedule(Callable<T>, long, TimeUnit)`, taking a task and delay, and returning a `ScheduledFuture<T>`
+* `schedule(Runnable, long, TimeUnit)`, taking a task and delay, and returning a `ScheduledFuture<?>`
+* `scheduleAtFixedRate(Runnable, long, long, TimeUnit)`, taking a task, initial delay and period, and returning a `ScheduledFuture<?>`
+* `scheduleWithFixedDelay(Runnable, long, long, TimeUnit)`, taking a task, initial delay and period, and returning a `ScheduledFuture<?>`
+
+Some remarks about methods `scheduleAtFixedRate` and `scheduleWithFixedDelay`:
+* These 2 methods *create a new task repeatedly* (at the given rate or after the given delay, respectively)
+* This also means that if the main thread quickly calls `shutdown` and then terminates, any "new tasks" (after 1st delay, 2nd delay etc.) will not be started!
+* These 2 methods return a `ScheduledFuture`, representing pending completion of the series of repeated tasks
+* The repeated tasks will run forever, unless cancelled
+* Cancellation can be implemented as a scheduled task that calls `ScheduledFuture.cancel` on the returned `ScheduledFuture`, leading to an unchecked `CancellationException`
+* The `ScheduledFuture.get` calls will never return normally
+* Method `scheduleAtFixedRate` is problematic when each task consistently takes longer than the execution interval
+
+Note that for all 4 methods mentioned above the following holds:
+* If the main thread quickly calls `shutdown` and then terminates, any (one-time or repeated) tasks not yet created will be discarded!
+
+Interface `ScheduledFuture<T>` adds one method to `Future<T>`, namely `getDelay(TimeUnit)`, which returns the remaining delay.
+
+#### Increasing concurrency with thread pools
+
+So far we have seen *static factory methods* in class `Executors` that create single-thread executors. For more concurrency
+it makes sense to create executors that use *thread pools* of reusable pre-instantiated threads. The static factory methods in
+class `Executors` that we need to know about are:
+* `newSingleThreadExecutor()`, returning an `ExecutorService`
+  * the returned executor service uses a single worker thread that processes tasks in the order that they were submitted
+* `newSingleThreadScheduledExecutor()`, returning a `ScheduledExecutorService`
+  * the returned executor service uses a single worker thread that is capable of running scheduled one-time or repeated tasks
+* `newCachedThreadPool()`, returning an `ExecutorService`
+  * the executor service uses a thread pool that creates new threads as needed and then reuses them
+* `newFixedThreadPool(int)`, returning an `ExecutorService`
+  * the returned executor service uses a thread pool with a fixed number of threads
+* `newScheduledThreadPool(int)`, returning a `ScheduledExecutorService`
+  * the returned executor service uses a thread pool that is capable of running scheduled one-time or repeated tasks
+
+All these methods have overloads that take an extra parameter of *interface* type `java.util.concurrent.ThreadFactory`.
+
+### Writing thread-safe code
+
 TODO
