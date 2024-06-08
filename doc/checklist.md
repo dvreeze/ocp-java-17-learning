@@ -57,4 +57,13 @@ There are endless possibilities w.r.t. *hidden runtime behavior* not visible in 
 * *Autocloseable* resources versus resources/objects that are not autocloseable (e.g. `ExecutorService`)
 * *Nullable* versus *non-nullable* variables
 * *Thread-safe* classes versus *non-thread-safe* classes
+* Is an object *backed by some resource* or not? E.g. `java.sql.Connection` is certainly backed by a JDBC resource
 * ...
+
+Another perspective to look at code is to use an "FP perspective" (e.g. see ZIO library documentation).
+Is a *function* or *operator*:
+* *Deterministic*? (counterexample: `Thread.getStackTrace`)
+* *Total*? (counterexample: division, where division by zero throws an exception)
+* *Pure* or *free from side effects*? (counterexample: `StringBuilder.append`)
+
+I remember this as "DTP" (deterministic, total, pure).
