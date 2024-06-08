@@ -596,7 +596,7 @@ collections*. The Java platform does not deliver them, but *Guava* does, e.g. *I
 
 #### Understanding memory consistency errors
 
-*Concurrent collections* are designed to prevent *memory consistency errors*, so to prevent 2 threads to have inconsistent
+*Concurrent collections* are designed to prevent *memory consistency errors*, so to prevent 2 threads from having inconsistent
 views of what should be the same data. We want writes on one thread to *happen before* and therefore be available to
 another thread reading the data after the write operation has occurred. For an explanation of *memory visibility* issues,
 see for example [Java memory model](https://jenkov.com/tutorials/java-concurrency/java-memory-model.html).
