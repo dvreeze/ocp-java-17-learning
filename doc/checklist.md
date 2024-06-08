@@ -55,4 +55,6 @@ There are endless possibilities w.r.t. *hidden runtime behavior* not visible in 
 * *Synchronous* versus *asynchronous* code
 * *Single-threaded* versus *multithreaded* code
 * *Autocloseable* resources versus resources/objects that are not autocloseable (e.g. `ExecutorService`)
+* *Nullable* versus *non-nullable* variables
+* *Thread-safe* classes versus *non-thread-safe* classes
 * ...
