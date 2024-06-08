@@ -1,0 +1,43 @@
+# Checklist
+
+### Quickly checking whether a code snippet compiles successfully
+
+Does a code snippet *compile successfully*? It might help to quickly follow these steps:
+
+1. Check the *syntactic structure*
+2. Check *scope and types of variables*
+3. Check *additional rules* checked by the compiler
+
+#### Checking syntax
+
+TODO Add content...
+
+Examples of checking the syntax:
+* Distinguish *methods* from *constructors*
+* Distinguish *instance members* from *static members*
+* ...
+
+#### Checking scope and types of variables
+
+Examples of checking scope and types of variables:
+* *Local variables* (in the broad sense of the word) *cannot shadow each other*
+* Mind *flow scope*
+* `switch` statements/expressions can not take `long`, reference types other than `String` and primitive wrappers, etc.
+* ...
+
+#### Additional rules checked by the compiler
+
+Examples of additional rules checked by the compiler, other than syntax/scope/type checks:
+* Is it tried to update a `final` variable?
+* Does a variable have to be `final` or *effectively final*?
+* Does a static member try to access an instance member?
+* Does the compiler detect *unreachable code*?
+* Is a method *correctly overridden*?
+* ...
+
+### Quickly checking whether a code snippet runs successfully
+
+Below, assume that the code snippet to check compiles successfully. Does it run successfully, or does it throw an exception,
+or does it run forever?
+
+TODO
