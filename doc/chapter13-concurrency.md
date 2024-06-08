@@ -568,3 +568,152 @@ In addition, a `ReentrantLock` can do the following:
 * create a `ReentrantLock` with a "fairness" property, granting the lock to threads in the order of lock requests
 
 There is also a `ReentrantReadWriteLock`, which is quite useful but not necessary to know about for the exam.
+
+#### Orchestrating tasks with a CyclicBarrier
+
+We can use a `java.util.concurrent.CyclicBarrier` if we want a given number of "parties" (i.e. threads) to all reach a
+certain "common barrier point", before they can all proceed past that barrier point. The barrier is created with a
+constructor that takes a number of parties, e.g. `public CyclicBarrier(int parties)`. Then the code executed for all
+parties includes an `await()` call, which returns the "arrival index" (ranging from `parties - 1` to `0`, inclusive).
+Each `await()` call decrements the "arrival index". Once "arrival index" zero is reached, the barrier is released.
+
+That's the happy flow. The details are more complex if a participating thread is interrupted or the barrier is reset.
+
+The `CyclicBarrier` is *cyclic* because it can be reused after the waiting threads are released. Method `reset()` resets
+the barrier.
+
+Note that using a `CyclicBarrier` along with a thread pool as an `ExecutorService` allows us to avoid sequential processing
+in a single thread without adding too much complexity.
+
+### Using concurrent collections
+
+The Java Concurrency API not only offers support for thread management, but it also offers *Java collections* that can
+be shared by multiple threads. These *concurrent collections* fit naturally in the Java Collections API, implementing
+familiar interfaces like `List`, `Set`, `Queue` and `Map`.
+
+A personal note on thread-safe collections: the *safest collections* to use in a multithreaded environment are *immutable
+collections*. The Java platform does not deliver them, but *Guava* does, e.g. *ImmutableList* and *ImmutableSet*.
+
+#### Understanding memory consistency errors
+
+*Concurrent collections* are designed to prevent *memory consistency errors*, so to prevent 2 threads to have inconsistent
+views of what should be the same data. We want writes on one thread to *happen before* and therefore be available to
+another thread reading the data after the write operation has occurred. For an explanation of *memory visibility* issues,
+see for example [Java memory model](https://jenkov.com/tutorials/java-concurrency/java-memory-model.html).
+
+When 2 threads try to modify the same non-concurrent collection, an unchecked `java.util.ConcurrentModificationException`
+may be thrown. Even with a single thread this exception can be thrown. Consider the following example (from the book):
+
+```java
+Map<String, Integer> foodData = new HashMap<>();
+foodData.put("penguin", 1);
+foodData.put("flamingo", 2;
+for (String key : foodData.keySet()) {
+    foodData.remove(key);
+}
+```
+
+A `ConcurrentModificationException` will be thrown during the second loop iteration, because after removing the first
+element the iterator on `foodData.keySet()` should be properly updated but that is not the case.
+
+This is solved if we replace the creation of the `Map` with the following code, using a concurrent `Map`:
+
+```java
+Map<String, Integer> foodData = new ConcurrentHashMap<>();
+```
+
+Now the iterator on `foodData.keySet()` is properly updated after removing an element.
+
+#### Working with concurrent classes
+
+Whenever multiple threads modify a collection outside a synchronized block or method, a *concurrent collection* should
+be used (or a Guava immutable collection, I would like to add).
+
+Before mentioning some important Java concurrent collection implementation types, let's consider some *collection interfaces*,
+in the loose sense (because `Map` does not extend `Collection`), leaving out the type parameters:
+* `List`
+  * There are no interface subtypes to mention here
+* `Set`
+  * Interface subtype `SortedSet`, promising a *total ordering* on the elements in the set
+  * Interface type `NavigableSet` extending `SortedSet`, adding methods for finding "closest matches"
+* `Queue`
+  * Interface subtype `BlockingQueue`, adding methods to do *blocking waits*
+* `Map`
+  * Interface subtype `SortedMap`, promising a *total ordering* on the keys
+  * Interface type `NavigableMap` extending `SortedMap`, adding methods for finding "closest matches"
+  * Interface subtype `ConcurrentMap`, providing thread-safety and atomicity guarantees
+  * Interface type `ConcurrentNavigableMap` extending `ConcurrentMap` and `NavigableMap`
+
+Interface type `BlockingQueue` promises support for *blocking waits*. All collection types (concurrent or not) that do
+not express "blocking behaviour" in the interface/class name do not offer any blocking behaviour.
+
+Moreover, a `Set` implementation that does not implement `SortedSet` is not sorted. The same is true for a `Map`
+implementation that does not implement `SortedMap`.
+
+The *concurrent collection classes* to be familiar with (except for the extra methods) are (again leaving out type parameters):
+* `java.util.concurrent.CopyOnWriteArrayList`
+  * It implements `List`
+  * Under the hood it is a thread-safe `ArrayList` where all mutator methods make a fresh copy of the underlying array
+  * So this implementation makes sense as concurrent `List` if there are far more reads than writes
+  * Iterators do not see modifications to the collection
+* `java.util.concurrent.CopyOnWriteArraySet`
+  * It implements `Set`
+  * It is backed by a `CopyOnWriteArrayList`
+  * Iterators do not see modifications to the collection
+* `java.util.concurrent.ConcurrentSkipListSet`
+  * It implements `Set`, `SortedSet` and `NavigableSet`
+  * Under the hood it uses a `ConcurrentSkipListMap`
+  * Strings "concurrent" and "skip" in the name suggest "sorted concurrent"
+* `java.util.concurrent.ConcurrentLinkedQueue`
+  * It implements `Queue`
+  * It is a thread-safe FIFO queue based on linked nodes
+* `java.util.concurrent.LinkedBlockingQueue`
+  * It implements `Queue` and `BlockingQueue`, and is the only "blocking" collection in this list of collection implementations
+  * It is a thread-safe FIFO queue based on linked nodes and offering blocking behaviour
+  * It offers overloaded blocking `offer` and `poll` methods taking a timeout
+* `java.util.concurrent.ConcurrentHashMap`
+  * It implements `Map` and `ConcurrentMap`
+  * Under the hood it uses a hash table
+  * Like legacy class `Hashtable` it is thread-safe, but it offers far more concurrency and never locks on retrieval
+* `java.util.concurrent.ConcurrentSkipListMap`
+  * It implements `Map`, `SortedMap`, `NavigableMap`, `ConcurrentMap` and `ConcurrentNavigableMap`
+  * Under the hood it uses a concurrent variant of so-called *skip lists* (see [skip list](https://en.wikipedia.org/wiki/Skip_list))
+  * Strings "concurrent" and "skip" in the name suggest "sorted concurrent"
+
+Above we ignored thread-safe `Deque` implementations.
+
+This is an example (in the book) of using a `CopyOnWriteArrayList`, where the iterator does not see modifications to the
+collection:
+
+```java
+List<Integer> favNumbers = new CopyOnWriteArrayList<>(List.of(4, 3, 42));
+for (var n : favNumbers) {
+    System.out.print(n + " ");
+    favNumbers.add(n + 1);
+}
+// Afterwards, favNumbers.size() returns 6, because the iterator is not modified
+// With a regular ArrayList, we would get a ConcurrentModificationException
+```
+
+#### Obtaining synchronized collections
+
+If we have non-concurrent collection objects, and we need thread-safety, consider using *static methods* of class
+`java.util.Collections`, such as:
+* `synchronizedCollection(Collection<E>)`
+* `synchronizedList(List<E>)`
+* `synchronizedSet(Set<E>)`
+* `synchronizedSortedSet(SortedSet<E>)`
+* `synchronizedNavigableSet(NavigableSet<E>)`
+* `synchronizedMap(Map<K, V>)`
+* `synchronizedSortedMap(SortedMap<K, V>)`
+* `synchronizedNavigableMap(NavigableMap<K, V>)`
+
+When possible, prefer the concurrent collection implementations mentioned above.
+
+### Identifying threading problems
+
+TODO
+
+### Working with parallel streams
+
+TODO
