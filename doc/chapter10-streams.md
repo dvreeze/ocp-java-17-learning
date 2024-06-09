@@ -512,6 +512,9 @@ Note that *stateless non-interfering side-effect-free behavioral parameters* con
 mathematics" (or functions in functional programming). They are not only easy to reason about, but also more robust and
 performant in practice, as hinted at above.
 
+The Javadoc documentation page also talks about *encounter order*, *reduction operations*, *mutable reduction* and
+*associativity*. Some of it is treated in chapter 13, when discussing *parallel streams*.
+
 ### Check lists
 
 How to quickly check *stream pipelines*:
