@@ -16,8 +16,12 @@
 
 package chapter10;
 
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.BooleanSupplier;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -28,15 +32,105 @@ import java.util.stream.Stream;
  */
 public class StreamPropertiesExample {
 
-    public static void main(String[] args) {
-        List<Integer> intList = IntStream.rangeClosed(1, 1_000).boxed().toList();
+    public static final List<Integer> intList = List.copyOf(IntStream.rangeClosed(1, 144_000).boxed().toList());
+    public static final List<Integer> intListDoubled = List.copyOf(intList.stream().map(i -> i * 2).toList());
 
+    private static void showParallelOrNot() {
         requireFalse(() -> intList.stream().isParallel());
         requireTrue(() -> intList.parallelStream().isParallel());
         requireTrue(() -> intList.stream().parallel().isParallel());
         requireFalse(() -> makeParallel(makeParallel(makeSequential(intList.parallelStream()))).sequential().isParallel());
         requireFalse(() -> makeParallel(intList.stream()).sequential().filter(i -> i % 2 == 0).map(i -> i * 2).isParallel());
         requireFalse(() -> makeParallel(intList.stream()).filter(i -> i % 2 == 0).map(i -> i * 2).sequential().isParallel());
+    }
+
+    private static void showParallelStreamSemantics() {
+        // The result is the same as for sequential processing of the stream
+        requireTrue(() ->
+                Arrays.equals(
+                        intList.parallelStream().mapToInt(x -> {
+                            expensiveCall(x);
+
+                            return x * 2;
+                        }).toArray(),
+                        intListDoubled.stream().mapToInt(x -> x).toArray()
+                )
+        );
+
+        final Set<Thread> usedThreads = new CopyOnWriteArraySet<>();
+
+        requireTrue(() -> {
+            var list = List.copyOf(intList.parallelStream().map(x -> {
+                expensiveCall(x);
+
+                // It's ok. We are "interfering with" a concurrent collection.
+                usedThreads.add(Thread.currentThread());
+
+                return x * 2;
+            }).toList());
+
+            return list.equals(intListDoubled);
+        });
+
+        System.out.printf("Used thread count: %d%n", usedThreads.size());
+
+        usedThreads.clear();
+
+        requireTrue(() -> {
+            var list = List.copyOf(intList.parallelStream().unordered().map(x -> {
+                expensiveCall(x);
+
+                usedThreads.add(Thread.currentThread());
+
+                return x * 2;
+            }).toList());
+
+            return Set.copyOf(list).equals(Set.copyOf(intListDoubled));
+        });
+
+        System.out.printf("Used thread count: %d%n", usedThreads.size());
+    }
+
+    private static void showUnordered() {
+        requireFalse(
+                () -> intListDoubled.parallelStream().unordered().spliterator().hasCharacteristics(Spliterator.ORDERED)
+        );
+        requireTrue(
+                () -> intListDoubled.parallelStream().spliterator().hasCharacteristics(Spliterator.ORDERED)
+        );
+
+        requireFalse(
+                () -> intListDoubled.parallelStream().unordered().findFirst()
+                        .equals(intListDoubled.stream().findFirst())
+        );
+        requireTrue(
+                () -> intListDoubled.parallelStream().findFirst()
+                        .equals(intListDoubled.stream().findFirst())
+        );
+    }
+
+    private static void showCharacteristics() {
+        requireFalse(() -> Collectors.toList().characteristics().contains(Collector.Characteristics.UNORDERED));
+        requireFalse(() -> Collectors.toList().characteristics().contains(Collector.Characteristics.CONCURRENT));
+
+        Collector<Integer, ?, Map<Integer, Integer>> toMapCollector =
+                Collectors.toMap(k -> k, v -> v);
+
+        requireFalse(() -> toMapCollector.characteristics().contains(Collector.Characteristics.UNORDERED));
+        requireFalse(() -> toMapCollector.characteristics().contains(Collector.Characteristics.CONCURRENT));
+
+        Collector<Integer, ?, ConcurrentMap<Integer, Integer>> toConcurrentMapCollector =
+                Collectors.toConcurrentMap(k -> k, v -> v);
+
+        requireTrue(() -> toConcurrentMapCollector.characteristics().contains(Collector.Characteristics.UNORDERED));
+        requireTrue(() -> toConcurrentMapCollector.characteristics().contains(Collector.Characteristics.CONCURRENT));
+    }
+
+    public static void main(String[] args) {
+        showParallelOrNot();
+        showParallelStreamSemantics();
+        showUnordered();
+        showCharacteristics();
 
         System.out.printf("Stream: %s%n", intList.stream());
         System.out.printf("Stream: %s%n", intList.parallelStream());
@@ -59,5 +153,11 @@ public class StreamPropertiesExample {
 
     private static <T> Stream<T> makeParallel(Stream<T> stream) {
         return stream.parallel();
+    }
+
+    private static void expensiveCall(int x) {
+        requireTrue(() ->
+                (x % 100 != 0) ||
+                        Thread.getAllStackTraces().values().stream().allMatch(Objects::nonNull));
     }
 }
