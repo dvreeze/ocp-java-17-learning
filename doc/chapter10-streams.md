@@ -51,6 +51,14 @@ The methods above, except for the first one, are convenience methods. For exampl
 A Java *stream* is a *sequence of data, that can be used only once*. So, unlike collections (especially immutable collections)
 that can be reused again and again, streams are much more *like iterators* than collections in that they are not reusable.
 
+As the [package java.util.Stream Javadoc](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/package-summary.html)
+says, *streams* differ from collections in several ways:
+* *No storage*, unlike collections; instead, it is a *pipeline of computational operations* (or "recipe for computations")
+* *Functional in nature*, in that the stream source is not modified
+* *Laziness-seeking*, where *intermediate stream operations* are always *lazy*
+* *Possibly unbounded*, i.e. possibly infinite
+* *Consumable*, like an "iterator", visiting/consuming the elements *only once*
+
 The Stream interface type is `java.util.stream.Stream<T>`.
 
 For example:
@@ -473,6 +481,35 @@ Map<Integer, List<String>> lengthToWordsMap =
 Finally, be aware of method `Collectors.teeing(downstreamCollector1, downstreamCollector2, mergingFunction)`.
 It allows us to go only once through the stream, but still using 2 collectors on that stream, and combine the
 collector results afterwards.
+
+### Extra information from the Javadoc documentation
+
+The [package java.util.Stream Javadoc](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/package-summary.html)
+documentation provides some additional information and definitions that we should know about.
+
+*Intermediate operations* can be *stateless* or *stateful*:
+* *Stateless* intermediate operations (like `filter` and `map`) retain no state from previously seen elements
+* *Stateful* intermediate operations (like `distinct` and `sorted`) potentially do retain state from previously seen elements
+
+Stream pipelines containing only stateless intermediate operations can be processed in a *single pass*, whether sequential
+or parallel.
+
+Except for explicitly nondeterministic operations like `findAny`, the result of a stream computation should not depend
+on whether the stream was executed sequentially or in parallel.
+
+Most stream operations accepts parameters that are instances of *functional interfaces* such as `Function` and `Predicate`.
+These parameters are called *behavioral parameters*. They are often provided as lambda expressions or method references.
+
+These *behavioral parameters* should be *stateless* (so depend only on their own function parameters, and not on any "outside"
+mutable state) and *non-interfering*. *Non-interference* means that during execution of the stream pipeline the stream source
+*is not modified at all*. On the other hand, interference is allowed if the stream source is a concurrent collection, or more
+generally, if the stream source `Spliterator` has the CONCURRENT characteristic.
+
+*Side effects* in *behavioral parameters* are discouraged, and also rarely really needed.
+
+Note that *stateless non-interfering side-effect-free behavioral parameters* conceptually come close to "functions in
+mathematics" (or functions in functional programming). They are not only easy to reason about, but also more robust and
+performant in practice, as hinted at above.
 
 ### Check lists
 
