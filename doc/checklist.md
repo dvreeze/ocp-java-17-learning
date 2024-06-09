@@ -52,6 +52,7 @@ There are endless possibilities w.r.t. *hidden runtime behavior* not visible in 
 * *Mutable* data (e.g. `ArrayList` constructor) and *unmodifiable* data (e.g. `List.of` result) versus *immutable* data (e.g. `String`)
 * *Side-effecting* calls (e.g. `StringBuilder.append`) versus *functions returning new (immutable) objects* (e.g. `LocalDate.plus`)
 * *Collections* versus *streams and iterators* that are *processed only once* (e.g. `Stream`, `java.io.Reader`)
+* *Eager* versus *lazy* evaluation
 * *Synchronous* versus *asynchronous* code
 * *Single-threaded* versus *multithreaded* code
 * *Autocloseable* resources versus resources/objects that are not autocloseable (e.g. `ExecutorService`)
