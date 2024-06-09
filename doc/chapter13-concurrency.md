@@ -783,7 +783,8 @@ The latest such call "wins". Stream method `isParallel()` can be used to test wh
 and then reassembling the results.
 
 A stream pipeline where each element of a collection is independently mapped to an element of the result collection is
-certainly a good example of stream processing that can safely be done in parallel.
+certainly a good example of stream processing that can safely be done in parallel. But the same is true for well-designed
+*reductions*, as shown below.
 
 Note that terminal operation `forEach` does not respect encounter order, so especially in parallel streams, if the encounter
 order of elements must be respected, use terminal operation `forEachOrdered` instead of `forEach`. This may come with some
@@ -792,13 +793,13 @@ performance penalty, of course.
 #### Processing parallel reductions
 
 Like terminal operation `forEach`, terminal operation `findAny` is also explicitly nondeterministic. For sequential streams
-it may tend to return the first element, but that's not even guaranteed. For parallel streams it is even unlikely.
+it may tend to return the first element, but that's not even guaranteed. For parallel streams this is even unlikely.
 
 Stream operations `skip`, `limit` and `findFirst` do respect encounter order, if there is any, but for parallel streams
 this may come with a substantial performance penalty. So these methods have exactly the same semantics for parallel streams
 as for sequential streams, but at a runtime cost.
 
-Intermediate operation `unordered` tells the JVM that encounter order can be ignored for order-based stream operations.
+Intermediate operation `unordered` tells the JVM that the encounter order can be ignored for order-based stream operations.
 This can potentially significantly speed up parallel stream pipelines involving methods like `skip`, `limit` and `findFirst`.
 
 Recall `Stream` terminal operation `reduce`, taking an *identity*, *accumulator* function and *combiner* function:
@@ -808,13 +809,13 @@ public <U> U reduce(U identity, BiFunction<U, ? super T, U> accumulator, BinaryO
 ```
 
 Note that the *combiner* function is needed in parallel stream processing. In sequential stream processing the
-*identity* and *accumulator* function take together perform a simple *recursive* algorithm to compute the result,
+*identity* and *accumulator* function taken together perform a simple *recursive* algorithm to compute the result,
 with the accumulator on each call taking the accumulated result so far along with the next element of the stream.
 In parallel stream processing, all 3 `reduce` parameters are used.
 
 In parallel streams, we must be concerned about the order. Yet following some simple rules, the order does not affect
-the stream pipeline result. The idea is that accumulator and combiner can be called in any order. If that is the case,
-parallel stream processing returns the same result as sequential processing.
+the stream pipeline result. The idea is that accumulator and combiner are such that they can be called in any order. If
+that is the case, parallel stream processing returns the same result as sequential processing.
 
 Let's make this a little bit more formal, even if the book does not do that. In order for the `reduce` call to work exactly
 as expected, whether the stream is sequential or parallel, first of all the *accumulator* and *combiner* functions must be
@@ -851,15 +852,15 @@ public <U> U collect(Supplier<U> supplier, BiConsumer<U, ? super T> accumulator,
 The *supplier*, *accumulator* and *combiner* are tightly coupled, and can be combined into a `Collector`, as we have seen.
 An overloaded Stream `collect` method directly takes a `Collector` (which may have been created by class `Collectors`).
 
-"In spirit" the requirements for *mutable reductions* are similar to "regular" reductions.
+"In spirit" the requirements for *mutable reductions* are similar to those for "regular" reductions.
 
 For parallel streams, if the *supplier* in the `collect` call creates a collection, it should create a *concurrent collection*.
 
 A *concurrent reduction* is a mutable reduction where the result container is a concurrent collection, and where there is
 no need for the combiner to merge result containers. This efficient *concurrent reduction* is only possible if:
 * The stream is *parallel*
-* The collector has characteristic `Collector.Characteristics.CONCURRENT`
-* Either the stream is *unordered*, or the collector has characteristic `Collector.Characteristics.UNORDERED`
+* The `Collector` has characteristic `Collector.Characteristics.CONCURRENT`
+* Either the stream is *unordered*, or the `Collector` has characteristic `Collector.Characteristics.UNORDERED`
 
 To ensure that a stream is unordered, use stream method `unordered`.
 
