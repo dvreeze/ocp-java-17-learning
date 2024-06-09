@@ -497,8 +497,9 @@ or parallel.
 Except for explicitly nondeterministic operations like `findAny`, the result of a stream computation should not depend
 on whether the stream was executed sequentially or in parallel.
 
-Most stream operations accepts parameters that are instances of *functional interfaces* such as `Function` and `Predicate`.
-These parameters are called *behavioral parameters*. They are often provided as lambda expressions or method references.
+Most stream operations accept parameters that are instances of *functional interfaces* such as `Function` and `Predicate`.
+These parameters are called *behavioral parameters*. They are often provided as lambda expressions or method references,
+but they are always instances of *functional interfaces*.
 
 These *behavioral parameters* should be *stateless* (so depend only on their own function parameters, and not on any "outside"
 mutable state) and *non-interfering*. *Non-interference* means that during execution of the stream pipeline the stream source
