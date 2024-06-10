@@ -46,6 +46,9 @@ A *symbolic link* (or "soft link") is a special file pointing to another file or
 followed when using them in paths, as if they are not links but the "real" file or directory. The "legacy" Java I/O
 APIs do not follow them, but NIO.2 has full support for them.
 
+Important to remember for the exam: Although typically regular files have a file extension and directories do not, this
+is not something to assume!
+
 #### Creating a File or Path
 
 A path to a file or directory can be created in Java with the old I/O API (using class `java.io.File`) or the NIO.2 API
@@ -97,6 +100,9 @@ Path path6 = Paths.get("/home", "jane", "xml", "test.xml");
 
 System.out.println("Path path1 exists: " + Files.exists(path1));
 ```
+
+Just like class `java.io.File`, interface `java.nio.file.Path` is used both for files and directories, and both for absolute
+and relative paths, and both for existing and non-existing files/directories.
 
 It is also possible to take a `java.net.URI` as input when constructing a `java.io.File` or `java.nio.file.Path`.
 In the old I/O API this is supported by `File` constructor `File(URI)`. In NIO.2 it is supported by factory methods
@@ -177,9 +183,59 @@ Static method `Files.deleteIfExists(Path)` can throw a checked `java.io.Exceptio
 
 Methods `File.mkdirs` and `Files.createDirectories` also create non-existing parent directories.
 
+Method `Path.move` is not only used for renaming, but also for moving files.
+
 Note that NIO.2 is not only more powerful and "strict" than the old I/O API, but it is also cleaner, by making a
 distinction between paths (`Path`) and file operations involving paths. For example, creating a directory gets
 a path as parameter, unlike method `File.mkdir`, which suggests that a path knows how to create a directory.
+
+When creating code using NIO.2, unlike equivalent code using the old I/O API, it is highly likely that a checked
+`java.io.IOException` must be handled or declared.
+
+Consider method `Stream<Path> list(Path)`. This *Stream* is backed by a resource (a connection to the file system), so
+must be properly closed, unlike streams that work only with in-memory data without any underlying resources that must be
+closed. Interface `Stream<T>` extends `java.lang.AutoCloseable`, so it can be used in a try-resources statement. For example:
+
+```java
+// Easy way to get the current working directory
+// This is indeed a directory and not a regular file
+// Otherwise a checked NotDirectoryException is thrown (extends IOException)
+Path path = Path.of("").toAbsolutePath();
+
+try (Stream<Path> childFileStream = Files.list(path)) {
+    childFileStream.forEach(p -> System.out.println(p.getFileName()));
+}
+```
+
+#### Handling methods that declare IOException
+
+Typically, if a NIO.2 method declares a `java.io.IOException`, it requires the `Path` instances it operates on to exist.
+
+#### Providing NIO.2 optional parameters
+
+Some NIO.2 optional parameters passed in `Files` methods are:
+
+| Enum type            | Implemented interfaces     | Enum value          | Details                                       |
+|----------------------|----------------------------|---------------------|-----------------------------------------------|
+| `LinkOption`         | `CopyOption`, `LinkOption` | `NOFOLLOW_LINKS`    | Do not follow symbolic links                  |
+| `StandardCopyOption` | `CopyOption`               | `ATOMIC_MOVE`       | Move file as atomic operation                 |
+|                      |                            | `COPY_ATTRIBUTES`   | Copy existing attributes to new file          |
+|                      |                            | `REPLACE_EXISTING`  | Overwrite file if it already exists           |
+| `StandardOpenOption` | `OpenOption`               | `APPEND`            | If file is open for write, append to the end  |
+|                      |                            | `CREATE`            | Create file if it does not already exist      |
+|                      |                            | `CREATE_NEW`        | Create new file, and fail if already existing |
+|                      |                            | `READ`              | Open for read access                          |
+|                      |                            | `TRUNCATE_EXISTING` | If already open for write, erase file first   |
+|                      |                            | `WRITE`             | Open for write access                         |
+| `FileVisitOption`    | N/A                        | `FOLLOW_LINKS`      | Follow symbolic links                         |
+
+#### Interacting with NIO.2 Paths
+
+Like `String` and `File`, `java.nio.file.Path` is *immutable*. That also implies that `Path` operation results *must be
+picked up* or else get lost. So just writing `myPath.resolve(dir)` without assigning the result to a variable does not
+buy us anything.
+
+`Path` operations can often be *chained*. For example: `myPath.getParent().normalize().toAbsolutePath()`.
 
 ### Introducing I/O streams
 
