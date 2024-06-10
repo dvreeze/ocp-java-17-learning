@@ -146,18 +146,18 @@ There are many commonalities between the old `java.io.File` API on the one hand 
 
 Common `java.io.File` and `java.nio.file.Path` operations:
 
-| Description                    | `File` instance method  | `Path` instance method  | Remarks                           |
-|--------------------------------|-------------------------|-------------------------|-----------------------------------|
-| Gets the file/directory name   | `getName()`             | `getFileName()`         |                                   |
-| Retrieves parent directory     | `getParent()`           | `getParent()`           | Both return `null` <br/>otherwise |
-| Checks if the path is absolute | `isAbsolute()`          | `isAbsolute()`          |                                   |
-| Get absolute path              | `getAbsolutePath()`     | `toAbsolutePath()`      |                                   |
+| Description                    | `File` instance method     | `Path` instance method  | Remarks                           |
+|--------------------------------|----------------------------|-------------------------|-----------------------------------|
+| Gets the file/directory name   | `String getName()`         | `Path getFileName()`    |                                   |
+| Retrieves parent directory     | `File getParentFile()`     | `Path getParent()`      | Both return `null` <br/>otherwise |
+| Checks if the path is absolute | `boolean isAbsolute()`     | `boolean isAbsolute()`  |                                   |
+| Get absolute path              | `String getAbsolutePath()` | `Path toAbsolutePath()` |                                   |
 
 Common `java.io.File` *instance methods* and `java.nio.file.Files` *static methods*:
 
 | Description                 | `File` instance method   | `Files` static method                               |
 |-----------------------------|--------------------------|-----------------------------------------------------|
-| Deletes file/directory      | `boolen delete()`        | `boolean deleteIfExists(Path)`                      |
+| Deletes file/directory      | `boolean delete()`       | `boolean deleteIfExists(Path)`                      |
 | Checks existence            | `boolean exists()`       | `boolean exists(Path, LinkOption...)`               |
 | Checks if path is directory | `boolean isDirectory()`  | `boolean isDirectory(Path, LinkOption...)`          |
 | Checks if path is file      | `boolean isFile()`       | `boolean isRegularFile(Path, LinkOption...)`        |
