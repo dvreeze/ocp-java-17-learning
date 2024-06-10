@@ -342,7 +342,7 @@ instance method `get()` would give us), consider using `ExecutorService` method 
 
 Method `awaitTermination(long, TimeUnit)` returns `true` if the executor terminated and `false` if the timeout elapsed
 before termination. Not surprisingly, it can throw a checked `InterruptedException` if interrupted while waiting.
-Again, make sure that `awaitTermination` is called `shutdown`.
+Again, make sure that `awaitTermination` is called after `shutdown`.
 
 #### Scheduling tasks
 
