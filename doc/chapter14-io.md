@@ -20,9 +20,10 @@ The *root directory* is the topmost directory in the file system. On Windows it 
 Linux it would probably be a single forward slash, so "/".
 
 A *path* represents a file or directory within the file system. A path is given as a sequence of *path entries* separated
-by a *path separator*, which is "\" on Windows and "/" on Linux. Typically, all path entries but the last one represent
-directories. Consider path `/home/jane/test.xml`. File `test.xml` is in directory `/home/jane`, which is the *parent directory*
-of `test.xml`. Directory `jane` is in directory `/home`, which is the parent directory of directory `jane`.
+by a *path separator*, which is a backslash on Windows and a forward slash on Linux. Typically, all path entries but the
+last one represent directories. Consider path `/home/jane/test.xml`. File `test.xml` is in directory `/home/jane`, which
+is the *parent directory* of `test.xml`. Directory `jane` is in directory `/home`, which is the parent directory of
+directory `jane`.
 
 Java returns the file separator with a system property:
 
@@ -31,7 +32,7 @@ System.out.println(System.getProperty("file.separator")); // On Linux, it return
 ```
 
 Paths of files or directories can be *absolute* or *relative*. Absolute paths start with the root directory, such as
-"C:\" on Windows and "/" on Linux. Paths that do not start with a forward slash or drive letter are *relative paths*.
+"C:\\" on Windows and "/" on Linux. Paths that do not start with a forward slash or drive letter are *relative paths*.
 Relative paths can be turned into absolute paths by taking the *current working directory* into account.
 
 Absolute and relative paths can contain *path symbols*:
@@ -111,7 +112,8 @@ supports symbolic links. Prefer using NIO.2 whenever feasible.
 NIO.2 has *abstract class* `java.nio.file.FileSystem`, and "factory class" `java.nio.file.FileSystems`.
 The default `FileSystem` can be obtained with static method `FileSystems.getDefault()`.
 
-Methods `Path.of` and `Paths.get` are shortcuts for `FileSystem` instance methods. For example:
+Methods `Path.of` and `Paths.get` are shortcuts for `FileSystem` instance methods, such as instance method
+`FileSystem.getPath(String)`. This is shown in the following code snippet:
 
 ```java
 import java.nio.file.FileSystem;
@@ -132,5 +134,5 @@ Note that NIO.2 makes extensive use of the following pattern:
 * Offering *factory classes with static factory methods* for creating these objects, such as `Paths`, `FileSystems` etc.
   * The factory class names are "plural" names
 
-There is also class `java.nio.file.Files` (note the name in plural again) with *static methods* to manipulate
-`java.nio.file.Path` instances.
+There is also class `java.nio.file.Files` (note the name in plural again) with *static methods* to interact with the file
+system through static methods that take and return `java.nio.file.Path` instances.
