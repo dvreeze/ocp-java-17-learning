@@ -144,6 +144,8 @@ system through static methods that take and return `java.nio.file.Path` instance
 There are many commonalities between the old `java.io.File` API on the one hand and the NIO.2 `java.nio.file.Path` and
 `java.nio.file.Files` APIs on the other hand.
 
+##### Operations on File and Path
+
 Common `java.io.File` and `java.nio.file.Path` operations:
 
 | Description                    | `File` instance method     | `Path` instance method  | Remarks                           |
@@ -152,6 +154,8 @@ Common `java.io.File` and `java.nio.file.Path` operations:
 | Retrieves parent directory     | `File getParentFile()`     | `Path getParent()`      | Both return `null` <br/>otherwise |
 | Checks if the path is absolute | `boolean isAbsolute()`     | `boolean isAbsolute()`  |                                   |
 | Get absolute path              | `String getAbsolutePath()` | `Path toAbsolutePath()` |                                   |
+
+##### Operations on File and Files
 
 Common `java.io.File` *instance methods* and `java.nio.file.Files` *static methods*:
 
