@@ -163,7 +163,7 @@ Common `java.io.File` *instance methods* and `java.nio.file.Files` *static metho
 | Checks if path is file      | `boolean isFile()`       | `boolean isRegularFile(Path, LinkOption...)`        |
 | Returns last modified time  | `long lastModified()`    | `FileTime getLastModifiedTime(Path, LinkOption...)` |
 | Gets number of bytes        | `long length()`          | `long size(Path)`                                   |
-| Lists directory contents    | `File[] listFiles()`     | `Stream&lt;Path&gt; list(Path)`                     |
+| Lists directory contents    | `File[] listFiles()`     | `Stream<Path> list(Path)`                           |
 | Creates directory           | `boolean mkdir()`        | `Path createDirectory(Path, FileAttribute...)`      |
 | Creates directories         | `boolean mkdirs()`       | `Path createDirectories(Path, FileAttribute...)`    |
 | Renames file/directory      | `boolean renameTo(File)` | `Path move(Path, Path, CopyOption...)`              |
