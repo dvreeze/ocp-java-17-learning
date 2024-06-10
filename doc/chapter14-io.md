@@ -16,7 +16,7 @@ it may mean files or directories.
 The *file system* gives us access to files on a computer. Different operating systems (e.g. Linux, Windows) use different
 file systems, but the JVM abstracts away many of those differences.
 
-The *root directory* is the topmost directory in the file system. On Windows it could be "C:\" (on drive "C"), and on
+The *root directory* is the topmost directory in the file system. On Windows it could be "C:\\" (on drive "C"), and on
 Linux it would probably be a single forward slash, so "/".
 
 A *path* represents a file or directory within the file system. A path is given as a sequence of *path entries* separated
@@ -113,7 +113,7 @@ NIO.2 has *abstract class* `java.nio.file.FileSystem`, and "factory class" `java
 The default `FileSystem` can be obtained with static method `FileSystems.getDefault()`.
 
 Methods `Path.of` and `Paths.get` are shortcuts for `FileSystem` instance methods, such as instance method
-`FileSystem.getPath(String)`. This is shown in the following code snippet:
+`FileSystem.getPath(String, String...)`. This is shown in the following code snippet:
 
 ```java
 import java.nio.file.FileSystem;
