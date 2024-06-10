@@ -146,32 +146,36 @@ There are many commonalities between the old `java.io.File` API on the one hand 
 
 Common `java.io.File` and `java.nio.file.Path` operations:
 
-| Description                    | `File` instance method  | `Path` instance method  | Remarks                      |
-|--------------------------------|-------------------------|-------------------------|------------------------------|
-| Gets the file/directory name   | `getName()`             | `getFileName()`         |                              |
-| Retrieves parent directory     | `getParent()`           | `getParent()`           | Returns `null` otherwise     |
-| Checks if the path is absolute | `isAbsolute()`          | `isAbsolute()`          |                              |
-| Get absolute path              | `getAbsolutePath()`     | `toAbsolutePath()`      |                              |
+| Description                    | `File` instance method  | `Path` instance method  | Remarks                           |
+|--------------------------------|-------------------------|-------------------------|-----------------------------------|
+| Gets the file/directory name   | `getName()`             | `getFileName()`         |                                   |
+| Retrieves parent directory     | `getParent()`           | `getParent()`           | Both return `null` <br/>otherwise |
+| Checks if the path is absolute | `isAbsolute()`          | `isAbsolute()`          |                                   |
+| Get absolute path              | `getAbsolutePath()`     | `toAbsolutePath()`      |                                   |
 
 Common `java.io.File` *instance methods* and `java.nio.file.Files` *static methods*:
 
-| Description                 | `File` instance method | `Files` static method                       |
-|-----------------------------|------------------------|---------------------------------------------|
-| Deletes file/directory      | `delete()`             | `deleteIfExists(Path)`                      |
-| Checks existence            | `exists()`             | `exists(Path, LinkOption...)`               |
-| Checks if path is directory | `isDirectory()`        | `isDirectory(Path, LinkOption...)`          |
-| Checks if path is file      | `isFile()`             | `isFile(Path, LinkOption...)`               |
-| Returns last modified time  | `lastModified()`       | `getLastModifiedTime(Path, LinkOption...)`  |
-| Gets number of bytes        | `length()`             | `size(Path)`                                |
-| Lists directory contents    | `listFiles()`          | `list(Path)`                                |
-| Creates directory           | `mkdir()`              | `createDirectory(Path, FileAttribute...)`   |
-| Creates directories         | `mkdirs()`             | `createDirectories(Path, FileAttribute...)` |
-| Renames file/directory      | `renameTo(File)`       | `move(Path, Path, CopyOption...)`           |
+| Description                 | `File` instance method   | `Files` static method                               |
+|-----------------------------|--------------------------|-----------------------------------------------------|
+| Deletes file/directory      | `boolen delete()`        | `boolean deleteIfExists(Path)`                      |
+| Checks existence            | `boolean exists()`       | `boolean exists(Path, LinkOption...)`               |
+| Checks if path is directory | `boolean isDirectory()`  | `boolean isDirectory(Path, LinkOption...)`          |
+| Checks if path is file      | `boolean isFile()`       | `boolean isRegularFile(Path, LinkOption...)`        |
+| Returns last modified time  | `long lastModified()`    | `FileTime getLastModifiedTime(Path, LinkOption...)` |
+| Gets number of bytes        | `long length()`          | `long size(Path)`                                   |
+| Lists directory contents    | `File[] listFiles()`     | `Stream&lt;Path&gt; list(Path)`                     |
+| Creates directory           | `boolean mkdir()`        | `Path createDirectory(Path, FileAttribute...)`      |
+| Creates directories         | `boolean mkdirs()`       | `Path createDirectories(Path, FileAttribute...)`    |
+| Renames file/directory      | `boolean renameTo(File)` | `Path move(Path, Path, CopyOption...)`              |
 
 Static method `Files.deleteIfExists(Path)` can throw a checked `java.io.Exception`. This is also true for methods
 `getLastModifiedTime`, `size`, `list`, `createDirectory`, `createDirectories` and `move`.
 
-Methods `File.mkdirs` and `Files.createDirectories` also create nonexisting parent directories.
+Methods `File.mkdirs` and `Files.createDirectories` also create non-existing parent directories.
+
+Note that NIO.2 is not only more powerful and "strict" than the old I/O API, but it is also cleaner, by making a
+distinction between paths (`Path`) and file operations involving paths. For example, creating a directory gets
+a path as parameter, unlike method `File.mkdir`, which suggests that a path knows how to create a directory.
 
 ### Introducing I/O streams
 
