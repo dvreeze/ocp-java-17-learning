@@ -136,3 +136,63 @@ Note that NIO.2 makes extensive use of the following pattern:
 
 There is also class `java.nio.file.Files` (note the name in plural again) with *static methods* to interact with the file
 system through static methods that take and return `java.nio.file.Path` instances.
+
+### Operating on File and Path
+
+#### Using shared functionality
+
+There are many commonalities between the old `java.io.File` API on the one hand and the NIO.2 `java.nio.file.Path` and
+`java.nio.file.Files` APIs on the other hand.
+
+Common `java.io.File` and `java.nio.file.Path` operations:
+
+| Description                    | `File` instance method  | `Path` instance method  | Remarks                      |
+|--------------------------------|-------------------------|-------------------------|------------------------------|
+| Gets the file/directory name   | `getName()`             | `getFileName()`         |                              |
+| Retrieves parent directory     | `getParent()`           | `getParent()`           | Returns `null` otherwise     |
+| Checks if the path is absolute | `isAbsolute()`          | `isAbsolute()`          |                              |
+| Get absolute path              | `getAbsolutePath()`     | `toAbsolutePath()`      |                              |
+
+Common `java.io.File` *instance methods* and `java.nio.file.Files` *static methods*:
+
+| Description                 | `File` instance method | `Files` static method                       |
+|-----------------------------|------------------------|---------------------------------------------|
+| Deletes file/directory      | `delete()`             | `deleteIfExists(Path)`                      |
+| Checks existence            | `exists()`             | `exists(Path, LinkOption...)`               |
+| Checks if path is directory | `isDirectory()`        | `isDirectory(Path, LinkOption...)`          |
+| Checks if path is file      | `isFile()`             | `isFile(Path, LinkOption...)`               |
+| Returns last modified time  | `lastModified()`       | `getLastModifiedTime(Path, LinkOption...)`  |
+| Gets number of bytes        | `length()`             | `size(Path)`                                |
+| Lists directory contents    | `listFiles()`          | `list(Path)`                                |
+| Creates directory           | `mkdir()`              | `createDirectory(Path, FileAttribute...)`   |
+| Creates directories         | `mkdirs()`             | `createDirectories(Path, FileAttribute...)` |
+| Renames file/directory      | `renameTo(File)`       | `move(Path, Path, CopyOption...)`           |
+
+Static method `Files.deleteIfExists(Path)` can throw a checked `java.io.Exception`. This is also true for methods
+`getLastModifiedTime`, `size`, `list`, `createDirectory`, `createDirectories` and `move`.
+
+Methods `File.mkdirs` and `Files.createDirectories` also create nonexisting parent directories.
+
+### Introducing I/O streams
+
+TODO
+
+### Reading and writing files
+
+TODO
+
+### Serializing data
+
+TODO
+
+### Interacting with users
+
+TODO
+
+### Working with advanced APIs
+
+TODO
+
+### Review of key APIs
+
+TODO
