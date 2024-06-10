@@ -202,8 +202,9 @@ Calling instance method `Thread.interrupt()` on a thread in the TIMED_WAITING or
 RUNNABLE again, triggering a checked `java.lang.InterruptedException`. The thread may also go to the BLOCKED state if it
 needs to acquire a "monitor lock".
 
-If the thread on which method `interrupt()` is called is already RUNNABLE, its state is not affected. On the other hand,
+If the thread on which method `interrupt()` is called is (already) RUNNABLE, its state is not affected. On the other hand,
 a RUNNABLE thread can still "be cooperative" by periodically checking the `Thread.isInterrupted()` boolean value.
+A thread in state NEW is also not affected by an `interrupt()` call.
 
 ### Creating threads with the concurrency API
 
