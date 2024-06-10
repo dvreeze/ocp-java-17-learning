@@ -340,6 +340,10 @@ public interface Callable<T> {
 If after calling `shutdown()` we would like to wait for the results, without needing the results themselves (as `Future`
 instance method `get()` would give us), consider using `ExecutorService` method `awaitTermination(long, TimeUnit)`.
 
+Method `awaitTermination(long, TimeUnit)` returns `true` if the executor terminated and `false` if the timeout elapsed
+before termination. Not surprisingly, it can throw a checked `InterruptedException` if interrupted while waiting.
+Again, make sure that `awaitTermination` is called `shutdown`.
+
 #### Scheduling tasks
 
 With static factory method `Executors.newSingleThreadScheduledExecutor()` we get a `ScheduledExecutorService`.
