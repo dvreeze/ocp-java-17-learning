@@ -84,9 +84,9 @@ public class PathPropertiesExample {
     private static Path reconstructPathByGettingParents(Path path) {
         List<Path> elems =
                 Stream.iterate(path, Objects::nonNull, Path::getParent)
-                        .collect(Collectors.collectingAndThen(Collectors.toList(), xs -> {
+                        .collect(Collectors.collectingAndThen(Collectors.toCollection(ArrayList::new), xs -> {
                             Collections.reverse(xs);
-                            return xs;
+                            return List.copyOf(xs);
                         }));
         Path[] elements = elems.toArray(Path[]::new);
 
