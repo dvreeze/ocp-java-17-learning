@@ -81,8 +81,13 @@ Indeed, class `File` is used both for files and directories, and both for absolu
 and non-existing files/directories.
 
 Using the NIO.2 API, `java.nio.file.Path` is an interface so has no constructor. We can use static methods of interface
-`java.nio.file.Path` or of "factory" class `java.nio.file.Paths`, however. All created `Path` instances in the following
-code snippet point to the same location on the file system (whether the file exists or not):
+`java.nio.file.Path` or of "factory" class `java.nio.file.Paths`, however. These (equivalent) methods require at least
+one "name element":
+* Static `Path` method `of(String first, String... more)`
+* Static `Paths` method `get(String first, String... more)`
+
+All created `Path` instances in the following code snippet point to the same location on the file system (whether the file
+exists or not):
 
 ```java
 import java.nio.file.Files;
@@ -102,7 +107,8 @@ System.out.println("Path path1 exists: " + Files.exists(path1));
 ```
 
 Just like class `java.io.File`, interface `java.nio.file.Path` is used both for files and directories, and both for absolute
-and relative paths, and both for existing and non-existing files/directories.
+and relative paths, and both for existing and non-existing files/directories. Paths themselves know nothing about existence
+of files/directories. That's the domain of the `java.nio.file.Files` class.
 
 It is also possible to take a `java.net.URI` as input when constructing a `java.io.File` or `java.nio.file.Path`.
 In the old I/O API this is supported by `File` constructor `File(URI)`. In NIO.2 it is supported by factory methods
