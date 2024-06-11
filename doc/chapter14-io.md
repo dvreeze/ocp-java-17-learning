@@ -231,11 +231,50 @@ Some NIO.2 optional parameters passed in `Files` methods are:
 
 #### Interacting with NIO.2 Paths
 
-Like `String` and `File`, `java.nio.file.Path` is *immutable*. That also implies that `Path` operation results *must be
-picked up* or else get lost. So just writing `myPath.resolve(dir)` without assigning the result to a variable does not
-buy us anything.
+Like `String`, `LocalDateTime` and `File`, `java.nio.file.Path` is *immutable*. That also implies that `Path` operation
+results *must be explicitly retrieved* or else they get lost. So just writing `myPath.resolve(dir)` without assigning the
+result to a variable does not buy us anything.
 
 `Path` operations can often be *chained*. For example: `myPath.getParent().normalize().toAbsolutePath()`.
+
+To view a `Path`, one option is to use overridden method `toString()`. It is even the only `Path` API method to return a
+`String`. Many other `Path` methods return `Path` instances.
+
+We can also use instance methods `getNameCount()` and `getName(int)` (repeatedly) to iterate through the *name elements*
+of the `Path`. The index passed to `getName(int)` must be between 0, inclusive, and `getNameCount()`, exclusive.
+If it is not, an unchecked `IllegalArgumentException` is thrown.
+
+Method `getName(int)` returns a `Path`, not a string. The *root* of the path is not included in the returned names.
+For example:
+
+```java
+import java.nio.file.Path;
+import java.util.stream.IntStream;
+
+Path currentDir = Path.of("").toAbsolutePath();
+
+List<Path> nameElements =
+        IntStream.range(0, currentDir.getNameCount()).mapToObj(currentDir::getName).toList();
+
+nameElements.stream().map(nm -> "Name element: " + nm).forEach(System.out::println);
+
+System.out.println(nameElements.stream().allMatch(nm -> nm.getNameCount() == 1)); // prints true
+
+// The root is not part of the name elements
+System.out.println(Path.of("/").getNameCount()); // prints 0
+System.out.println(Path.of("/home").getNameCount()); // prints 1
+System.out.println(Path.of("/home").getName(0)); // prints "home" (without slash)
+
+var strangePath = Path.of("/home/andre/../jane/../andre/./test.xml");
+var normalizedPath = strangePath.normalize();
+
+// Path symbols like ".." are name elements too, so no normalization takes place silently
+var strangePathNames =
+        IntStream.range(0, strangePath.getNameCount()).mapToObj(strangePath::getName).toList();
+// Only after explicitly normalizing the Path, the path symbols are gone
+var normalizedPathNames =
+        IntStream.range(0, normalizedPath.getNameCount()).mapToObj(normalizedPath::getName).toList();
+```
 
 ### Introducing I/O streams
 
