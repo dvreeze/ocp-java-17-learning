@@ -266,12 +266,14 @@ System.out.println(Path.of("/home").getNameCount()); // prints 1
 System.out.println(Path.of("/home").getName(0)); // prints "home" (without slash)
 
 var strangePath = Path.of("/home/andre/../jane/../andre/./test.xml");
-var normalizedPath = strangePath.normalize();
+var normalizedPath = strangePath.normalize(); // equal to Path.of("/home/andre/test.xml")
 
 // Path symbols like ".." are name elements too, so no normalization takes place silently
+// This returns [home, andre, .., jane, .., andre, ., test.xml]
 var strangePathNames =
         IntStream.range(0, strangePath.getNameCount()).mapToObj(strangePath::getName).toList();
 // Only after explicitly normalizing the Path, the path symbols are gone
+// This returns [home, andre, test.xml]
 var normalizedPathNames =
         IntStream.range(0, normalizedPath.getNameCount()).mapToObj(normalizedPath::getName).toList();
 ```
