@@ -341,6 +341,9 @@ As we can see, the methods above do not clean up paths with path symbols. The sa
 ```java
 import java.nio.file.Path;
 
+// Returns true, so the ending slash does not change anything
+var check = Path.of("home/jane/../jane/").equals(Path.of("home/jane/../jane"));
+
 // First path is relative. Second path is relative.
 var path1 = Path.of("home/jane/../jane/");
 var path2 = Path.of("xml/test.xml");
@@ -353,12 +356,104 @@ var path5 = Path.of("xml/test.xml");
 // Returns "/home/jane/../jane/xml/test.xml"
 var path6 = path4.resolve(path5);
 
+// Returns true, so ignoring the root both paths (as relative paths) are equal
+var check2 = path1.subpath(0, path1.getNameCount())
+        .equals(path4.subpath(0, path4.getNameCount()));
+// Also true
+var check3 = path3.subpath(0, path3.getNameCount())
+        .equals(path6.subpath(0, path6.getNameCount()));
+
 // Second path is absolute, and is the path that is returned.
 var path7 = path4.resolve(Path.of("/home/jim/test.json"));
 
 // Second path is empty, so first path is returned.
 var path8 = path1.resolve(Path.of(""));
+
+// The empty path is lost in the result, which is equal to the parameter path
+var path9 = Path.of("").resolve(path1);
 ```
+
+Method `resolve(Path)` has an overloading counterpart `resolve(String)`, which works exactly the same way.
+
+The inverse of path *resolution* is method `relativize(Path)`. How do we get from this path to the parameter path?
+That's what method `relativize` returns, as `Path`. Again, type `Path` knows nothing about regular files versus directories,
+so path `user/test.xml` of regular file `test.xml` is path `user`, which is the directory containing regular file `test.xml`.
+
+When calling method `relativize(Path)`, both paths must either both be absolute or both be relative. If they are absolute
+Windows paths, they must start with the same drive letter. An exception will be thrown otherwise. For example:
+
+```java
+import java.nio.file.Path;
+
+// Straightforward relativization
+var path1 = Path.of("home/jane/../jane/");
+var path2 = Path.of("xml/test.xml");
+// Returns "home/jane/../jane/xml/test.xml"
+var path3 = path1.resolve(path2);
+
+// Returns path2
+var path4 = path1.relativize(path3);
+// Returns true
+var check1 = path1.resolve(path1.relativize(path3)).normalize().equals(path3.normalize());
+
+// Relativization with 2 "unrelated" relative paths
+var path5 = Path.of("test.txt");
+var path6 = Path.of("json/test.json");
+// Returns "../json/test.json"
+var path7 = path5.relativize(path6);
+// Returns "../../test.txt"
+var path8 = path6.relativize(path5);
+
+// Both checks return true
+var check2 = path5.resolve(path5.relativize(path6)).normalize().equals(path6.normalize());
+var check3 = path6.resolve(path6.relativize(path5)).normalize().equals(path5.normalize());
+
+// Relativization with 2 "unrelated" absolute paths
+var path9 = Path.of("/test.txt");
+var path10 = Path.of("/user/json/test.json");
+// Returns "../user/json/test.json"
+var path11 = path9.relativize(path10);
+// Returns "../../../test.txt"
+var path12 = path10.relativize(path9);
+
+// Both checks return true
+var check4 = path9.resolve(path9.relativize(path10)).normalize().equals(path10.normalize());
+var check5 = path10.resolve(path10.relativize(path9)).normalize().equals(path9.normalize());
+```
+
+Method `normalize()` removes redundancies, in particular path symbols "." and "..", to the extent possible.
+So `Path.of("../../test.xml").normalize()` can only return the same path, with the repeated ".." path symbols.
+
+Method `normalize` helps in comparing paths for equality. Paths can better be compared for equality after normalization.
+
+Method `toRealPath(LinkOption...)` is different from other methods in interface `Path`, in that it does inspect existence
+of the file. Method `toRealPath(LinkOption...)`:
+* Eliminates redundant path symbols, like method `normalize()`
+* Resolves the path against the current working directory if the path is relative, like method `toAbsolutePath()`
+* It follows symbolic links, unless the parameter `LinkOption` tells the method not to do so
+* It throws an exception if the file or directory does not exist on the file system
+* It can show the current working directory like this: `Path.of(".").toRealPath()`
+
+Summary of the `Path` *instance methods* seen so far:
+
+| Description                                    | `Path` instance method                              |
+|------------------------------------------------|-----------------------------------------------------|
+| Returns file path as string                    | `public String toString()`                          |
+| Retrieves a single name element                | `public Path getName(int index)`                    |
+| Gets the number of name elements               | `public int getNameCount()`                         |
+| Retrieves a sub-range of name elements         | `public Path subpath(int beginIndex, int endIndex)` |
+| Gets the final name element                    | `public Path getFileName()`                         |
+| Gets the immediate parent path, if any         | `public Path getParent()`                           |
+| Gets the root                                  | `public Path getRoot()`                             |
+| Appends a path                                 | `public Path resolve(Path other)`                   |
+|                                                | `public Path resolve(String other)`                 |
+| The inverse of resolving paths                 | `public Path relativize(Path other)`                |
+| Removes redundant parts of a path              | `public Path normalize()`                           |
+| Tries to find the real path on the file system | `public Path toRealPath(LinkOption...)`             |
+
+#### Creating, moving and deleting files and directories
+
+TODO
 
 ### Introducing I/O streams
 
