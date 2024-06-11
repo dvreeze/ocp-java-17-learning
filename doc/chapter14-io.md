@@ -311,6 +311,26 @@ So methods `getName(int)` and `subpath(int, int)` return `Path` instances *witho
 not have a root, so may be absolute or not. Yet the paths returned by `getName` and `subpath` are all relative. These
 2 methods treat all paths as if they are all relative, which is logical and predictable, because the root is not a "name".
 
+Interface `Path` also has methods `getFileName()`, `getRoot()` and `getParent()`, all returning a `Path` that can be `null`.
+Method `getParent` retains the root, if any. Method `getFileName` returns the last name element, if any, and `null` otherwise.
+Method `getParent` is shown in the example below:
+
+```java
+import java.nio.file.Path;
+
+public List<Path> getAncestorsOrSelf(Path path) {
+    return Stream.iterate(path, Objects::nonNull, Path::getParent).toList();
+}
+
+var path1 = Path.of("home/jane/xml/test.xml");
+// Returns [home/jane/xml/test.xml, home/jane/xml, home/jane, home]
+var ancestors1 = getAncestorsOrSelf(path1);
+
+var path2 = Path.of("/home/jane/xml/test.xml");
+// Returns [/home/jane/xml/test.xml, /home/jane/xml, /home/jane, /home, /]
+var ancestors2 = getAncestorsOrSelf(path2);
+```
+
 ### Introducing I/O streams
 
 TODO
