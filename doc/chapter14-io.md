@@ -329,6 +329,35 @@ var ancestors1 = getAncestorsOrSelf(path1);
 var path2 = Path.of("/home/jane/xml/test.xml");
 // Returns [/home/jane/xml/test.xml, /home/jane/xml, /home/jane, /home, /]
 var ancestors2 = getAncestorsOrSelf(path2);
+
+var path3 = Path.of("home/jane/../jane/xml/test.xml");
+// Returns the parent paths without interpreting path symbols, so ".." is one of the name elements
+var ancestors3 = getAncestorsOrSelf(path3);
+```
+
+As we can see, the methods above do not clean up paths with path symbols. The same is true for the next `Path` method:
+`resolve(Path)`, returning a `Path`, which is the "concatenation" of this path and the parameter path. For example:
+
+```java
+import java.nio.file.Path;
+
+// First path is relative. Second path is relative.
+var path1 = Path.of("home/jane/../jane/");
+var path2 = Path.of("xml/test.xml");
+// Returns "home/jane/../jane/xml/test.xml"
+var path3 = path1.resolve(path2);
+
+// First path is absolute. Second path is relative.
+var path4 = Path.of("/home/jane/../jane/");
+var path5 = Path.of("xml/test.xml");
+// Returns "/home/jane/../jane/xml/test.xml"
+var path6 = path4.resolve(path5);
+
+// Second path is absolute, and is the path that is returned.
+var path7 = path4.resolve(Path.of("/home/jim/test.json"));
+
+// Second path is empty, so first path is returned.
+var path8 = path1.resolve(Path.of(""));
 ```
 
 ### Introducing I/O streams
