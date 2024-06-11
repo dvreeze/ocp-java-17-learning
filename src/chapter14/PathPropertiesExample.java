@@ -17,8 +17,10 @@
 package chapter14;
 
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * This program tries to check some properties about NIO.2 type Path, on a Linux system.
@@ -41,20 +43,65 @@ public class PathPropertiesExample {
         );
     }
 
+    private static boolean computeIsAbsolute(Path path) {
+        return path.getRoot() != null;
+    }
+
     private static boolean isAbsolutePropertyHolds(Path path) {
-        boolean isAbsolute = path.isAbsolute();
-        boolean hasRoot = path.getRoot() != null;
-        return isAbsolute == hasRoot;
+        return path.isAbsolute() == computeIsAbsolute(path);
+    }
+
+    private static Optional<Path> computeOptionalFileName(Path path) {
+        int nameCount = path.getNameCount();
+
+        return (nameCount == 0) ? Optional.empty() : Optional.of(path.subpath(nameCount - 1, nameCount));
     }
 
     private static boolean getFileNamePropertyHolds(Path path) {
-        Optional<Path> optionalFileName = Optional.ofNullable(path.getFileName());
+        return Optional.ofNullable(path.getFileName()).equals(computeOptionalFileName(path));
+    }
 
-        int nameCount = path.getNameCount();
-        Optional<Path> optionalComputedFileName =
-                (nameCount == 0) ? Optional.empty() : Optional.of(path.subpath(nameCount - 1, nameCount));
+    private static Path reconstructPath(Path path) {
+        Optional<Path> rootOption = Optional.ofNullable(path.getRoot());
+        Optional<Path> firstNameOption =
+                (path.getNameCount() == 0) ? Optional.empty() : Optional.of(path.getName(0));
+        List<Path> remainingPathNames =
+                (path.getNameCount() <= 1) ? List.of() : IntStream.range(1, path.getNameCount()).mapToObj(path::getName).toList();
 
-        return optionalFileName.equals(optionalComputedFileName);
+        Path firstName = Path.of(
+                rootOption.map(Path::toString).orElse("") + firstNameOption.map(Path::toString).orElse("")
+        );
+        Path[] more = remainingPathNames.toArray(new Path[0]);
+        String[] moreStrings = Arrays.stream(more).map(Path::toString).toArray(String[]::new);
+
+        return Path.of(firstName.toString(), moreStrings);
+    }
+
+    private static boolean pathReconstructionPropertyHolds(Path path) {
+        return path.equals(reconstructPath(path));
+    }
+
+    private static Path reconstructPathByGettingParents(Path path) {
+        List<Path> elems =
+                Stream.iterate(path, Objects::nonNull, Path::getParent)
+                        .collect(Collectors.collectingAndThen(Collectors.toList(), xs -> {
+                            Collections.reverse(xs);
+                            return xs;
+                        }));
+        Path[] elements = elems.toArray(Path[]::new);
+
+        if (elements.length == 0) {
+            throw new RuntimeException("A path must at least have either a root or a name element");
+        }
+
+        return Path.of(
+                elements[0].toString(),
+                Arrays.stream(elements).skip(1).map(Path::getFileName).map(Path::toString).toArray(String[]::new)
+        );
+    }
+
+    private static boolean reversePathReconstructionPropertyHolds(Path path) {
+        return path.equals(reconstructPathByGettingParents(path));
     }
 
     public static void main(String[] args) {
@@ -73,6 +120,8 @@ public class PathPropertiesExample {
                 Path.of(".."),
                 Path.of("."),
                 Path.of("././test"),
+                Path.of("/.././home"), // weird path
+                Path.of("/home/jane/../../../../../../../home/jane/test.xml"), // security risk
                 Path.of("../../../.")
         );
 
@@ -86,5 +135,13 @@ public class PathPropertiesExample {
         System.out.println();
         boolean getFileNamePropertyHolds = examplePaths.stream().allMatch(PathPropertiesExample::getFileNamePropertyHolds);
         System.out.printf("Property about getFileName holds: %b%n", getFileNamePropertyHolds);
+
+        System.out.println();
+        boolean pathReconstructionPropertyHolds = examplePaths.stream().allMatch(PathPropertiesExample::pathReconstructionPropertyHolds);
+        System.out.printf("Property about path reconstruction holds: %b%n", pathReconstructionPropertyHolds);
+
+        System.out.println();
+        boolean reversePathReconstructionPropertyHolds = examplePaths.stream().allMatch(PathPropertiesExample::reversePathReconstructionPropertyHolds);
+        System.out.printf("Property about reverse path reconstruction holds: %b%n", reversePathReconstructionPropertyHolds);
     }
 }
