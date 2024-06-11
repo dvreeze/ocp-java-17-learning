@@ -278,6 +278,33 @@ var normalizedPathNames =
         IntStream.range(0, normalizedPath.getNameCount()).mapToObj(normalizedPath::getName).toList();
 ```
 
+With `Path` method `subpath(int, int)` we can retrieve a sub-path. Like `String.substring(int, int)` the start index is
+inclusive, the end index is exclusive, and both indices are zero-based. Unlike `String.substring`, method `subpath(int, int)`
+does not allow both indices to be the same. The root is not part of the returned `Path`. Wrong index parameters lead to
+an `IllegalArgumentException` being thrown. This is an example of using the `subpath` method:
+
+```java
+import java.nio.file.Path;
+
+var strangePath = Path.of("/home/andre/../jane/../andre/./test.xml");
+System.out.println(strangePath.getRoot() == null); // prints false
+
+var subpath = strangePath.subpath(3, strangePath.getNameCount()); // "jane/../andre/./test.xml"
+System.out.println(subpath.getRoot() == null); // prints true
+
+var firstName = strangePath.subpath(0, 1); // "home", without the slash
+System.out.println(firstName.getNameCount() == 1); // prints true
+System.out.println(firstName.getName(0).equals(Path.of("home"))); // prints true
+
+var strangePathAgain = Path.of("/").resolve(strangePath.subpath(0, strangePath.getNameCount()));
+// This returns true
+System.out.println(strangePath.equals(strangePathAgain));
+```
+
+So methods `getName(int)` and `subpath(int, int)` return `Path` instances *without root*. The original path may or may
+not have a root, so may be absolute or not. Yet the paths returned by `getName` and `subpath` are all relative. These
+2 methods treat all paths as if they are all relative, which is logical and predictable, because the root is not a "name".
+
 ### Introducing I/O streams
 
 TODO
