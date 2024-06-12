@@ -690,7 +690,7 @@ public void copyTextFile(File src, File dest) throws IOException {
 Classes `java.io.PrintStream` and `java.io.PrintWriter` have many overloaded `println` methods. Think of most of these
 overloads as calling `println(String)` on the result value of `String.valueOf` called on the parameter. Class `PrintWriter`
 should be preferred to `PrintStream` when outputting text characters. Methods in these 2 classes never throw `IOException`
-in their methods, but can be checked queried for error status using method `checkError()`. This is quite different from
+in their methods, but can be queried for the error status using method `checkError()`. This is quite different from
 what we are used to from other Java APIs, of course.
 
 The `println` methods in both classes use the `System.lineSeparator()` (or `System.getProperty("line.separator")`) as
