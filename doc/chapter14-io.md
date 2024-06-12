@@ -486,6 +486,25 @@ The following holds for method `move`:
 * This behavior can be changed with "copy option" `StandardCopyOption.REPLACE_EXISTING`
 * An *atomic move* (which is a single indivisible operation in the file system) is achieved with `StandardCopyOption.ATOMIC_MOVE` (or else a checked `AtomicMoveNotSupportedException` is thrown)
 
+Copying a directory tree recursively:
+
+```java
+public void copyPath(Path source, Path target) {
+    try {
+        Files.copy(source, target);
+        if (Files.isDirectory(source)) {
+            // Symbolic links are not followed
+            try (Stream<Path> childStream = Files.list(source)) {
+                // Recursion
+                childStream.forEach(ch -> copyPath(ch, target.resolve(ch.getFileName())));
+            }
+        }
+    } catch (IOException e) {
+        throw new UncheckedIOException(e);
+    }
+}
+```
+
 There are also overloaded `copy` methods:
 * `public static long copy(InputStream in, Path target, CopyOption... options) throws IOException`, returning the number of bytes read/written
 * `public static long copy(Path source, OutputStream out) throws IOException`, returning the number of bytes read/written
@@ -524,9 +543,80 @@ where the file contents differ will be returned (zero-based).
 
 ### Introducing I/O streams
 
-TODO
+*I/O streams* can be used to read or write data. Do not confuse them with *(Java) streams*. They are a completely different
+API. I/O streams are in package `java.io`.
+
+#### Understanding I/O stream fundamentals
+
+*I/O streams* can conceptually be thought of as large *streams of water*, with *data presented only one wave at a time*.
+Such a "wave" could be a byte, a character, a byte array, a text line, a serialized Java object, etc.
+
+I/O streams can be used with files, web URLs, in-memory data (byte arrays, character arrays, Strings etc.), or other
+*sequential data sources*. I/O streams can be *big* without using much memory themselves, because at each time only one
+"wave/block" is processed.
+
+#### Learning I/O stream nomenclature
+
+All I/O streams inherit from one of four *abstract base classes*:
+* `java.io.InputStream`, which is an input *stream of bytes*
+* `java.io.OutputStream`, which is an output stream of bytes
+* `java.io.Reader`, which is an input *stream of characters*
+* `java.io.Writer`, which is an output stream of characters
+
+Data is stored in a file system and in memory as *8-bit bytes*. So it makes sense that I/O streams can read or write
+Java `byte` or `byte[]` values. (Note: primitive type `byte` is signed, so it is a little bit more complex than that.)
+Hence, we have abstract classes `java.io.InputStream` and `java.io.OutputStream`.
+
+Yet often we want to deal with *text data*. Hence, we have abstract classes `java.io.Reader` and `java.io.Writer`.
+Whenever converting between bytes and characters (which we also do when using a `Reader` or `Writer`), we need to know
+the used *character encoding*. Examples of character encodings are US-ASCII (1 byte character encoding), UTF-8, a whole
+suite of "Windows encodings", UTF-16 (taking 2 bytes per character) etc.
+
+A character encoding is represented by *abstract class* `java.nio.charset.Charset` (mind the lowercase letter "s").
+Some predefined character set constants can be found in class `java.nio.charset.StandardCharsets`. For example,
+`Charset.forName("UTF-8")` is equivalent to `StandardCharsets.UTF_8`.
+
+It is often quite simple to predict the existence of several I/O stream class names. For example, for reading from
+a `java.io.File` it is logical that class `java.io.FileInputStream` exists, a constructor of which takes a `File` object.
+Knowing this class name, it is easy to predict the existence of 3 other I/O stream classes. So the following makes sense:
+* Class `java.io.FileInputStream`, inheriting from `java.io.InputStream`
+* Class `java.io.FileOutputStream`, inheriting from `java.io.OutputStream`
+* Class `java.io.FileReader`, inheriting from `java.io.Reader` (and using some explicit or default character encoding)
+* Class `java.io.FileWriter`, inheriting from `java.io.Writer` (and using some explicit or default character encoding)
+
+Most output stream classes have *corresponding* input stream classes. Exceptions are `java.io.PrintStream` and
+`java.io.PrintWriter`. These convenient classes offer writing of formatted representations of Java objects ("printf-style").
+
+*Low-level streams* connect with a "source of data". *High-level streams* are built on top of other I/O streams using wrapping.
+
+Some other *low-level stream* pairs are:
+* `java.io.ByteArrayInputStream` and `java.io.ByteArrayOutputStream`, working with byte arrays in memory
+* `java.io.StringReader` and `java.io.StringWriter`, working with character strings in memory
+
+Some *high-level stream* pairs are:
+* `java.io.BufferedInputStream` and `java.io.BufferedOutputStream`, processing data in a buffered manner, for improved efficiency and performance
+* `java.io.BufferedReader` and `java.io.BufferedWriter`, processing data in a buffered manner, for improved efficiency and performance
+* `java.io.ObjectInputStream` and `java.io.ObjectOutputStream`, deserializing and serializing Java primitives and Objects
+
+The following code snippet is an example of "stacking" streams:
+
+```java
+import java.io.*;
+
+try (var ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
+    // Method readObject is specific to ObjectInputStream
+    System.out.print(ois.readObject());
+}
+```
+
+Note that in this example a higher-level `java.io.InputStream` instance wraps another `java.io.InputStream` one (even any
+other `java.io.InputStream`). You cannot mix `InputStream` with `Reader` or with `OutputStream`, when wrapping I/O streams.
+Also, the first I/O stream in this "I/O stream wrapping chain" must typically be a low-level one, that is connected to
+some data source.
 
 ### Reading and writing files
+
+#### Using I/O streams
 
 TODO
 
