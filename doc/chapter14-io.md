@@ -36,8 +36,8 @@ Paths of files or directories can be *absolute* or *relative*. Absolute paths st
 Relative paths can be turned into absolute paths by taking the *current working directory* into account.
 
 Absolute and relative paths can contain *path symbols*:
-* `.` refers to the current file or directory
-* `..` refers to the parent directory of the current file or directory
+* `.` at the beginning of a path refers to the current directory
+* `..` at the beginning of a path refers to the parent directory of the current directory
 
 Some paths can be *normalized*. For example, absolute path `/fish/clownfish/../shark/./swim.txt` can be simplified to
 `/fish/shark/swim.txt` (example taken from the book).
