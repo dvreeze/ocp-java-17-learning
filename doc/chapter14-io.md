@@ -474,7 +474,7 @@ The following holds for method `copy`:
 * It can be used for copying regular files (where source and target are regular files) or directories (where source and target are directories)
 * When used for copying directories, the copy is a *shallow copy*; i.e. files/directories within the source directory are not copied
 * For deeply copying directories, this method should be called recursively (see below)
-* Unlike a Unix `cp` command, the `copy` method does not directly support "copying into an existing directory"; copying source into target must be *taken literally*
+* Unlike a Unix `cp` command, the `copy` method does not directly support "copying into an existing directory"; copying source `Path` to target `Path` must be *taken literally*
 * So, if you want to copy `regularFilePath` into `directoryPath`, calling `copy(regularFilePath, directoryPath.resolve(regularFilePath.getFileName()))` would work
 * By default, if the target already exists, an exception will be thrown
 * This behavior can be changed with "copy option" `StandardCopyOption.REPLACE_EXISTING`
