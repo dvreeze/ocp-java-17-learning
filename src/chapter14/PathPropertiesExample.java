@@ -169,7 +169,6 @@ public class PathPropertiesExample {
         List<PathPair> pathPairs =
                 examplePaths.stream().flatMap(p1 -> examplePaths.stream().map(p2 -> new PathPair(p1, p2)))
                         .filter(PathPair::bothAbsoluteOrRelative)
-                        .filter(pair -> !List.of(pair.path1, pair.path2).contains(Path.of("")))
                         .filter(PathPair::normalizedPathsHaveNoPathSymbols)
                         .toList();
         boolean pathReconstructionPropertyUsingRelativizeHolds =
