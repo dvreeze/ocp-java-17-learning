@@ -21,9 +21,9 @@ Linux it would probably be a single forward slash, so "/".
 
 A *path* represents a file or directory within the file system. A path is given as a sequence of *path entries* separated
 by a *path separator*, which is a backslash on Windows and a forward slash on Linux. Typically, all path entries but the
-last one represent directories. Consider path `/home/jane/test.xml`. File `test.xml` is in directory `/home/jane`, which
-is the *parent directory* of `test.xml`. Directory `jane` is in directory `/home`, which is the parent directory of
-directory `jane`.
+last one represent directories (and often the last one as well). Consider path `/home/jane/test.xml`. File `test.xml` is
+in directory `/home/jane`, which is the *parent directory* of `test.xml`. Directory `jane` is in directory `/home`, which
+is the parent directory of directory `jane`.
 
 Java returns the file separator with a system property:
 
@@ -36,8 +36,8 @@ Paths of files or directories can be *absolute* or *relative*. Absolute paths st
 Relative paths can be turned into absolute paths by taking the *current working directory* into account.
 
 Absolute and relative paths can contain *path symbols*:
-* `.` refers to the current directory
-* `..` refers to the parent directory of the current directory
+* `.` refers to the current file or directory
+* `..` refers to the parent directory of the current file or directory
 
 Some paths can be *normalized*. For example, absolute path `/fish/clownfish/../shark/./swim.txt` can be simplified to
 `/fish/shark/swim.txt` (example taken from the book).
