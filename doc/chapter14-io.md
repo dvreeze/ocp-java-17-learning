@@ -638,8 +638,10 @@ is a summary of those *blocking* instance methods:
 | `java.io.Writer`       | `public void write(char[] cbuf) throws IOException`                   |
 | `java.io.Writer`       | `public void write(char[] cbuf, int off, int len) throws IOException` |
 
-The read methods return the number of bytes/characters read, but `-1` if the end of the stream has been reached, and no
-data could be read. These read methods *block* until some data was found, EOF was reached, or an exception was thrown.
+The read methods taking a byte array or character array return the number of bytes/characters read, but `-1` if the end
+of the stream has been reached, and no data could be read. The read methods without parameters return a byte or char as
+`int`, or `-1` if no data could be read. All these read methods *block* until some data was found, EOF was reached, or an
+exception was thrown.
 
 Class `java.io.Writer` also has "write" methods:
 * `public void write(String str) throws IOException`
