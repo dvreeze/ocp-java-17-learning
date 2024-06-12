@@ -29,6 +29,19 @@ import java.util.stream.Stream;
  */
 public class PathPropertiesExample {
 
+    public record PathPair(Path path1, Path path2) {
+
+        public boolean bothAbsoluteOrRelative() {
+            return (path1.isAbsolute() && path2.isAbsolute()) || (!path1.isAbsolute() && !path2.isAbsolute());
+        }
+
+        public boolean normalizedPathsHaveNoPathSymbols() {
+            return Stream.of(path1, path2)
+                    .map(Path::normalize)
+                    .allMatch(p -> IntStream.range(0, p.getNameCount()).mapToObj(p::getName).noneMatch(nm -> nm.equals(Path.of(".."))));
+        }
+    }
+
     private static String quote(Path p) {
         return (p == null) ? null : String.format("\"%s\"", p);
     }
@@ -104,6 +117,14 @@ public class PathPropertiesExample {
         return path.equals(reconstructPathByGettingParents(path));
     }
 
+    private static Path reconstructNormalizedSecondPath(Path thisPath, Path otherPath) {
+        return thisPath.resolve(thisPath.relativize(otherPath)).normalize();
+    }
+
+    private static boolean pathReconstructionPropertyUsingRelativizeHolds(Path thisPath, Path otherPath) {
+        return otherPath.normalize().equals(reconstructNormalizedSecondPath(thisPath, otherPath));
+    }
+
     public static void main(String[] args) {
         // Note that we cannot create a Path without any "Path.of" parameters
         List<Path> examplePaths = List.of(
@@ -143,5 +164,18 @@ public class PathPropertiesExample {
         System.out.println();
         boolean reversePathReconstructionPropertyHolds = examplePaths.stream().allMatch(PathPropertiesExample::reversePathReconstructionPropertyHolds);
         System.out.printf("Property about reverse path reconstruction holds: %b%n", reversePathReconstructionPropertyHolds);
+
+        System.out.println();
+        List<PathPair> pathPairs =
+                examplePaths.stream().flatMap(p1 -> examplePaths.stream().map(p2 -> new PathPair(p1, p2)))
+                        .filter(PathPair::bothAbsoluteOrRelative)
+                        .filter(pair -> !List.of(pair.path1, pair.path2).contains(Path.of("")))
+                        .filter(PathPair::normalizedPathsHaveNoPathSymbols)
+                        .toList();
+        boolean pathReconstructionPropertyUsingRelativizeHolds =
+                pathPairs.stream().allMatch(pair -> pathReconstructionPropertyUsingRelativizeHolds(pair.path1, pair.path2));
+        System.out.printf(
+                "Property about path reconstruction using relativization holds: %b%n",
+                pathReconstructionPropertyUsingRelativizeHolds);
     }
 }
