@@ -453,7 +453,16 @@ Summary of the `Path` *instance methods* seen so far:
 
 #### Creating, moving and deleting files and directories
 
-TODO
+Directories can be created with `java.nio.file.Files` *static methods*:
+* `public static Path createDirectory(Path dir, FileAttribute<?>... attrs) throws IOException`
+* `public static Path createDirectories(Path dir, FileAttribute<?>... attrs) throws IOException`
+
+The following holds for these methods:
+* As the names imply, they create directories, not regular files
+* Method `createDirectory` throws an exception if the file/directory already exists, or if the paths leading up to the directory do not exist
+* Method `createDirectories` throws an exception if the file exists but not as a directory; otherwise it will create all missing (parent) directories as well
+* If all directories exist, method `createDirectories` will do nothing
+* File attributes are discussed later in this chapter
 
 ### Introducing I/O streams
 
