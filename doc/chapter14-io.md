@@ -536,7 +536,7 @@ is not a reliable way to compare paths for equality.
 Static `Files` method `isSameFile(Path, Path)` is more reliable to compare paths of regular files or directories
 (resolving relative paths, normalizing paths, following symbolic links, etc.). It can throw an exception if the paths
 do not exist. There is one case where this method will not check existence of the files, and that is the case where
-bot paths are equal according to method `Path.equals(Object other)`.
+both paths are equal according to method `Path.equals(Object other)`.
 
 If we want to compare the *contents* of 2 files, we can use method `mismatch(Path path1, Path path2)` (introduced in Java 12).
 Only regular files can be compared with this method. Comparing directories will throw an exception. The method returns
