@@ -54,10 +54,10 @@ that can be reused again and again, streams are much more *like iterators* than 
 As the [package java.util.Stream Javadoc](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/package-summary.html)
 says, *streams* differ from collections in several ways:
 * *No storage*, unlike collections; instead, it is a *pipeline of computational operations* (or "recipe for computations")
+* *Consumable*, like an "iterator", visiting/consuming the elements *only once*
 * *Functional in nature*, in that the stream source is not modified
 * *Laziness-seeking*, where *intermediate stream operations* are always *lazy*
 * *Possibly unbounded*, i.e. possibly infinite
-* *Consumable*, like an "iterator", visiting/consuming the elements *only once*
 
 The Stream interface type is `java.util.stream.Stream<T>`.
 
