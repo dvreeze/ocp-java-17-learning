@@ -566,8 +566,8 @@ All I/O streams inherit from one of four *abstract base classes*:
 * `java.io.Writer`, which is an output stream of characters
 
 Data is stored in a file system and in memory as *8-bit bytes*. So it makes sense that I/O streams can read or write
-Java `byte` or `byte[]` values. (Note: primitive type `byte` is signed, so it is a little bit more complex than that.)
-Hence, we have abstract classes `java.io.InputStream` and `java.io.OutputStream`.
+Java `byte` or `byte[]` values. (Note: primitive type `byte` is signed, but for I/O we ignore that and just regard
+the bytes as chunks of 8 bits.) Hence, we have abstract classes `java.io.InputStream` and `java.io.OutputStream`.
 
 Yet often we want to deal with *text data*. Hence, we have abstract classes `java.io.Reader` and `java.io.Writer`.
 Whenever converting between bytes and characters (which we also do when using a `Reader` or `Writer`), we need to know
