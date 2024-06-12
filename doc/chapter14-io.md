@@ -784,14 +784,49 @@ the transient instance fields will get the default value, and static fields are 
 
 Again, on deserialization constructors of serializable classes are not called. Neither are initializers called. Obviously,
 this is potentially very unsafe. All *encapsulation* offered by *OO best practices* are *thrown out of the window* with
-Java serialization (at least with the techniques so far). As far as I know, in practice Java serialization is not very
-widely used.
+Java serialization (at least with the techniques presented so far). As far as I know, in practice Java serialization is
+not very widely used.
 
 Java serialization also breaks the "S" of *single responsibility* of the *SOLID principles*.
 
 ### Interacting with users
 
-TODO
+Java provides `System.out` and `System.err` as out-of-the-box `java.io.PrintStream` instances. A Java process can redirect
+the standard output and standard error channels to different files. Still, the use of a *proper logging solution* is much
+better in practice.
+
+Java also provides `System.in`, which is a `java.io.InputStream`. It can be wrapped in an `InputStreamReader`, which
+can be wrapped in a `BufferedReader`. Still, do *not close* these 3 streams, so do *not use them in try-resources statements*.
+
+Class `java.io.Console` is designed for user interactions. It cannot be created by us using a constructor. Instead,
+obtain the *Console* singleton provided by the Java platform like this (taken from the book):
+
+```java
+import java.io.*;
+
+Console console = System.console();
+if (console != null) {
+    // Use the console
+    String userInput = console.readLine();
+    console.writer().println("You entered: " + userInput);
+} else {
+    System.err.println("Console not available");
+}
+```
+
+In this example, method `readLine()` does a *blocking read* on user input, until the user hits ENTER.
+Then method `writer()` returns a `PrintWriter` that can be used to give output to the user.
+
+Some `java.io.Console` instance methods are:
+* `reader()`, returning a `java.io.Reader`, that can be used if we need more power than the Console API provides directly
+* `writer()`, returning a `java.io.PrintWriter`, that is used to write output to the console
+* `readLine()`, doing a *blocking read*, waiting for user input until ENTER is hit (and returning `null` on reaching end of input, resulting from CTRL-D etc.)
+* `readLine(String, Object...)`, which is like `readLine()`, but providing a formatted prompt (consistent with method `String.format`)
+* `readPassword()` and `readPassword(String, Object...)`, which is like `readLine` but disabling echoing; the return type is `char[]` instead of `String`
+* `format(String, Object...)` and equivalent method `printf(String, Object...)`, writing a formatted string to the console's output stream
+
+If we want to call `format` but explicitly provide a `Locale`, we can do that by calling the appropriate formatting method
+on the `PrintWriter` obtained through method `writer()`.
 
 ### Working with advanced APIs
 
