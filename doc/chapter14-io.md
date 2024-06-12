@@ -206,7 +206,7 @@ closed. Interface `Stream<T>` extends `java.lang.AutoCloseable`, so it can be us
 ```java
 // Easy way to get the current working directory
 // This is indeed a directory and not a regular file
-// Otherwise a checked NotDirectoryException is thrown (extends IOException)
+// Otherwise a checked NotDirectoryException (which extends IOException) is thrown by method "list"
 Path path = Path.of("").toAbsolutePath();
 
 try (Stream<Path> childFileStream = Files.list(path)) {
