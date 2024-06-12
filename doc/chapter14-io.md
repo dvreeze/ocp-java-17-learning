@@ -618,7 +618,98 @@ some data source.
 
 #### Using I/O streams
 
-TODO
+To copy an input stream into an output stream in a loop, we need to know about *low-level read/write methods*. This table
+is a summary of those *blocking* instance methods:
+
+| I/O stream class       | Read/write method                                                     |
+|------------------------|-----------------------------------------------------------------------|
+| `java.io.InputStream`  | `public abstract int read() throws IOException`                       |
+| `java.io.InputStream`  | `public int read(byte[] b) throws IOException`                        |
+| `java.io.InputStream`  | `public int read(byte[] b, int off, int len) throws IOException`      |
+| `java.io.Reader`       | `public int read() throws IOException`                                |
+| `java.io.Reader`       | `public int read(char[] cbuf) throws IOException`                     |
+| `java.io.Reader`       | `public int read(char[] cbuf, int off, int len) throws IOException`   |
+| `java.io.OutputStream` | `public void write(int b) throws IOException`                         |
+| `java.io.OutputStream` | `public void write(byte[] b) throws IOException`                      |
+| `java.io.OutputStream` | `public void write(byte[] b, int off, int len) throws IOException`    |
+| `java.io.Writer`       | `public void write(int c) throws IOException`                         |
+| `java.io.Writer`       | `public void write(char[] cbuf) throws IOException`                   |
+| `java.io.Writer`       | `public void write(char[] cbuf, int off, int len) throws IOException` |
+
+The read methods return the number of bytes/characters read, but `-1` if the end of the stream has been reached, and no
+data could be read. These read methods *block* until some data was found, EOF was reached, or an exception was thrown.
+
+Class `java.io.Writer` also has "write" methods:
+* `public void write(String str) throws IOException`
+* `public void write(String str, int off, int len) throws IOException`
+
+Class `java.io.InputStream` also has "read" method `public byte[] readAllBytes() throws IOException`, but it should not be
+used for reading large amounts of data.
+
+Copying input streams to output streams using these low-level methods is a bit cumbersome and also not quite efficient.
+For example (from the book):
+
+```java
+import java.io.*;
+
+public void copy(InputStream in, OutputStream os) throws IOException {
+    int b;
+    while ((b = in.read()) != -1) {
+        out.write(b);
+    }
+}
+```
+
+All `InputStream`, `OutputStream`, `Reader` and `Writer` (sub-)classes inherit from `java.io.Closeable`, so can be used
+in a try-resources statement.
+
+Abstract classes `java.io.OutputStream` and `java.io.Writer` also have method `flush()` to "commit" the write(s), but this
+may be costly if called too often.
+
+Let's copy a text file to another file in a slightly higher-level way, by using a `BufferedReader` and `PrintWriter`
+(example from the book):
+
+```java
+import java.io.*;
+
+public void copyTextFile(File src, File dest) throws IOException {
+    try (var reader = new BufferedReader(new FileReader(src));
+         var writer = new PrintWriter(new FileWriter(dest))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            writer.println(line); // This also adds the "lost" newline
+        }
+    }
+}
+```
+
+Classes `java.io.PrintStream` and `java.io.PrintWriter` have many overloaded `println` methods. Think of most of these
+overloads as calling `println(String)` on the value of `String.valueOf` called on the parameter. Class `PrintWriter`
+should be preferred to `PrintStream` when outputting text characters. Methods in these 2 classes never throw `IOException`
+in their methods, but can be checked queried for error status using method `checkError()`. This is quite different from
+what we are used to from other Java APIs, of course.
+
+The `println` methods in both classes use the `System.lineSeparator()` (or `System.getProperty("line.separator")`) as
+line separator, which is "\\n" on Linux and "\\r\\n" on Windows. Other output methods apply some "printf-style" formatting
+before writing the output.
+
+#### Enhancing with Files
+
+The NIO.2 `Files` class has a few *static methods* for conveniently reading and writing data. Most of them may potentially
+use a lot of memory, and one of them works "in a streaming way". Here is a list:
+
+| Description                      | `Files` static method                                                                                                               |
+|----------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
+| Reading all bytes from a Path    | `public static byte[] readAllBytes(Path path) throws IOException`                                                                   |
+| Writing byte array to a Path     | `public static Path write(Path path, byte[] bytes, OpenOption... options) throws IOException`                                       |
+| Reading all lines from a Path    | `public static List<String> readAllLines(Path path, Charset cs) throws IOException`                                                 |
+| Writing lines to a Path          | `public static Path write(Path path, Iterable<? extends CharSequence> lines, Charset cs, OpenOption... options) throws IOException` |
+| Reading a String from a Path     | `public static String readString(Path path, Charset cs) throws IOException`                                                         |
+| Writing a String to a Path       | `public static Path writeString(Path path, CharSequence csq, Charset cs, OpenOption... options) throws IOException`                 |
+| Lazily reading lines from a Path | `public static Stream<String> lines(Path path, Charset cs) throws IOException`                                                      |
+
+The methods taking an extra `Charset` also have overloads not taking that extra parameter for the character encoding.
+In those cases, `StandardCharsets.UTF_8` is used.
 
 ### Serializing data
 
