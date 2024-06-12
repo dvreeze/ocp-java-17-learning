@@ -107,8 +107,9 @@ System.out.println("Path path1 exists: " + Files.exists(path1));
 ```
 
 Just like class `java.io.File`, interface `java.nio.file.Path` is used both for files and directories, and both for absolute
-and relative paths, and both for existing and non-existing files/directories. Paths themselves know nothing about existence
-of files/directories. That's the domain of the `java.nio.file.Files` class.
+and relative paths, and both for existing and non-existing files/directories. Most `Path` methods seem to know nothing about
+existence of files/directories. That's more like the domain of the `java.nio.file.Files` class (delegating to a `FileSystem`
+instance).
 
 It is also possible to take a `java.net.URI` as input when constructing a `java.io.File` or `java.nio.file.Path`.
 In the old I/O API this is supported by `File` constructor `File(URI)`. In NIO.2 it is supported by factory methods
