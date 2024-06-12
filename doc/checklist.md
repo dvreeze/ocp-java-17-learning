@@ -84,6 +84,7 @@ The standard APIs below are in module `java.base`, unless mentioned otherwise. P
 | "Old" Java I/O API          | `java.io`              |                                             |
 | NIO.2                       | `java.nio.file`        |                                             |
 | Formatting API              | `java.text`            |                                             |
+| Math                        | `java.math`            |                                             |
 | JDBC                        | `java.sql`             |                                             |
 
 Other types to know about include:
