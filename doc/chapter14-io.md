@@ -161,12 +161,12 @@ There are many commonalities between the old `java.io.File` API on the one hand 
 
 Common `java.io.File` and `java.nio.file.Path` operations:
 
-| Description                    | `File` instance method     | `Path` instance method  | Remarks                           |
-|--------------------------------|----------------------------|-------------------------|-----------------------------------|
-| Gets the file/directory name   | `String getName()`         | `Path getFileName()`    |                                   |
-| Retrieves parent directory     | `File getParentFile()`     | `Path getParent()`      | Both return `null` <br/>otherwise |
-| Checks if the path is absolute | `boolean isAbsolute()`     | `boolean isAbsolute()`  |                                   |
-| Get absolute path              | `String getAbsolutePath()` | `Path toAbsolutePath()` |                                   |
+| Description                    | `File` instance method     | `Path` instance method  | Remarks                                       |
+|--------------------------------|----------------------------|-------------------------|-----------------------------------------------|
+| Gets the file/directory name   | `String getName()`         | `Path getFileName()`    |                                               |
+| Retrieves parent directory     | `File getParentFile()`     | `Path getParent()`      | Both return `null` <br/>if there is no parent |
+| Checks if the path is absolute | `boolean isAbsolute()`     | `boolean isAbsolute()`  |                                               |
+| Get absolute path              | `String getAbsolutePath()` | `Path toAbsolutePath()` |                                               |
 
 ##### Operations on File and Files
 
