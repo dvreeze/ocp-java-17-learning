@@ -715,9 +715,79 @@ use a lot of memory, and one of them works "in a streaming way". Here is a list:
 The methods taking an extra `Charset` also have overloads not taking that extra parameter for the character encoding.
 In those cases, `StandardCharsets.UTF_8` is used.
 
+Class `Files` also has a few static convenience methods to create readers and writers from a `Path`, such as:
+* `newBufferedReader(Path, Charset)` and an overload leaving out the character encoding
+* `newBufferedWriter(Path, Charset, OpenOption...)` and an overload leaving out the character encoding
+* `newInputStream(Path, OpenOption...)`
+* `newOutputStream(Path, OpenOption...)`
+
 ### Serializing data
 
-TODO
+There are many ways of serializing Java objects to a file using some serialization format, and deserializing them back
+into Java objects again. Such formats include XML, JSON, but also the *Java serialization format*, which is "baked into
+the Java platform". Using Java (de)serialization, we can use the Java I/O stream API to serialize and deserialize Java
+objects.
+
+No Java class is "automatically" serializable. This is also true for Java *record classes*. The class must be "marked"
+as such. To use Java serialization with a Java class, the following is required:
+* The class must be marked as serializable, by having the class *implement* the *marker interface* `java.io.Serializable`
+* Recursively, each *instance member* of the class must be *serializable*, marked `transient`, or be `null` at the time of serialization
+
+Normally only *data-oriented* class should be made serializable (if we want to use them with Java serialization).
+All Java primitives and many well-known Java classes (such as `String` and collections) are serializable.
+
+*Transient* instance members of a serializable class do not take part in serialization, and get their default values
+(such as `null` for objects) on deserialization.
+
+For versioning of serializable classes, use static field `private static final long serialVersionUID = 1L;` (where the
+constant value is incremented when needed). This "serial version UID" is part of the serialized data, along with the
+non-transient serialized instance fields. On deserialization, a checked `java.io.InvalidClassException` may be thrown
+(which inherits from `java.io.IOException`). Besides the "serial version UID", static fields take no part in (de)serialization.
+
+Using Java (de)serialization requires the use of a `java.io.ObjectInputStream` and/or `java.io.ObjectOutputStream`. Their
+instance methods are:
+* `ObjectInputStream` has method `public Object readObject() throws IOException, ClassNotFoundException`
+* `ObjectOutputStream` has method `public void writeObject(Object obj) throws IOException`
+
+Writing and reading Java objects could look like this:
+
+```java
+import java.io.*;
+
+public record Quote(String attributedTo, String text, List<String> subjects) implements Serializable { }
+
+public void saveQuotes(List<Quote> quotes, File file) throws IOException {
+    try (var out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+        for (Quote quote : quotes) out.writeObject(quote);
+    }
+}
+
+public List<Quote> readQuotes(File file) throws IOException, ClassNotFoundException {
+    var quotes = new ArrayList<Quote>();
+    try (var in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
+        // This is quite clunky, but apparently needed
+        while (true) {
+            var obj = in.readObject();
+            if (obj instanceof Quote quote) quotes.add(quote);
+        }
+    } catch (EOFException e) {
+        // File end reached. Method "available()" does not work as EOF check.
+    }
+    return quotes;
+}
+```
+
+*Deserialization* is quite an *insecure* process, *bypassing normal construction*. Instead, Java will *call the no-arg
+constructor of the first non-serializable ancestor class*. Often that is `java.lang.Object`. After calling that no-arg
+constructor of a non-serializable ancestor class, the non-transient instance fields will be filled from the serialized data,
+the transient instance fields will get the default value, and static fields are left alone.
+
+Again, on deserialization constructors of serializable classes are not called. Neither are initializers called. Obviously,
+this is potentially very unsafe. All *encapsulation* offered by *OO best practices* are *thrown out of the window* with
+Java serialization (at least with the techniques so far). As far as I know, in practice Java serialization is not very
+widely used.
+
+Java serialization also breaks the "S" of *single responsibility* of the *SOLID principles*.
 
 ### Interacting with users
 
