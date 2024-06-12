@@ -464,6 +464,64 @@ The following holds for these methods:
 * If all directories exist, method `createDirectories` will do nothing
 * File attributes are discussed later in this chapter
 
+Class `java.nio.file.Files` offers the following static methods for *copying* and *moving/renaming* files/directories:
+* "Copying" method `public static Path copy(Path source, Path target, CopyOption... options) throws IOException`
+* "Moving/renaming" method `public static Path move(Path source, Path target, CopyOption... options) throws IOException`
+
+The following holds for method `copy`:
+* It can be used for copying regular files (where source and target are regular files) or directories (where source and target are directories)
+* When used for copying directories, the copy is a *shallow copy*; i.e. files/directories within the source directory are not copied
+* For deeply copying directories, this method should be called recursively (see below)
+* Unlike a Unix `cp` command, the `copy` method does not directly support "copying into an existing directory"; copying source into target must be *taken literally*
+* So, if you want to copy `regularFilePath` into `directoryPath`, calling `copy(regularFilePath, directoryPath.resolve(regularFilePath.getFileName()))` would work
+* By default, if the target already exists, an exception will be thrown
+* This behavior can be changed with "copy option" `StandardCopyOption.REPLACE_EXISTING`
+
+The following holds for method `move`:
+* It can be used for moving/renaming regular files (where source and target are regular files) or directories (where source and target are directories)
+* Moving and renaming can be combined in one `move` call, but just moving or just renaming is also possible, of course
+* When used for moving/renaming directories, the contents of the source directory moves to the target directory and will not be lost
+* Like is the case for `copy`, source and target parameters must be *taken literally*
+* By default, if the target already exists, an exception will be thrown
+* This behavior can be changed with "copy option" `StandardCopyOption.REPLACE_EXISTING`
+* An *atomic move* (which is a single indivisible operation in the file system) is achieved with `StandardCopyOption.ATOMIC_MOVE` (or else a checked `AtomicMoveNotSupportedException` is thrown)
+
+There are also overloaded `copy` methods:
+* `public static long copy(InputStream in, Path target, CopyOption... options) throws IOException`, returning the number of bytes read/written
+* `public static long copy(Path source, OutputStream out) throws IOException`, returning the number of bytes read/written
+
+Of course, most parameter I/O streams can only be processed once, but `System.in`, `System.out` etc. are not created/closed by us.
+
+For example, copying a file to `System.out`: 
+
+```java
+Files.copy(Path.of("/home/jane/test.xml"), System.out);
+```
+
+Class `java.nio.file.Files` offers the following static methods for *deleting* regular files or non-empty directories:
+* `public static void delete(Path path) throws IOException`
+* `public static boolean deleteIfExists(Path path) throws IOException`
+
+The following holds for these `delete` and `deleteIfExists` methods:
+* When trying to delete a directory, both methods expect the directory to be empty, or else an exception is thrown
+* If the path is a symbolic link, the link itself will be deleted, not the path that the link points to
+* If the path does not exist, `delete` throws an exception, whereas `deleteIfExists` returns `false` in that case
+
+#### Comparing files with isSameFile() and mismatch()
+
+Paths may contain path symbols, and they may be symbol links, relative paths etc. So method `Path.equals(Object other)`
+is not a reliable way to compare paths for equality.
+
+Static `Files` method `isSameFile(Path, Path)` is more reliable to compare paths of regular files or directories
+(resolving relative paths, normalizing paths, following symbolic links, etc.). It can throw an exception if the paths
+do not exist. There is one case where this method will not check existence of the files, and that is the case where
+bot paths are equal according to method `Path.equals(Object other)`.
+
+If we want to compare the *contents* of 2 files, we can use method `mismatch(Path path1, Path path2)` (introduced in Java 12).
+Only regular files can be compared with this method. Comparing directories will throw an exception. The method returns
+an `int`. It returns `-1` if the files are equal (as physical files or in their contents). Otherwise, the first position
+where the file contents differ will be returned (zero-based).
+
 ### Introducing I/O streams
 
 TODO
