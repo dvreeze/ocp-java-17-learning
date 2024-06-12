@@ -68,3 +68,27 @@ Is a *function* or *operator*:
 * *Pure* or *free from side effects*? (counterexample: `StringBuilder.append`)
 
 I remember this as "DTP" (deterministic, total, pure).
+
+### Standard APIs to know
+
+The standard APIs below are in module `java.base`, unless mentioned otherwise. Package `java.sql` is in module `java.sql`.
+
+| API description             | Java packages          | Characteristics                             |
+|-----------------------------|------------------------|---------------------------------------------|
+| Core `java.lang` APIs       | `java.lang`            |                                             |
+| Collections Framework       | `java.util`            |                                             |
+| Concurrent Collections      | `java.util.concurrent` |                                             |
+| Functional interfaces       | `java.util.function`   |                                             |
+| Stream API                  | `java.util.stream`     |                                             |
+| Time API                    | `java.time`            |                                             |
+| "Old" Java I/O API          | `java.io`              |                                             |
+| NIO.2                       | `java.nio.file`        |                                             |
+| Formatting API              | `java.text`            |                                             |
+| JDBC                        | `java.sql`             |                                             |
+
+Other types to know about include:
+* `java.net.URI`
+
+### Language constructs to know
+
+TODO
