@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.PosixFileAttributes;
+import java.nio.file.attribute.PosixFilePermission;
 import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.List;
@@ -46,9 +49,21 @@ public class FindLargestFiles {
         return optionalExtension.stream().allMatch(ext -> path.getFileName().toString().endsWith(ext));
     }
 
-    private static long getFileSize(Path path) {
+    private static BasicFileAttributes getBasicFileAttributes(Path path) {
         try {
-            return Files.size(path);
+            return Files.readAttributes(path, BasicFileAttributes.class);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    private static long getFileSize(Path path) {
+        return getBasicFileAttributes(path).size();
+    }
+
+    private static Optional<String> probeContentType(Path path) {
+        try {
+            return Optional.ofNullable(Files.probeContentType(path));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -78,15 +93,62 @@ public class FindLargestFiles {
 
         List<Path> largestFiles = findLargestFiles(startDir, optionalExtension, config);
 
-        try {
-            NumberFormat formatter = NumberFormat.getCompactNumberInstance();
+        NumberFormat formatter = NumberFormat.getCompactNumberInstance();
 
-            for (Path path : largestFiles) {
-                long size = Files.size(path);
-                System.out.printf("File '%s'. Size: %s%n", path, formatter.format(size));
+        for (Path path : largestFiles) {
+            var fileAttributes = getBasicFileAttributes(path);
+            long size = fileAttributes.size();
+            System.out.printf("File '%s'. Size: %s%n", path, formatter.format(size));
+            System.out.printf("\tByte size: %d%n", size);
+            System.out.printf("\tIs regular file: %b%n", fileAttributes.isRegularFile());
+            System.out.printf("\tIs directory: %b%n", fileAttributes.isDirectory());
+            System.out.printf("\tIs symbolic link: %b%n", fileAttributes.isSymbolicLink());
+            System.out.printf("\tIs other kind of file: %b%n", fileAttributes.isOther());
+            System.out.printf("\tProbed content type: %s%n", probeContentType(path).orElse("<unknown>"));
+            System.out.printf("\tCreation time: %s%n", fileAttributes.creationTime());
+            System.out.printf("\tLast modified time: %s%n", fileAttributes.lastModifiedTime());
+            System.out.printf("\tLast access time: %s%n", fileAttributes.lastAccessTime());
+
+            if (fileAttributes instanceof PosixFileAttributes posixFileAttributes) {
+                System.out.printf("\tOwner: %s%n", posixFileAttributes.owner());
+                System.out.printf("\tGroup: %s%n", posixFileAttributes.group());
+                System.out.printf(
+                        "\tOwner can read: %s%n",
+                        posixFileAttributes.permissions().contains(PosixFilePermission.OWNER_READ)
+                );
+                System.out.printf(
+                        "\tOwner can write: %s%n",
+                        posixFileAttributes.permissions().contains(PosixFilePermission.OWNER_WRITE)
+                );
+                System.out.printf(
+                        "\tOwner can execute: %s%n",
+                        posixFileAttributes.permissions().contains(PosixFilePermission.OWNER_EXECUTE)
+                );
+                System.out.printf(
+                        "\tGroup can read: %s%n",
+                        posixFileAttributes.permissions().contains(PosixFilePermission.GROUP_READ)
+                );
+                System.out.printf(
+                        "\tGroup can write: %s%n",
+                        posixFileAttributes.permissions().contains(PosixFilePermission.GROUP_WRITE)
+                );
+                System.out.printf(
+                        "\tGroup can execute: %s%n",
+                        posixFileAttributes.permissions().contains(PosixFilePermission.GROUP_EXECUTE)
+                );
+                System.out.printf(
+                        "\tOthers can read: %s%n",
+                        posixFileAttributes.permissions().contains(PosixFilePermission.OTHERS_READ)
+                );
+                System.out.printf(
+                        "\tOthers can write: %s%n",
+                        posixFileAttributes.permissions().contains(PosixFilePermission.OTHERS_WRITE)
+                );
+                System.out.printf(
+                        "\tOthers can execute: %s%n",
+                        posixFileAttributes.permissions().contains(PosixFilePermission.OTHERS_EXECUTE)
+                );
             }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
     }
 }
