@@ -22,8 +22,8 @@ Linux it would probably be a single forward slash, so "/".
 A *path* represents a file or directory within the file system. A path is given as a sequence of *path entries* separated
 by a *path separator*, which is a backslash on Windows and a forward slash on Linux. Typically, all path entries but the
 last one represent directories (and often the last one as well). Consider path `/home/jane/test.xml`. File `test.xml` is
-in directory `/home/jane`, which is the *parent directory* of `test.xml`. Directory `jane` is in directory `/home`, which
-is the parent directory of directory `jane`.
+in directory `/home/jane`, which is the *parent directory* of file `test.xml`. Directory `jane` is in directory `/home`,
+which is the parent directory of directory `jane`.
 
 Java returns the file separator with a system property:
 
