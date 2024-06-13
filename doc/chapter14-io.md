@@ -882,8 +882,9 @@ Class `Files` also contains some `boolean` methods that query individual *file a
 * `isWritable(Path)`
 * `isExecutable(Path)`
 
-On Unix systems we recognize these file attributes from the output of the `ls -al` command (for the owning user, group
-and others).
+As an aside, class `Files` also has method `getPosixFilePermissions(Path path, LinkOption... options)`. The resulting
+set of `java.nio.file.attribute.PosixFilePermission` instances remind us of the same permissions shown in the output
+of Unix command `ls -al`.
 
 If we need to query multiple attributes of multiple files, these fine-grained methods are not the best fit, since too many
 interactions with the file system would be needed to retrieve that data. NIO.2 does have a solution for that: a *read-only
