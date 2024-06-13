@@ -968,3 +968,9 @@ inherits from `java.io.FilterOutputStream`.
 Some things to be on the outlook for during the exam are:
 * NIO.2 is a rather *functional API*, with types like `Path` being *immutable*, so look out for *non-side-effecting methods calls where the result is ignored*
 * Many NIO.2 methods declare that they can throw `IOException`, so beware of required *"throws" clauses in method signatures*
+
+Sometimes we can make a good educated guess if there is something we do not know by heart. For example, I did not know
+whether interface `java.nio.file.Path` had a method `toUri()`. I could have guessed that such a method would exist in class
+`Path`, because:
+* There is a factory method to create a `Path` from a `java.net.URI`, and `Path` has enough information to convert back to `URI`
+* Class `java.io.File` is conceptually similar to `Path`, and that class also has methods to convert a ("file" protocol) `URI` to a `File` and back
