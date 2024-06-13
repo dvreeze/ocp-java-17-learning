@@ -51,7 +51,11 @@ public class FindLargestFiles {
 
     private static BasicFileAttributes getBasicFileAttributes(Path path) {
         try {
-            return Files.readAttributes(path, BasicFileAttributes.class);
+            try {
+                return Files.readAttributes(path, PosixFileAttributes.class);
+            } catch (UnsupportedOperationException e) {
+                return Files.readAttributes(path, BasicFileAttributes.class);
+            }
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
