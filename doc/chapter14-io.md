@@ -830,8 +830,114 @@ on the `PrintWriter` obtained through method `writer()`.
 
 ### Working with advanced APIs
 
-TODO
+#### Manipulating input streams
+
+Sometimes we may want to "put some data back" into an input stream, possibly to first "look ahead" and then process
+the same data again with more info because of the "look ahead". Input streams may offer this functionality through
+the *marking of data*. This is probably implemented as some kind of temporary buffer "proxying the real input stream".
+
+Abstract classes `java.io.InputStream` and `java.io.Reader` have the following methods in the context of marking data:
+* `public boolean markSupported()`; this method should be called first before trying to mark data in the input stream
+* `public void mark(int readLimit)`; this method demarcates the temporary buffer, starting at the current position in the stream, and having the provided size
+  * the provided read limit is in bytes for `InputStream` and in characters for `Reader`
+* `public void reset() throws IOException`; this method resets the input stream to the starting point of the "marked region" in the input stream
+  * when called outside the "marked region", all bets are off (maybe an exception is thrown, maybe not)
+* `public long skip(long n) throws IOException`; this method simply reads the given number of bytes or characters
+  * it returns the actual number of bytes (for `InputStream`) or characters (for `Reader`) skipped
+
+#### Discovering file attributes
+
+Recall the following `Files` methods:
+* `isDirectory(Path, LinkOption...)`
+* `isRegularFile(Path, LinkOption...)`
+* `isSymbolicLink(Path)`
+
+If a certain `Path` is a symbolic link pointing to a regular file, methods `isSymbolicLink` and `isRegularFile` will
+both return `true` (if no link option was passed to method `isRegularFile` in order not to follow symbolic links).
+If the path is a symbolic link pointing to a directory, methods `isSymbolicLink` and `isDirectory` (by default) will
+both return `true`. Method `isSymbolicLink` does not look at the file/directory pointed to by the symbolic link; it only
+looks at whether the file is a symbolic link or not.
+
+Class `Files` also contains some `boolean` methods that query individual *file attributes*. For example:
+* `isHidden(Path)`, potentially throwing an `IOException`
+* `isReadable(Path)`
+* `isWritable(Path)`
+* `isExecutable(Path)`
+
+On Unix systems we recognize these file attributes from the output of the `ls -al` command (for the owning user, group
+and others).
+
+If we need to query multiple attributes of multiple files, these fine-grained methods are not the best fit, since too many
+interactions with the file system would be needed to retrieve that data. NIO.2 does have a solution for that: a *read-only
+attributes* method and an *updatable attributes view* method.
+
+The corresponding "data holder" interfaces are:
+* Interface `java.nio.file.attribute.BasicFileAttributes` (we can ignore the OS-specific ones); some methods are:
+  * `isDirectory()`, `isRegularFile()`, `isSymbolicLink()`, `isOther()`
+  * `creationTime()`, `lastModifiedTime()`, `lastAccessTime()`, all returning a `java.nio.file.attribute.FileTime`
+  * `size()`, returning the size in bytes as `long`
+* Interface `java.nio.file.attribute.BasicFileAttributeView`, inheriting from `AttributeView` (we can ignore the OS-specific ones); some methods are:
+  * `readAttributes()`, returning a `BasicFileAttributes`
+  * `setTimes(FileTime, FileTime, FileTime)`, to set lastModifiedTime, lastAccessTime and createTime (possibly `null` in order to leave that parameter alone)
+
+As apparent from the interfaces and their methods above, these interfaces model a basic set of attributes supported by all file
+systems.
+
+Class `Files` has the following methods to retrieve "attribute sets":
+* `public static <A extends BasicFileAttributes> A readAttributes(Path path, Class<A> type, LinkOption... options) throws IOException`
+  * Typically, we would pass `BasicFileAttributes.class` as 2nd argument
+* `public static <V extends FileAttributeView> V getFileAttributeView(Path path, Class<V>, LinkOption... options)`
+  * Typically, we would pass `FileAttributeView.class` as 2nd argument
+
+Above we have seen how we can use the return types of `readAttributes` and `getFileAttributeView`. With the latter we can
+update the lastModifiedTime, for example.
+
+#### Traversing a directory tree
+
+With method `Files.list(Path)` we can traverse the (direct) "children" of a directory. But what if we want to traverse
+all "descendants (or self)"? That is called *traversing a directory*, or *walking a directory tree*.
+
+NIO.2 has support for that. First of all, do not use the legacy `DirectoryStream` and `FileVisitor` APIs. Use `Stream`-based
+methods in class `Files` instead.
+
+The *NIO.2 Stream API* methods use *depth-first searching* (as opposed to breadth-first searching).
+
+Two straightforward `Files` (static) methods for traversing a directory are:
+* `public static Stream<Path> walk(Path start, FileVisitOption... options) throws IOException`
+* `public static Stream<Path> walk(Path start, int maxDepth, FileVisitOption... options) throws IOException`
+
+These methods do a *lazy walk* through the returned `Stream<Path>`. It is strongly recommended to use this `Stream`
+in a try-resources statement, because the stream is backed by a connection to the file system. Obviously, we have
+all the combined power of the `Stream` API and the `Files` API at our disposal when walking a directory tree with these
+methods.
+
+These methods do NOT follow symbolic links, unless `FileVisitOption.FOLLOW_LINKS` is passed to the `walk` method.
+
+If we do follow symbolic links, there obviously is the risk of *cycles* in the search. When symbolic links are followed,
+the `walk` method will track all visited paths, and throw a `FileSystemLoopException` on encountering a cycle.
+
+There is a more convenient `Files` static method to traverse directory trees, though, namely:
+* `public static Stream<Path> find(Path start, int maxDepth, BiPredicate<Path, BasicFileAttributes> matcher, FileVisitOption... options) throws IOException`
+
+This method leads to less verbose lambda expressions in the `find` call, and we hardly need to worry about checked exceptions
+in lambdas anymore.
 
 ### Review of key APIs
 
-TODO
+The key APIs can be summarized as follows:
+
+| Class/Interface               | Description                                                     |
+|-------------------------------|-----------------------------------------------------------------|
+| `java.io.File`                | I/O representation of location in file system ("old" API)       |
+| `java.nio.file.Files`         | Static helper methods for working with `java.nio.file.Path`     |
+| `java.nio.file.Path`          | NIO.2 representation of location in file system                 |
+| `java.nio.file.Paths`         | Factory class to get `java.nio.file.Path` instances             |
+| `java.net.URI`                | Uniform resource identifier for URLs, files, etc.               |
+| `java.nio.file.FileSystem`    | NIO.2 representation of file system                             |
+| `java.nio.file.FileSystems`   | Factory class to get `java.nio.file.FileSystem`                 |
+| `java.io.InputStream`         | Input stream of bytes                                           |
+| `java.io.OutputStream`        | Output stream of bytes                                          |
+| `java.io.Reader`              | Input stream of characters                                      |
+| `java.io.Writer`              | Output stream of characters                                     |
+
+Also revisit the different kinds of `InputStream`, `OutputStream`, `Reader` and `Writer`.
