@@ -287,4 +287,30 @@ Class `Instant` represents a moment in time in the GMT time zone. With `ZonedDat
 to an `Instant`.
 
 Note how *Daylight Saving Time* influences methods like `plusHours` twice each year (in the US and in many other countries).
-Java is smart enough to adapt "date-times with time zone" accordingly.
+Java is smart enough to adapt "date-times with time zone" accordingly. It does this by updating the "offset". For example:
+
+```java
+import java.time.*;
+import java.time.temporal.ChronoUnit;
+
+var localDate = LocalDate.of(2022, Month.NOVEMBER, 6);
+var localTime = LocalTime.of(1, 30);
+var zone = ZoneId.of("US/Eastern");
+
+// In half an hour from this moment in time, the clock will go back one hour
+var dateTime1 = ZonedDateTime.of(localDate, localTime, zone);
+
+// One hour later, but the clock went back one hour
+var dateTime2 = dateTime1.plus(1, ChronoUnit.HOURS);
+
+// The LocalDateTime is the same (after the clock having gone back one hour). This returns true.
+var localDateTimesEqual = dateTime1.toLocalDateTime().equals(dateTime2.toLocalDateTime());
+// Even the zone stayed the same. This returns true.
+var zonesEqual = dateTime1.getZone().equals(dateTime2.getZone());
+// Yet the offsets are not the same, going from -04:00 to -05:00. So there is the difference.
+var dateTime1Offset = dateTime1.getOffset();
+var dateTime2Offset = dateTime2.getOffset();
+// And the final test that these moments in time are 1 hour apart is to convert them to an Instant
+var dateTime1Instant = dateTime1.toInstant();
+var dateTime2Instant = dateTime2.toInstant();
+```
