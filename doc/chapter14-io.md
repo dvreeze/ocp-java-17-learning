@@ -745,7 +745,7 @@ All Java primitives and many well-known Java classes (such as `String` and colle
 For versioning of serializable classes, use static field `private static final long serialVersionUID = 1L;` (where the
 constant value is incremented when needed). This "serial version UID" is part of the serialized data, along with the
 non-transient serialized instance fields. On deserialization, a checked `java.io.InvalidClassException` may be thrown
-(which inherits from `java.io.IOException`). Besides the "serial version UID", static fields take no part in (de)serialization.
+(which inherits from `java.io.IOException`). Except for the "serial version UID", static fields take no part in (de)serialization.
 
 Using Java (de)serialization requires the use of a `java.io.ObjectInputStream` and/or `java.io.ObjectOutputStream`. Their
 instance methods are:
