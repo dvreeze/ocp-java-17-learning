@@ -82,7 +82,7 @@ and non-existing files/directories.
 
 Using the NIO.2 API, `java.nio.file.Path` is an interface so has no constructor. We can use static methods of interface
 `java.nio.file.Path` or of "factory" class `java.nio.file.Paths`, however. These (equivalent) methods require at least
-one "name element":
+one *path entry*:
 * Static `Path` method `of(String first, String... more)`
 * Static `Paths` method `get(String first, String... more)`
 
