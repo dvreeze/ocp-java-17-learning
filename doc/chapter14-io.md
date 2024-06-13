@@ -382,11 +382,9 @@ var path9 = Path.of("").resolve(path1);
 Method `resolve(Path)` has an overloading counterpart `resolve(String)`, which works exactly the same way.
 
 The inverse of path *resolution* is method `relativize(Path)`. How do we get from this path to the parameter path?
-That's what method `relativize` returns, as `Path`. Again, type `Path` seems to know little about regular files versus
-directories, so path `user/test.xml` of regular file `test.xml` is path `user`, which is the directory containing regular
-file `test.xml`.
+That's what method `relativize` returns, as `Path`.
 
-When calling method `relativize(Path)`, both paths must either both be absolute or both be relative. If they are absolute
+When calling method `relativize(Path)`, *the 2 paths must either both be absolute or both be relative*. If they are absolute
 Windows paths, they must start with the same drive letter. An exception will be thrown otherwise. For example:
 
 ```java
