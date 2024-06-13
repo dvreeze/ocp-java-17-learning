@@ -748,6 +748,9 @@ as such. To use Java serialization with a Java class, the following is required:
 * The class must be marked as serializable, by having the class *implement* the *marker interface* `java.io.Serializable`
 * Recursively, each *instance member* of the class must be *serializable*, marked `transient`, or be `null` at the time of serialization
 
+If the superclass of a serializable class is not serializable, *the instance fields of the non-serializable superclass will
+not be serialized*.
+
 Normally only *data-oriented* class should be made serializable (if we want to use them with Java serialization).
 All Java primitives and many well-known Java classes (such as `String` and collections) are serializable.
 
@@ -968,6 +971,8 @@ inherits from `java.io.FilterOutputStream`.
 Some things to be on the outlook for during the exam are:
 * NIO.2 is a rather *functional API*, with types like `Path` being *immutable*, so look out for *non-side-effecting methods calls where the result is ignored*
 * Many NIO.2 methods declare that they can throw `IOException`, so beware of required *"throws" clauses in method signatures*
+* When using a `java.io.OutputStream` or `java.io.Writer` on a file, if method `flush()` has not been called *you cannot assume anything about when exactly the written data is visible in the file*
+* Is a type an *interface* or *class*, so do we need keyword `implements` or `extends`? For example, `java.io.Serializable` is an interface
 
 Sometimes we can make a good educated guess if there is something we do not know by heart. For example, I did not know
 whether interface `java.nio.file.Path` had a method `toUri()`. I could have guessed that such a method would exist in class
