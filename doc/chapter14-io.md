@@ -229,7 +229,7 @@ Some NIO.2 optional parameters passed in `Files` methods are:
 
 | Enum type            | Implemented interfaces     | Enum value          | Details                                       |
 |----------------------|----------------------------|---------------------|-----------------------------------------------|
-| `LinkOption`         | `CopyOption`, `LinkOption` | `NOFOLLOW_LINKS`    | Do not follow symbolic links                  |
+| `LinkOption`         | `CopyOption`, `OpenOption` | `NOFOLLOW_LINKS`    | Do not follow symbolic links                  |
 | `StandardCopyOption` | `CopyOption`               | `ATOMIC_MOVE`       | Move file as atomic operation                 |
 |                      |                            | `COPY_ATTRIBUTES`   | Copy existing attributes to new file          |
 |                      |                            | `REPLACE_EXISTING`  | Overwrite file if it already exists           |
