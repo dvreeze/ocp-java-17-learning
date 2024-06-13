@@ -16,16 +16,77 @@
 
 package chapter14;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.NumberFormat;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 /**
- * Template for any program, as a starting point to copy from.
- * <p>
- * As a reminder, make sure to use Java 17 when compiling and running.
+ * Program that finds the largest 30 files in a directory tree, optionally taking a file extension into account.
+ * Symbolic links are not followed.
  *
  * @author Chris de Vreeze
  */
 public class FindLargestFiles {
 
+    public record SearchConfig(int numberOfResults, int maxSearchDepth) {
+    }
+
+    private static final SearchConfig config = new SearchConfig(
+            Integer.parseInt(System.getProperty("numberOfResults", "30")),
+            Integer.parseInt(System.getProperty("maxSearchDepth", "25"))
+    );
+
+    private static boolean hasOptionalExtension(Path path, Optional<String> optionalExtension) {
+        return optionalExtension.stream().allMatch(ext -> path.getFileName().toString().endsWith(ext));
+    }
+
+    private static long getFileSize(Path path) {
+        try {
+            return Files.size(path);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    public static List<Path> findLargestFiles(Path startDir, Optional<String> optionalExtension, SearchConfig config) {
+        try (var pathStream =
+                     Files.find(
+                             startDir,
+                             config.maxSearchDepth(),
+                             (p, a) -> a.isRegularFile() && hasOptionalExtension(p, optionalExtension))) {
+            return pathStream
+                    .parallel()
+                    .sorted(Comparator.comparingLong(FindLargestFiles::getFileSize).reversed())
+                    .limit(config.numberOfResults())
+                    .toList();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
     public static void main(String[] args) {
-        System.out.println("Program template"); // Remove this line in programs copied from this template
+        Objects.checkIndex(0, args.length);
+
+        Path startDir = Path.of(args[0]);
+        Optional<String> optionalExtension = (args.length >= 2) ? Optional.of(args[1]) : Optional.empty();
+
+        List<Path> largestFiles = findLargestFiles(startDir, optionalExtension, config);
+
+        try {
+            NumberFormat formatter = NumberFormat.getCompactNumberInstance();
+
+            for (Path path : largestFiles) {
+                long size = Files.size(path);
+                System.out.printf("File '%s'. Size: %s%n", path, formatter.format(size));
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 }
