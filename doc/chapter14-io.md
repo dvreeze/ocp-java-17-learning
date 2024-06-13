@@ -191,7 +191,8 @@ Common `java.io.File` *instance methods* and `java.nio.file.Files` *static metho
 | Renames file/directory      | `boolean renameTo(File)` | `Path move(Path, Path, CopyOption...)`              |
 
 Static method `Files.deleteIfExists(Path)` can throw a checked `java.io.Exception`. This is also true for methods
-`getLastModifiedTime`, `size`, `list`, `createDirectory`, `createDirectories` and `move`.
+`delete`, `getLastModifiedTime`, `size`, `list`, `createDirectory`, `createDirectories` and `move`, and for many other
+methods not mentioned here.
 
 Methods `File.mkdirs` and `Files.createDirectories` also create non-existing parent directories.
 
@@ -961,3 +962,9 @@ that class. An analogous remark applies to `java.io.OutputStreamWriter` and `jav
 
 Also note that `java.io.BufferedInputStream` inherits from `java.io.FilterInputStream`, and  `java.io.BufferedOutputStream`
 inherits from `java.io.FilterOutputStream`.
+
+### Checklist
+
+Some things to be on the outlook for during the exam are:
+* NIO.2 is a rather *functional API*, with types like `Path` being *immutable*, so look out for *non-side-effecting methods calls where the result is ignored*
+* Many NIO.2 methods declare that they can throw `IOException`, so beware of required *"throws" clauses in method signatures*
