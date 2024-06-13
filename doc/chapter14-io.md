@@ -703,7 +703,7 @@ before writing the output.
 #### Enhancing with Files
 
 The NIO.2 `Files` class has a few *static methods* for conveniently reading and writing data. Most of them may potentially
-use a lot of memory, and one of them works "in a streaming way". Here is a list:
+use a lot of memory, but one of them works "in a streaming way". Here is a list:
 
 | Description                      | `Files` static method                                                                                                               |
 |----------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
