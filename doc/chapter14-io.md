@@ -179,7 +179,7 @@ Common `java.io.File` *instance methods* and `java.nio.file.Files` *static metho
 
 | Description                 | `File` instance method   | `Files` static method                               |
 |-----------------------------|--------------------------|-----------------------------------------------------|
-| Deletes file/directory      | `boolean delete()`       | `boolean deleteIfExists(Path)`                      |
+| Deletes file/directory      | `boolean delete()`       | `boolean deleteIfExists(Path)`, `void delete(Path)` |
 | Checks existence            | `boolean exists()`       | `boolean exists(Path, LinkOption...)`               |
 | Checks if path is directory | `boolean isDirectory()`  | `boolean isDirectory(Path, LinkOption...)`          |
 | Checks if path is file      | `boolean isFile()`       | `boolean isRegularFile(Path, LinkOption...)`        |
@@ -527,7 +527,7 @@ Class `java.nio.file.Files` offers the following static methods for *deleting* r
 * `public static boolean deleteIfExists(Path path) throws IOException`
 
 The following holds for these `delete` and `deleteIfExists` methods:
-* When trying to delete a directory, both methods expect the directory to be empty, or else an exception is thrown
+* When trying to delete a directory, both methods expect the *directory to be empty*, or else an exception is thrown
 * If the path is a symbolic link, the link itself will be deleted, not the path that the link points to
 * If the path does not exist, `delete` throws an exception, whereas `deleteIfExists` returns `false` in that case
 
@@ -624,7 +624,7 @@ some data source.
 #### Using I/O streams
 
 To copy an input stream into an output stream in a loop, we need to know about *low-level read/write methods*. This table
-is a summary of those *blocking* instance methods:
+is a summary of those instance methods:
 
 | I/O stream class       | Read/write method                                                     |
 |------------------------|-----------------------------------------------------------------------|
@@ -646,9 +646,20 @@ of the stream has been reached, and no data could be read. The read methods with
 `int`, or `-1` if no data could be read. All these read methods *block* until some data was found, EOF was reached, or an
 exception was thrown.
 
-Class `java.io.Writer` also has "write" methods:
+Class `java.io.Writer` also has the following (convenient) "write" methods:
 * `public void write(String str) throws IOException`
 * `public void write(String str, int off, int len) throws IOException`
+
+Moreover, class `java.io.Writer` has the following (convenient) methods:
+* `public Writer append(char c) throws IOException`
+  * Note that this method takes a `char`, as one would expect, unlike method `write(int)`, which takes an `int` in order to be consistent with `read()`
+  * A `Writer` is returned, so different `append` calls can be *chained*
+* `public Writer append(CharSequence csq) throws IOException`
+  * This method takes a `String` or even any `CharSequence`, which is more convenient than passing `char[]`
+  * A `Writer` is returned, so different `append` calls can be *chained*
+* `public Writer append(CharSequence csq, int off, int len) throws IOException`
+  * This method takes a `String` or even any `CharSequence`, which is more convenient than passing `char[]`
+  * A `Writer` is returned, so different `append` calls can be *chained*
 
 Class `java.io.InputStream` also has "read" method `public byte[] readAllBytes() throws IOException`, but it should not be
 used for reading large amounts of data.
