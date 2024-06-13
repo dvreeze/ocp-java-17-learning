@@ -941,3 +941,9 @@ The key APIs can be summarized as follows:
 | `java.io.Writer`              | Output stream of characters                                     |
 
 Also revisit the different kinds of `InputStream`, `OutputStream`, `Reader` and `Writer`.
+
+Note that `java.io.InputStreamReader` "turns an InputStream into a Reader", and that `java.io.FileReader` inherits from
+that class. An analogous remark applies to `java.io.OutputStreamWriter` and `java.io.FileWriter`.
+
+Also note that `java.io.BufferedInputStream` inherits from `java.io.FilterInputStream`, and  `java.io.BufferedOutputStream`
+inherits from `java.io.FilterOutputStream`.
