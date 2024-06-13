@@ -108,6 +108,7 @@ System.out.println("Path path1 exists: " + Files.exists(path1));
 // Path creation is quite lenient. These paths are equal to the preceding ones (on my machine)
 Path path8 = Paths.get("/", "home", "jane", "xml", "test.xml");
 Path path9 = Paths.get("/home", "/jane", "/xml/", "/test.xml");
+Path path10 = Paths.get("/", "/home", "/jane", "/xml/", "/test.xml");
 ```
 
 Just like class `java.io.File`, interface `java.nio.file.Path` is used both for files and directories, and both for absolute
