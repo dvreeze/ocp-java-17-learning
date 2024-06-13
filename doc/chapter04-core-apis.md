@@ -310,7 +310,10 @@ var zonesEqual = dateTime1.getZone().equals(dateTime2.getZone());
 // Yet the offsets are not the same, going from -04:00 to -05:00. So there is the difference.
 var dateTime1Offset = dateTime1.getOffset();
 var dateTime2Offset = dateTime2.getOffset();
-// And the final test that these moments in time are 1 hour apart is to convert them to an Instant
+// And the final test that these moments in time must be 1 hour apart is to convert them to an Instant
 var dateTime1Instant = dateTime1.toInstant();
 var dateTime2Instant = dateTime2.toInstant();
+
+// Indeed, they are 1 hour apart
+long diff = ChronoUnit.HOURS.between(dateTime1, dateTime2);
 ```
