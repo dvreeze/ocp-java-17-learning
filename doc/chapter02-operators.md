@@ -124,7 +124,8 @@ We can use *cast* operators to cast values to "smaller" types, risking overflow/
 and (compilation/runtime) errors for reference types.
 
 Assignments like `n *= 2` are like `n = n * 2`, except that the abbreviated form does a down-cast, if needed, instead of
-causing a compilation error.
+causing a compilation error. Compound assignments such as `*=`, `+=` etc. are only allowed by the compiler if the variable
+on the left-hand side *has already been declared (and initialized) before*.
 
 ### Comparison and "boolean logic" operators
 
