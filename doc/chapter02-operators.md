@@ -127,6 +127,14 @@ Assignments like `n *= 2` are like `n = n * 2`, except that the abbreviated form
 causing a compilation error. Compound assignments such as `*=`, `+=` etc. are only allowed by the compiler if the variable
 on the left-hand side *has already been declared (and initialized) before*.
 
+It's ok to assign integer literals (not "long literals"!) to variables of small integer types like `short` and `byte`,
+provided that the integer literal fits in the number range allowed by the type. So this is ok:
+
+```java
+byte b = 45; // max: 128
+b = -112; // min: -128
+```
+
 ### Comparison and "boolean logic" operators
 
 The *comparison operators* "equal-to" ("==") and "not-equal-to" ("!=") mean different things for primitives and reference types:
