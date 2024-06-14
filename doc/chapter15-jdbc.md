@@ -61,3 +61,129 @@ try (Connection conn = DriverManager.getConnection(jdbcUrl)) {
     // Use the Connection
 }
 ```
+
+### Working with a PreparedStatement
+
+In order to send a SQL command to the database, we need to get an instance of interface `java.sql.Statement` or one of
+the interface subtypes. The 2 interface subtypes are:
+* `java.sql.PreparedStatement`
+* `java.sql.CallableStatement`
+
+A plain `java.sql.Statement` cannot take parameters, executing the exact SQL given to it. A `java.sql.PreparedStatement`
+is far better than a plain `Statement`. Some reasons that `PreparedStatement` is superior are:
+* It has better *performance*. After all, a `PreparedStatement` accepts parameters. This enables the database to devise a reusable *query plan* for the query.
+* It is more *secure*, because `PreparedStatement` helps protect against *SQL injection*.
+* It is more *readable*, compared to string concatenation involving "parameters".
+* It is *future-proof*, if at some point a parameter is introduced in a SQL command that currently has no parameters.
+
+We will turn to `java.sql.CallableStatement` later.
+
+A `PreparedStatement` can be obtained from a `java.sql.Connection` with the following *instance method*:
+* `public PreparedStatement prepareStatement(String sql) throws SQLException`
+* there are several overloads of the `prepareStatement` call, that we will not go into here
+
+Note that we have to pass a SQL string to method `prepareStatement`. It typically has parameters. The prepared statement
+*does not run yet* after this call. Parameters, if any, have not yet been provided to the prepared statement.
+
+Like `java.sql.Connection`, interface `java.sql.PreparedStatement` is *auto-closeable*.
+
+This leads to the following "template code":
+
+```java
+import java.sql.*;
+
+// In practice we would use a DataSource instead, probably one backed by a connection pool
+
+String jdbcUrl = "jdbc:hsqldb:file:zoo";
+
+// Some SQL string
+String sql = "SELECT * FROM names";
+
+try (Connection conn = DriverManager.getConnection(jdbcUrl);
+     PreparedStatement ps = conn.prepareStatement(sql)) {
+    // Use the PreparedStatement (fill parameters, if any, run the SQL, and get results, if any)
+    // After that, do more with the same Connection, if needed
+}
+```
+
+We will get to setting `PreparedStatement` parameters soon. To run a prepared statement, interface `java.sql.PreparedStatement`
+has the following *instance methods*, for example:
+* `public ResultSet executeQuery() throws SQLException`
+  * all parameters must be set before executing the query (no more, no less), or else a `SQLException` is thrown
+  * if the SQL is not a SQL SELECT statement, a `SQLException` is thrown (but there are many more reasons that a `SQLException` can be thrown)
+* `public int executeUpdate() throws SQLException`, returning the (affected) row count, if applicable, and zero otherwise
+  * all parameters must be set before executing the query (no more, no less), or else a `SQLException` is thrown
+  * if the SQL is a SELECT query rather than a INSERT/UPDATE/DELETE SQL query, a corresponding `SQLException` is thrown
+* `public boolean execute() throws SQLException`, returning true if the first result is a `ResultSet`
+  * all parameters must be set before executing the query (no more, no less), or else a `SQLException` is thrown
+  * the SQL can be anything that is accepted by either method `executeQuery` or `executeUpdate`
+  * if `true` is returned, get the first result (as `ResultSet`) by calling `Statement` method `getResultSet()`
+  * if `false` is returned, get the first result by calling `Statement` method `getUpdateCount()`
+  * if `Statement` method `getMoreResults()` returns `true`, repeat this process of getting a result set or update count
+
+#### Working with parameters
+
+The SQL strings can contain *bind variables*, in the form of question marks. They are placeholders that let us provide
+the actual values at runtime. We can bind values to these placeholders with `PreparedStatement` instance methods like:
+* `public void setString(int parameterIndex, String x) throws SQLException`
+  * the database type could be CHAR, VARCHAR etc.
+* `public void setInt(int parameterIndex, int x) throws SQLException`
+  * the database type could be INTEGER etc.
+* `public void setLong(int parameterIndex, long x) throws SQLException`
+  * the database type could be BIGINT etc.
+* `public void setDouble(int parameterIndex, double x) throws SQLException`
+  * the database type could be DOUBLE etc.
+* `public void setBoolean(int parameterIndex, boolean x) throws SQLException`
+  * the database type could be BOOLEAN etc.
+* `public void setNull(int parameterIndex, int sqlType) throws SQLException`
+  * the database type could be anything
+  * this method is overloaded
+* `public void setObject(int parameterIndex, Object x) throws SQLException`
+  * the database type could be anything
+  * it is better to use more specific parameter setter methods, but in theory they could be replaced by this one
+  * this method has many overloads
+* and many more similar methods, for XML, dates/times, BLOBs, CLOBs, byte arrays, etc.
+
+Be very careful with using the correct *parameter indices*. These parameter indices *start counting from 1, not zero*!
+
+Here is an example (from the book):
+
+```java
+import java.sql.*;
+
+public static void register(Connection conn, int key, int type, String name) throws SQLException {
+    String sql = "INSERT INTO names VALUES (?, ?, ?)";
+
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, key); // the first bind variable is at position 1!
+        ps.setString(3, name);
+        ps.setInt(2, type); // that's ok (using position 2 after 3, if we pass the right value)
+        // now, before executing the SQL, all parameters must be set
+        ps.executeUpdate(); // ignoring the (int) result
+    }
+}
+```
+
+If we want to update multiple records in the database, we could reuse the same `PreparedStatement`, and repeat the following steps:
+1. Set all SQL string parameters
+2. Run the SQL command
+
+If we want to save network trips to the database, we could *batch SQL commands*. Instead of multiple `executeUpdate()` calls
+we would make `addBatch()` calls each time after binding the SQL variables. At the end, we would call method
+`executeBatch()` to send the batch to the database.
+
+### Getting data from a ResultSet
+
+TODO
+
+### Calling a CallableStatement
+
+TODO
+
+### Controlling data with transactions
+
+TODO
+
+### Closing database resources
+
+TODO
