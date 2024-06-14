@@ -131,7 +131,7 @@ It's ok to assign integer literals (not "long literals"!) to variables of small 
 provided that the integer literal fits in the number range allowed by the type. So this is ok:
 
 ```java
-byte b = 45; // max: 128
+byte b = 45; // max: 127
 b = -112; // min: -128
 ```
 
