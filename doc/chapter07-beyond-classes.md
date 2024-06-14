@@ -25,7 +25,7 @@ An *interface* is like a *public API* for classes implementing that interface:
 * Classes may implement *multiple interfaces* (comma-separated) at the same time
 * Interfaces may *extend* other interfaces (multiple ones at the same time, comma-separated)
 * Not surprisingly, interfaces can only extend other interfaces, and *cannot inherit from classes*
-* Compared to abstract classes, interfaces trade constructors for *multiple interface inheritance*
+* Compared to abstract classes, interfaces "trade constructors for multiple interface inheritance"
 
 Consider the following interfaces:
 
@@ -52,6 +52,7 @@ The compiler then generates several *implicit modifiers*:
   * private instance methods (marked as `private`, but not as `static`), with body (no implicit modifiers are generated)
   * private static methods (marked as `private static`), with body (no implicit modifiers are generated)
 * The compiler adds implicit modifiers `public static final` to all ("constant") fields
+  * the compiler does not allow any other kinds of fields than *public static final* fields, so e.g. "private" fields are not allowed
 
 Put differently, *methods in interfaces* are:
 * either explicitly `private` or (explicitly or implicitly) `public`; interface members cannot be "protected" or "package-private"
@@ -116,7 +117,7 @@ Conceptually:
 ### Working with enums
 
 An *enumeration* or *enum* in short is like a *fixed set of constants*. For example, the seasons of the year.
-Enumerations offer compile-time type-safety for such sets of constants.
+Enumerations offer compile-time type-safety for such sets of constants. This set of constants *may be empty*.
 
 Enum values are not created by us, but by the compiler. In other words, *enum constructors* are *private*, either implicitly
 or explicitly (if we explicitly provide a constructor and explicitly mark it as `private`).
