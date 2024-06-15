@@ -148,6 +148,21 @@ Copying a Set to an array is similar to copying Lists to an array. After all, th
 *Unmodifiable* Sets have the same restrictions as unmodifiable Lists. That is, the methods that may add/remove/replace
 elements throw an `UnsupportedOperationException`, and `null` is not allowed as element.
 
+The following `TreeSet` example may be a bit surprising, but "works":
+
+```java
+import java.util.*;
+
+var numbers = new TreeSet<>(); // This strange line creates a TreeSet<Object>
+numbers.add(1);
+numbers.add(3);
+numbers.add(2);
+// This is a TreeSet<Object>, but if we add a "non-integer" now, we get a ClassCastException
+
+// Printing the TreeSet elements
+numbers.forEach(System.out::print); // Prints 123
+```
+
 ### Using the Queue and Deque interfaces
 
 A *Queue* is a collection that *holds its elements in a specific order before processing* (FIFO, LIFO etc.).
