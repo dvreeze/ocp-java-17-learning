@@ -37,6 +37,7 @@ Some important *instance methods of class String* (or sets of overloaded String 
 * `replace` (taking 2 characters, or 2 strings), as opposed to `replaceAll` (taking a regular expression as first parameter)
 * `strip`, `stripLeading`, `stripTrailing`, `trim` (method "trim" is older, using a less advanced definition of whitespace)
 * `indent`, `stripIndent` (these methods are powerful, but mind line break normalization and trailing line break), and `lines`
+  * some exam questions involving multiline string literals and methods like `indent`, `stripIndent` etc. are to be expected on the exam; getting some experience with this topic pays off
 * `translateEscapes` (since Java 15)
 * `isEmpty`, `isBlank`
 * `formatted` (since Java 15; see static method `format`)
