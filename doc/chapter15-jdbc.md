@@ -188,7 +188,7 @@ String sql = "SELECT * FROM names";
 
 try (Connection conn = DriverManager.getConnection(jdbcUrl)) {
     try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        // Set parameters on the PreparedStatement, if any
+        // Set parameters on the PreparedStatement, if any (not for the parameter-less SQL above)
         try (ResultSet rs = ps.executeQuery(sql)) {
             while (rs.next()) {
                 // Process the next row in the ResultSet, using methods like getString, getInt etc.
@@ -198,13 +198,64 @@ try (Connection conn = DriverManager.getConnection(jdbcUrl)) {
 }
 ```
 
-The `ResultSet` has a *cursor*. Initially the cursor points to a position before the first row. Always call `ResultSet.next()`
-before processing a row in the result set. If `ResultSet.next()` returns `false`, there is no more data to process in the
-result set.
+The `ResultSet` has a *cursor*. Initially the cursor points to a position *before* (and *not at*) the first row. Always
+call `ResultSet.next()` before processing a row in the result set (including the first time). If `ResultSet.next()` returns
+`false`, there is no more data to process in the result set.
+
+To retrieve data from a row in the result set, there are pairs of methods where one method uses a *one-based column index*
+and the other method uses a *column name*. Probably the latter method is preferred. So if the SQL query is
+`SELECT id, name FROM exhibits` we can retrieve the "name" column of a row with:
+* `ResultSet.getString(2)`, or:
+* `ResultSet.getString("name")`
+
+If the SQL query is `SELECT count(*) FROM exhibits` we can retrieve this count as follows:
+
+```java
+if (rs.next()) {
+    int count = rs.getInt(1);
+    // ...
+}
+```
+
+If the SQL query is `SELECT count(*) AS count FROM exhibits`, we could have used `rs.getInt("count")` instead.
+
+Typos in column names when retrieving data from a result set row will lead to a `java.sql.SQLException`. So does failing
+to use zero as column index (remember: *indexing in JDBC is 1-based*), or failing to call `ResultSet.next()` before processing
+the first row (at that point the cursor points before the first row, not at the first row).
+
+Some `ResultSet` "get" method pairs are:
+* `public boolean getBoolean(int columnIndex) throws SQLException` and `public boolean getBoolean(String columnLabel) throws SQLException`
+* analogously, `getDouble(int)` and `getDouble(String)`, both returning a `double`
+* analogously, `getInt(int)` and `getInt(String)`, both returning an `int`
+* analogously, `getLong(int)` and `getLong(String)`, both returning a `long`
+* analogously, `getObject(int)` and `getObject(String)`, both returning a `java.lang.Object`, with several overloads (which work in many cases, but are typically less easy to use than "more specific" "getter" methods)
+* analogously, `getString(int)` and `getString(String)`, both returning a `java.lang.String`, which works in many cases (even for numeric data, although "more specific" "getter" methods are preferred for numeric data)
+* and many more
 
 ### Calling a CallableStatement
 
-TODO
+Many database products support *stored procedures*, which is pre-compiled code stored in the database.
+We are already familiar with instance method `Connection.prepareStatement(String)`. In order to invoke a stored procedure,
+we use *instance method* `Connection.prepareCall(String)` instead. It returns an instance of *interface*
+`java.sql.CallableStatement`.
+
+For example:
+
+```java
+import java.sql.*;
+
+String sql = "{call read_e_names()}"; // SQL to call a stored procedure
+
+try (CallableStatement cs = conn.prepareCall(sql)) {
+    // Set parameters on the CallableStatement ...
+    // In this example, we want a ResultSet to process (that depends on the stored procedure, of course)
+    try (ResultSet rs = cs.executeQuery()) {
+        // Process the ResultSet ...
+    }
+}
+```
+
+
 
 ### Controlling data with transactions
 
