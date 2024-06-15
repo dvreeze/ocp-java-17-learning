@@ -189,7 +189,7 @@ A "var" is also allowed, if it resolves to one of the types mentioned above
 Each "case value" must be a "compile-time constant". Its type must be *assignable to the type of the target expression*.
 With *compile-time constant* we mean:
 * either a literal
-* or an enum constant
+* or an enum constant, *without it being prefixed with the enum class name* (or else it will not compile)
 * or a trivial "operation" (such as `3 * 5`) that can easily be resolved by the compiler
 * or a final variable initialized with a literal or enum constant
 
