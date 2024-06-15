@@ -267,7 +267,7 @@ does not have those "setter" method overloads. On `PreparedStatement` we have to
 For example, let the SQL be `{call read_names_by_letter(?)}`. The question mark is the parameter that must be bound to
 a value, for example like so: `cs.setString("prefix", "Z")` (example from the book). This also works: `cs.setString(1, "Z")`.
 
-It is also possible for a stored procedure to have *OUT* parameters. These stored procedures do hot return any result set.
+It is also possible for a stored procedure to have *OUT* parameters. These stored procedures do not return any result set.
 The SQL to call such a stored procedure could look like this: `{?= call magic_number(?)}` (although specific database
 products may be more lenient in how to call stored procedures). We can *register an output parameter* by calling a method like this:
 * `public void registerOutParameter(int parameterIndex, int sqlType) throws SQLException`, passing one of the constants of `java.sql.Types`
