@@ -294,8 +294,65 @@ The "resultSetConcurrency" integer constants are:
 
 ### Controlling data with transactions
 
-TODO
+JDBC offers support for *database transactions*. By default, JDBC *automatically commits* all individual statements that
+update the database. We can set *transactional boundaries* ourselves, but that requires first *setting auto-commit to false*,
+through `Connection` instance method `public void setAutoCommit(boolean autoCommit) throws SQLException`. Failing to set
+autocommit to false, while trying to *commit* or *rollback* a transaction ourselves, will lead to a `SQLException` being thrown.
+
+JDBC offers the following `Connection` instance methods to invoke database *commits* or *rollbacks* ourselves:
+* `public void commit() throws SQLException`
+* `public void rollback() throws SQLException`
+
+An edge case is setting auto-commit to true where auto-commit was false before that call. In this case, the switch to
+auto-commit will immediately trigger a commit (and after that the auto-commit mode takes effect, of course).
+
+Another edge case is closing the connection if auto-commit has been switched off and the ongoing transaction has neither
+been committed nor rolled back. The behaviour in that situation is undefined. We should therefore always either commit or
+roll back at the end of a transaction (also, or in particular, when an exception has been thrown).
+
+If auto-commit behaviour has been switched off, we can even set *savepoints*, and roll back to a savepoint that has been
+set. For example (from the book):
+
+```java
+conn.setAutoCommit(false);
+Savepoint sp1 = conn.setSavepoint();
+// database code
+Savepoint sp2 = conn.setSavepoint("second savepoint");
+// database code
+conn.rollback(sp2); // rolling back to savepoint sp2
+// database code
+conn.rollback(sp1); // rolling back to savepoint sp1
+```
+
+In the example above, we cannot *change the order of rollbacks to savepoints*, or else an exception is thrown.
+This makes sense, because rolling back to `sp1` makes `sp2` unreachable as savepoint to roll back to.
+
+The savepoint-related `Connection` instance methods shown above are:
+* `public Savepoint setSavepoint() throws SQLException`
+* `public Savepoint setSavepoint(String name) throws SQLException`
+* `public rollback(Savepoint savepoint) throws SQLException`
 
 ### Closing database resources
 
-TODO
+JDBC resources, especially *connections*, are expensive resources that must be closed properly after use, or else a
+resource leak will result. (In practice the connection comes from a connection pool, and "closing" means returning the
+connection to the pool, but still we need to "close" the connection properly to prevent resource leaks.)
+
+In a try-resources statement we make sure to first close the `ResultSet`, if any, followed by the `PreparedStatement`
+(or `CallableStatement`), and finally the `Connection`, in that order.
+
+Still, closing a JDBC resource should close any resources it created:
+* Closing a `Connection` also closes each `PreparedStatement` or `CallableStatement` created by it
+* Closing a `PreparedStatement` or `CallableStatement` closes the `ResultSet`
+
+It's a bad practice to create JDBC resources before entering the try-resources statement that will close them, because
+an exception thrown during creation of the JDBC resource will not lead to its automatic resource closing, and will
+therefore cause a resource leak.
+
+A `ResultSet` is also closed automatically when another SQL statement is run from the same `Statement` (i.e. `PreparedStatement`
+or its subtype `CallableStatement`).
+
+A checked `SQLException` can be queried for:
+* its message, through method `getMessage()` (like all exceptions)
+* its "SQL state", through method `getSQLState()`, which returns a "code" that can be looked up
+* its database-specific error code, through method `getErrorCode()`
