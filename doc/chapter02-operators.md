@@ -123,6 +123,8 @@ namely the evaluation result of the assignment.
 We can use *cast* operators to cast values to "smaller" types, risking overflow/underflow for primitive numeric types
 and (compilation/runtime) errors for reference types.
 
+As an example of overflow/underflow, `(byte) (Byte.MAX_VALUE + 1)` returns `-128`.
+
 Assignments like `n *= 2` are like `n = n * 2`, except that the abbreviated form does a down-cast, if needed, instead of
 causing a compilation error. Compound assignments such as `*=`, `+=` etc. are only allowed by the compiler if the variable
 on the left-hand side *has already been declared (and initialized) before*.
