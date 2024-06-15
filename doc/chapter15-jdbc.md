@@ -219,9 +219,11 @@ if (rs.next()) {
 
 If the SQL query is `SELECT count(*) AS count FROM exhibits`, we could have used `rs.getInt("count")` instead.
 
-Typos in column names when retrieving data from a result set row will lead to a `java.sql.SQLException`. So does failing
-to use zero as column index (remember: *indexing in JDBC is 1-based*), or failing to call `ResultSet.next()` before processing
-the first row (at that point the cursor points before the first row, not at the first row).
+Typing errors in column names when retrieving data from a result set row will lead to a `java.sql.SQLException`. So does using
+zero as column index (remember: *indexing in JDBC is 1-based*). So does failing to call `ResultSet.next()` before processing
+the first row (at that point the cursor points before the first row, not at the first row). So does using a closed result
+set. In other words, many different kinds of issues can lead to a (checked) `SQLException`, whether caused by the programmer
+using JDBC or not.
 
 Some `ResultSet` "get" method pairs are:
 * `public boolean getBoolean(int columnIndex) throws SQLException` and `public boolean getBoolean(String columnLabel) throws SQLException`
