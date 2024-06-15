@@ -296,8 +296,11 @@ The "resultSetConcurrency" integer constants are:
 
 JDBC offers support for *database transactions*. By default, JDBC *automatically commits* all individual statements that
 update the database. We can set *transactional boundaries* ourselves, but that requires first *setting auto-commit to false*,
-through `Connection` instance method `public void setAutoCommit(boolean autoCommit) throws SQLException`. Failing to set
-autocommit to false, while trying to *commit* or *rollback* a transaction ourselves, will lead to a `SQLException` being thrown.
+through the following `Connection` instance method:
+* `public void setAutoCommit(boolean autoCommit) throws SQLException`
+
+Failing to set autocommit to false, while trying to *commit* or *rollback* a transaction ourselves, will lead to a
+`SQLException` being thrown.
 
 JDBC offers the following `Connection` instance methods to invoke database *commits* or *rollbacks* ourselves:
 * `public void commit() throws SQLException`
