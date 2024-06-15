@@ -174,7 +174,33 @@ we would make `addBatch()` calls each time after binding the SQL variables. At t
 
 ### Getting data from a ResultSet
 
-TODO
+A pattern to iterate through a `java.sql.ResultSet` could look like this:
+
+```java
+import java.sql.*;
+
+// In practice we would use a DataSource instead, probably one backed by a connection pool
+
+String jdbcUrl = "jdbc:hsqldb:file:zoo";
+
+// Some SQL string
+String sql = "SELECT * FROM names";
+
+try (Connection conn = DriverManager.getConnection(jdbcUrl)) {
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        // Set parameters on the PreparedStatement, if any
+        try (ResultSet rs = ps.executeQuery(sql)) {
+            while (rs.next()) {
+                // Process the next row in the ResultSet, using methods like getString, getInt etc.
+            }
+        }
+    }
+}
+```
+
+The `ResultSet` has a *cursor*. Initially the cursor points to a position before the first row. Always call `ResultSet.next()`
+before processing a row in the result set. If `ResultSet.next()` returns `false`, there is no more data to process in the
+result set.
 
 ### Calling a CallableStatement
 
