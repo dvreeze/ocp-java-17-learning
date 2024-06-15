@@ -257,7 +257,40 @@ try (CallableStatement cs = conn.prepareCall(sql)) {
 }
 ```
 
+Interface `java.sql.CallableStatement` extends interface `java.sql.PreparedStatement`, so it has the same methods for
+*setting parameters*. The familiar methods to set parameters (e.g. `setString`, `setInt` etc.) are used to set the *IN*
+parameters of a stored procedure.
 
+Interface `CallableStatement` adds overloads of those methods that take a *parameter name*, though. Interface `PreparedStatement`
+does not have those "setter" method overloads. On `PreparedStatement` we have to use parameter positions (1-based).
+
+For example, let the SQL be `{call read_names_by_letter(?)}`. The question mark is the parameter that must be bound to
+a value, for example like so: `cs.setString("prefix", "Z")` (example from the book). This also works: `cs.setString(1, "Z")`.
+
+It is also possible for a stored procedure to have *OUT* parameters. These stored procedures do hot return any result set.
+The SQL to call such a stored procedure could look like this: `{?= call magic_number(?)}` (although specific database
+products may be more lenient in how to call stored procedures). We can *register an output parameter* by calling a method like this:
+* `public void registerOutParameter(int parameterIndex, int sqlType) throws SQLException`, passing one of the constants of `java.sql.Types`
+* since Java 1.8: `public void registerOutParameter(int parameterIndex, SQLType sqlType) throws SQLException`, which is more type-safe
+  * interface `java.sql.SQLType` is implemented by enum `java.sql.JDBCType`, which contains generic SQL types (called "JDBC types")
+* many other `registerOutParameter` overloads, both for *parameter indices* and *parameter names*
+
+When registering an *OUT* parameter, the stored procedure is then typically called with instance method `CallableStatement.execute()`.
+
+A stored procedure can also have *INOUT* (in-out) parameters. In that case *binding an input parameter* and *registering
+an output parameter* are combined for the same parameter, either based on parameter index or parameter label.
+
+Interface `java.sql.Connection` has method overloads for methods `prepareStatement` and `prepareCall`, taking an additional
+"resultSetType" integer constant and "resultSetConcurrency" integer constant, in that order (first "type", then "concurrency").
+
+The "resultSetType" integer constants are:
+* `ResultSet.TYPE_FORWARD_ONLY`
+* `ResultSet.TYPE_SCROLL_INSENSITVE`, meaning that we can go through the result set in any order, without seeing any changes made to the underlying database table
+* `ResultSet.TYPE_SCROLL_SENSITIVE`, meaning that we can go through the result set in any order, while seeing changes made to the underlying database table
+
+The "resultSetConcurrency" integer constants are:
+* `ResultSet.CONCUR_READ_ONLY`, meaning that the result set cannot be updated
+* `ResultSet.CONCUR_UPDATABLE`, meaning that the result set can be updated
 
 ### Controlling data with transactions
 
