@@ -44,7 +44,7 @@ For purposes of the OCP certification, a `java.sql.DriverManager` is used instea
 
 To get a database connection as `java.sql.Connection`, class `java.sql.DriverManager` offers some *static methods*:
 * `public static Connection getConnection(String url) throws SQLException`
-  * `java.sql.SQLException` is a *checked exception* and is potentially thrown all over the place in JDBC; it is analogous to (checked) `java.io.IOException` in NIO.2
+  * `java.sql.SQLException` is a *checked exception* and is potentially thrown all over the place in JDBC; it is in that sense similar to (checked) `java.io.IOException` in NIO.2
 * overloaded `getConnection` static methods taking an additional user and password, or taking additional `java.util.Properties`
   * of course, passing a password in a `getConnection` call is not a secure practice, to say the least
 
