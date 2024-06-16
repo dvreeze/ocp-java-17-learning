@@ -8,6 +8,13 @@ That's the main topic of this checklist.
 
 ### Quickly checking whether a code snippet compiles successfully
 
+First of all, *read very carefully*! For example:
+* Do we mix up *throw* and *throws*?
+* Do we miss any *semicolons*, or conversely, do we see them where they should not occur?
+* Do we mix up `=` with `==`, for example in a loop/if-statement condition?
+* Do we miss any *parentheses*, e.g. in a do-while statement?
+* Do we incorrectly interpret *nested* if-statements?
+
 Does a code snippet *compile successfully*? It might help to quickly follow these steps:
 
 1. Check the *syntactic structure*
@@ -16,17 +23,22 @@ Does a code snippet *compile successfully*? It might help to quickly follow thes
 
 #### Checking syntax
 
-TODO Add content...
+This is about very quickly recognizing the *overall structure* of a piece of code, recognizing interfaces and classes,
+and their members like constructors, static/non-static fields, static/non-static methods, nested classes etc. This is
+also about quickly recognizing *subtype relationships* and constructor call chains.
 
 Examples of checking the syntax:
-* Distinguish *methods* from *constructors*
+* Distinguish *methods* from *constructors* (sometimes methods can be made to look suspiciously like constructors)
 * Distinguish *instance members* from *static members*
+* Note that classes *implement* interfaces (keyword `implements`), classes *extend* another class, and interfaces *extend* other interfaces (keyword `extends`)
+* When making `super` calls explicit in constructors (as first statement), where appropriate, is there always a superclass constructor that's called?
 * ...
 
 #### Checking scope and types of variables
 
 Examples of checking scope and types of variables:
-* *Local variables* (in the broad sense of the word) *cannot shadow each other*
+* Does a *static member* try to access an *instance member*?
+* *Local variables* (in the broad sense of the word) *cannot shadow each other* (that includes lambda parameters)
 * Mind *flow scope*
 * `switch` statements/expressions can not take `long`, reference types other than `String` and primitive wrappers, etc.
 * ...
@@ -34,11 +46,18 @@ Examples of checking scope and types of variables:
 #### Additional rules checked by the compiler
 
 Examples of additional rules checked by the compiler, other than syntax/scope/type checks:
+* Do we miss any needed *checked exceptions in a throws clause*? Some APIs that "invite" checked exceptions are:
+  * `Thread.sleep(long)` etc., potentially throwing an `InterruptedException`
+  * NIO.2, which is quick to throw `java.io.IOException`
+  * JDBC, which is quick to throw `java.sql.SQLException`
 * Is it tried to update a `final` variable?
-* Does a variable have to be `final` or *effectively final*?
-* Does a static member try to access an instance member?
+* Does a variable have to be `final` or *effectively final*? This is a requirement in the following cases:
+  * When local variables (in the broad sense) are used in a *lambda expression*, they must be *effectively final*
+  * When local variables (in the broad sense) are used in a *local or anonymous class*, they must be *effectively final*
+  * When local variables (in the broad sense) that have already been declared are used in the *resource specification* of a *try-resources statement*, they must be *effectively final*
 * Does the compiler detect *unreachable code*?
-* Is a method *correctly overridden*?
+* Is a method *correctly overridden*? Method overloading only applies to methods having the *same signature* as methods in a supertype
+* Is a method *correctly overloaded*? Method overloading only applies to methods having the *same name* but different signature
 * ...
 
 ### Quickly checking whether a code snippet runs successfully
