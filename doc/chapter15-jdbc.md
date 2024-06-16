@@ -66,8 +66,8 @@ try (Connection conn = DriverManager.getConnection(jdbcUrl)) {
 
 In order to send a SQL command to the database, we need to get an instance of interface `java.sql.Statement` or one of
 the interface subtypes. The 2 interface subtypes are:
-* `java.sql.PreparedStatement`
-* `java.sql.CallableStatement`
+* `java.sql.PreparedStatement`, which extends `java.sql.Statement`
+* `java.sql.CallableStatement`, which extends `java.sql.PreparedStatement`
 
 A plain `java.sql.Statement` cannot take parameters, executing the exact SQL given to it. A `java.sql.PreparedStatement`
 is far better than a plain `Statement`. Some reasons that `PreparedStatement` is superior are:
