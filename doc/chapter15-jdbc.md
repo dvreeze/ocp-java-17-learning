@@ -32,9 +32,9 @@ JAR file contains (database-specific) implementations of the core JDBC *interfac
 ### Connecting to a database
 
 To connect to a database, we first need to know the *JDBC URL*. A JDBC URL consists of *3 non-empty colon-separated parts*:
-1. The *protocol*, namely "jdbc"
+1. The *protocol*, namely "jdbc" (i.e. if the protocol is not "jdbc", it is not a JDBC URL)
 2. The *sub-protocol*, which is typically a product/vendor name, such as "hsqldb"
-3. The *sub-name*, which are database-specific connection details
+3. The *sub-name*, which are database-specific connection details (it may itself contain colons, and it typically does)
 
 For example, this is a JDBC URL for "hsqldb": `jdbc:hsqldb://localhost:5432/zoo`. This JDBC URL suggests that the "hsqldb"
 database engine is listening on the local machine, on port 5432, and that we want to access the "zoo" database.
