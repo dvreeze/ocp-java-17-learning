@@ -12,6 +12,7 @@ First of all, *read very carefully*! For example:
 * Do we mix up *throw* and *throws*?
 * Do we miss any *semicolons*, or conversely, do we see them where they should not occur?
 * Do we mix up `=` with `==`, for example in a loop/if-statement condition?
+* Do we miss any *braces* where a block is required?
 * Do we miss any *parentheses*, e.g. in a do-while statement?
 * Do we incorrectly interpret *nested* if-statements?
 
