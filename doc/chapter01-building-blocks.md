@@ -3,7 +3,11 @@
 See [OCP Java SE 17 Developer Study Guide](https://www.amazon.com/Oracle-Certified-Professional-Developer-Study/dp/1119864585/ref=sr_1_1?crid=1GIZNHYFXHAK4&dib=eyJ2IjoiMSJ9.Mz5O0lUSaZhUZ-O1Mi__dRPfXHL9GM_CfZ3JDTz910a2d8XI7Vsfj7zwcywJAfMcubfCglH02m8PwlAk_DORk8SS5460zaDP1fskFDX4sUiFVR4pxE1Ln0VIY-g5awTQaOJKp4t0Y1HchXkrw0HtOeVSHg3dHG8Jql9TibGCj-WeXYyNdMp4zWtgM4EimHpl4wvlJZufvGpNjNEmXIObAd2B1mp1skt5k7v_B-k_Ip4.bRERgxl7gsekO5AihUKuOeT_yoO6Bsg7jHigb4sjHEM&dib_tag=se&keywords=ocp+java+se17&qid=1714573695&sprefix=ocp+java+%2Caps%2C192&sr=8-1).
 
 Topics in chapter 1 (from this OCP Java SE 17 Developer Study Guide):
-* Tools like javac, java etc. (and choosing the Java version)
+* Tools like javac, java, jar, javadoc etc. (and choosing the Java version)
+  * Make sure to choose a Java major version (in our case Java 17) before compiling and running code (check output of "javac -version" and "java -version")
+  * For *single-file source-code* programs, we can omit the "java" command and directly run `java MyProgram.java <arg0> ...`
+  * For running the `java`, `java` and `jar` commands, also see chapter 12 (about modules)
+* Note that since Java 9 there is no separate JRE download anymore ("JDK without compiler")
 * Understanding *class structure*:
   * An *object* is also called *instance of a class* (the class is a "template" for construction)
   * Objects are not accessible directly, but only via *references* (or *pointers*, but without the dangers associated with them in languages like C)
@@ -16,21 +20,29 @@ Topics in chapter 1 (from this OCP Java SE 17 Developer Study Guide):
 * *Comments* (mind nesting peculiarities):
   * Single-line comments
   * Multi-line comments (even if on a single line)
-  * Javadoc comments
+  * Javadoc comments (the compiler might complain if trying to nest those comments)
 * *Source files* and *classes*:
   * Normal: one top-level type (class/interface) corresponds to one source file
   * The (top-level) type must match the source file's name without the ".java" extension
   * We can have multiple top-level types in a source file, but at most one of them can be public
 * A program's *main* method (and how to run the program)
   * Three different "ways" of syntactically passing the main method's parameter(s), including the use of *varargs*
+    * `String[] args` (or using any other parameter name)
+    * `String args[]` (or using any other parameter name)
+    * `String... args` (or using any other parameter name)
   * Passing program arguments when running programs
 * *Package declarations* and *import statements*:
-  * Mind order of (optional) package declaration, (optional) import statements, and the top-level type definitions
-  * When do we need to import a type, if we do not want to use FQCNs?
+  * Mind order of (optional) package declaration coming first, then the (optional) import statements, and then the *top-level type definitions*
+  * When do we need to import a type, if we do not want to use FQCNs? No imports needed for anything in package `java.lang`, or anything in the "current" package
   * How can we import types (e.g. via wildcards)?
+    * Normal (non-static) imports cannot import any methods
+    * Wildcards can only appear once, at the end of the import statement (before the semicolon)
+  * Note that wildcard imports do not import child packages and their content
   * Solving naming conflicts, e.g. via FQCNs, or via combination of (very specific) non-wildcard and wildcard import
 * *Object construction*:
   * Constructor code itself is run after *fields* and *instance initializer blocks*
+  * The compiler provides a *default* parameterless "do nothing" constructor if none is provided by the programmer
+  * More details about constructors are in chapter 6 on class design
 * *Code blocks*:
   * Code blocks are surrounded by braces
   * Code blocks (i.e. their pairs of braces) must nest properly and braces always come in pairs
@@ -39,10 +51,24 @@ Topics in chapter 1 (from this OCP Java SE 17 Developer Study Guide):
   * Values of reference types can be *null*; not so for values of primitive types
   * Primitive values have no methods declared on them
   * Know the primitive types and their wrapper types well
+    * `boolean`, which is `false` (default) or `true`
+    * `byte`, signed 8-bit (single-byte) integer number, default `0`
+    * `short`, signed 16-bit (2-byte) integer number, default `0`
+    * `int`, signed 32-bit (4-byte) integer number, default `0`
+    * `long`, signed 64-bit (8-byte) integer number, default `0L`
+    * `float`, signed 32-bit (4-byte) floating point value, default `0.0f`
+    * `double`, signed 64-bit (8-byte) floating point value, default `0.0`
+    * `char`, 16-bit (2-byte) (unsigned) Unicode value, default `\u0000`
+  * The primitive wrapper types (which are reference types) have predictable names, but the `int` wrapper type is called `java.lang.Integer` (similar for `char` and `java.lang.Character`)
+    * Except for `Boolean` and `Character`, they extend class `java.lang.Number`
+    * Class `Number` offers methods like `byteValue()`, `intValue()`, `doubleValue()` etc.; loss of precision is possible, including overflow
+    * Compare `Integer.parseInt("123")` (returning an `int`) with `Integer.valueOf("123")` (returning an `Integer`)
   * Autoboxing and unboxing
   * Also know the corresponding literals well (note that float literals need an "f" suffix; otherwise it's a `double`)
+    * That includes octal, hexadecimal and binary number literals
   * Underscores in numeric literals
-  * *Text blocks* and incidental versus essential whitespace
+    * Not allowed at beginning and end, and not allowed directly before or after decimal point
+  * *Text blocks* (also known as multi-line strings), and *incidental versus essential whitespace*
 * *Identifiers*:
   * They are used for variables, methods, classes, interfaces and packages (with corresponding naming conventions)
   * But the rules are the same for all of them:
