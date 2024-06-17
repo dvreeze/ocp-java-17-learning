@@ -75,23 +75,33 @@ Topics in chapter 1 (from this OCP Java SE 17 Developer Study Guide):
     * Identifiers can contain letters, digits, currency symbols and underscores
     * But they cannot start with a digit, and they cannot be just an underscore
     * And they cannot be *reserved words* (note that "var" is not a reserved word, but a "reserved type name")
-    * And they cannot be "word" literals like true, false and null
+    * And they cannot be "word" *literal values* like `true`, `false` and `null`
 * *Variables*:
   * They are pieces of memory storing data (primitives or references)
   * Declaring them gives them a name (which must be a valid identifier)
   * They can be initialized (but they can also be "undefined")
   * Multiple variables can be declared in one statement (but only of the same type, which is mentioned only once)
+    * In `int i1, i2, i3 = 1;` only `i3` is initialized (if this declaration occurs in a method/constructor/initializer block)
   * Variables are either *local variables*, *method/constructor parameters*, *instance variables* (i.e. *fields*) or *class variables* (i.e. static fields)
-  * They can be made "final", which for reference types only prevents reassignment of the reference itself
-  * Using uninitialized local variables leads to compilation errors
-  * Yet instance variables and class variables are automatically initialized with default values (if not explicitly initialized)
+  * They can be made "final", which for reference types only *prevents reassignment of the reference itself*
+  * *Using uninitialized local variables* leads to compilation errors
+    * Having uninitialized local variables is allowed, but using them while still being uninitialized is not
+    * Passing a variable as argument to a method also counts as "using" it, so that requires first initializing it (so the method can always assume initialized parameters)
+  * Yet *instance variables and class variables* are *automatically initialized* with default values (if not explicitly initialized)
+    * For all reference types (e.g. `String`), this default value is `null`
   * Local variables can use the *var* syntax, to have the compiler infer the type
   * This is called *local variable type inference*, making clear what it is and is not about
+    * In this context, method/constructor parameters are not considered local variables, so *var* cannot be used there (let alone for fields)
   * If no type can be inferred, the "var" declaration is rejected by the compiler; after all, *Java is compile-time type-safe*!
+    * E.g., `var x = null;` is rejected by the compiler
   * Only one variable can be initialized in a "var" declaration statement
   * *Scope* of local variables, method/constructor parameters, instance variables (i.e. *fields*) and class variables
+    * Each *block* has its own scope for local variables declared in them
+    * Instance variables (i.e. instance fields) are available during the entire lifetime of the object containing them
+    * Class variables (i.e. static fields) are available for the entire remaining life of the program
+    * Note that *static members* of a class/interface cannot access *non-static members* of that class/interface
 * *Garbage collection*:
-  * Understanding when there are no more references to an object (then the object is eligible for GC)
+  * Understanding when there are no more references to an object (then the object is *eligible for GC*)
 
 It is also important to have a clear mental picture of:
 * *references* (to an object, or null) versus *primitive values*
