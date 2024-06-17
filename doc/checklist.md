@@ -20,7 +20,7 @@ First of all, *read very carefully*! For example:
 Does a code snippet *compile successfully*? It might help to quickly follow these steps:
 
 1. Check the *syntactic structure*
-2. Check *scope and types of variables*
+2. Check *scope, types and initialization of variables*
 3. Check *additional rules* checked by the compiler
 
 #### Checking syntax
@@ -36,11 +36,13 @@ Examples of checking the syntax:
 * When making `super` calls explicit in constructors (as first statement), where appropriate, is there always a superclass constructor that's called?
 * ...
 
-#### Checking scope and types of variables
+#### Checking scope, types and initialization of variables
 
-Examples of checking scope and types (and initialization) of variables:
+Examples of checking scope, types and initialization of variables:
 * Does a *static member* try to access an *instance member*?
 * Static/instance fields are automatically initialized. Local variables are not. Are *uninitialized local variables used*?
+* *Final static fields* must be explicitly initialized *precisely once*, *during class initialization* (so all static fields are always initialized during class initialization)
+* *Final instance fields* must be explicitly initialized *precisely once*, *during object construction* (so all instance fields are always initialized during object construction)
 * *Local variables* (in the broad sense of the word) *cannot shadow each other* (that includes lambda parameters)
 * Mind *flow scope*
 * `switch` statements/expressions can not take `long`, reference types other than `String` and primitive wrappers, etc.
