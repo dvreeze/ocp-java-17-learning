@@ -15,7 +15,7 @@ Topics in chapter 1 (from this OCP Java SE 17 Developer Study Guide):
     * (instance-level or static) *fields*
     * (instance-level or static) *methods* (the functions of a class or instance)
     * constructors (that create objects/instances)
-  * Be careful: constructors look like methods, but without return type
+  * Be careful: *constructors look like methods, but without return type* (so it is easy to mistake some methods for constructors)
   * Also: unlike fields, methods always have a parameter list, even if it is empty
 * *Comments* (mind nesting peculiarities):
   * Single-line comments
