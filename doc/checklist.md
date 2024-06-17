@@ -15,6 +15,7 @@ First of all, *read very carefully*! For example:
 * Do we miss any *braces* where a block is required?
 * Do we miss any *parentheses*, e.g. in a do-while statement?
 * Do we incorrectly interpret *nested* if-statements?
+* Are constructor parameters assigned to (possibly equally named) instance fields and *not to themselves*?
 
 Does a code snippet *compile successfully*? It might help to quickly follow these steps:
 
