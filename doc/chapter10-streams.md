@@ -151,6 +151,10 @@ Some common `Stream<T>` *terminal operations* are:
   * it is the "Stream equivalent of looping"
   * it is not a reduction operation, since it does not return any result but instead relies on the Consumer's side-effects
   * it does *not terminate* for infinite streams
+* `forEachOrdered(Consumer<? super T>)`, with return type `void`
+  * it is like `forEach`, but it respects *encounter order* even in parallel streams
+  * it can also be relied on for its *synchronisation effects* (processing one element *happens-before* processing the next element)
+  * of course, encounter order can be "switched off" with intermediate operation `unordered()`
 * overloaded method `reduce`, e.g. the above-mentioned `reduce(U, BiFunction<U, ? super T, U>, BinaryOperator<U>)`, returning a `U`
   * this above-mentioned overload of `reduce` is very powerful, as mentioned earlier, and many terminal operations can be understood in terms of `reduce`
   * there are also "friendly" overloads if the type does not change, namely `reduce(T, BinaryOperator<T>)` (returning `T`) and `reduce(BinaryOperator<T>)` (returning `Optional<T>`)
