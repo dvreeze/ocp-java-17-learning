@@ -6,7 +6,7 @@ Topics in chapter 1 (from this OCP Java SE 17 Developer Study Guide):
 * Tools like javac, java, jar, javadoc etc. (and choosing the Java version)
   * Make sure to choose a Java major version (in our case Java 17) before compiling and running code (check output of "javac -version" and "java -version")
   * For *single-file source-code* programs, we can omit the "javac" command and directly run `java MyProgram.java <arg0> ...`
-  * For running the `java`, `java` and `jar` commands, also see chapter 12 (about modules)
+  * For running the `javac`, `java` and `jar` commands, also see chapter 12 (about modules)
 * Note that since Java 9 there is no separate JRE download anymore ("JDK without compiler")
 * Understanding *class structure*:
   * An *object* is also called *instance of a class* (the class is a "template" for construction)
