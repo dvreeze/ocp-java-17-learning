@@ -38,8 +38,9 @@ Examples of checking the syntax:
 
 #### Checking scope and types of variables
 
-Examples of checking scope and types of variables:
+Examples of checking scope and types (and initialization) of variables:
 * Does a *static member* try to access an *instance member*?
+* Static/instance fields are automatically initialized. Local variables are not. Are *uninitialized local variables used*?
 * *Local variables* (in the broad sense of the word) *cannot shadow each other* (that includes lambda parameters)
 * Mind *flow scope*
 * `switch` statements/expressions can not take `long`, reference types other than `String` and primitive wrappers, etc.
