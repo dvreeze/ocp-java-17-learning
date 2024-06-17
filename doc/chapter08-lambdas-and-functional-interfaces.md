@@ -38,10 +38,10 @@ There are 2 kinds of *lambda expressions*:
 * *statement lambdas*, where the lambda body is a statement; e.g. `(String s) -> { return s.startsWith("A"); }`
 
 The *lambda parameter lists* can be given in one of 3 styles:
-* all parameters are *typed*; e.g. `(String s, String t) -> s.startsWith(t)`
+* all parameters are *typed*; e.g. `(String s, String t) -> s.startsWith(t)` or `(final String s, final String t) -> s.startsWith(t)` etc.
 * all parameters are parameter names *without type*; e.g. `(s, t) -> s.startsWith(t)`
   * a special case is having just one parameter, where we can leave out the parentheses; e.g. `s -> s.isEmpty())`
-* all parameters are *var parameters*; e.g. `(var s, var t) -> s.startsWith(t)` or `(final var s, final var t) -> s.startsWith(t)`
+* all parameters are *var parameters*; e.g. `(var s, var t) -> s.startsWith(t)` or `(final var s, final var t) -> s.startsWith(t)` etc.
 
 It is not allowed to mix these styles. For all parameters the same style is required (typed or without types or `var`).
 
