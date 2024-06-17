@@ -51,6 +51,7 @@ Examples of additional rules checked by the compiler, other than syntax/scope/ty
   * `Thread.sleep(long)` etc., potentially throwing an `InterruptedException`
   * NIO.2, which is quick to throw `java.io.IOException`
   * JDBC, which is quick to throw `java.sql.SQLException`
+* Related: Do lambda expressions typed as familiar *functional interfaces* like `Function`, `Predicate` etc. fail to catch *checked exceptions* (and maybe rethrow them as unchecked exceptions)?
 * Is it tried to update a `final` variable?
 * Does a variable have to be `final` or *effectively final*? This is a requirement in the following cases:
   * When local variables (in the broad sense) are used in a *lambda expression*, they must be *effectively final*
