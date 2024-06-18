@@ -136,8 +136,11 @@ The *numeric promotion rules* for (numeric) operands of binary arithmetic operat
 *Assignment* assigns a value on the right to a variable on the left. Example: `n = 3`. The assignment also returns a value,
 namely the evaluation result of the assignment.
 
-We can use *cast* operators to cast values to "smaller" types, risking overflow/underflow for primitive numeric types
-and (compilation/runtime) errors for reference types.
+Compile-time constants (`128`, `127 + 1`) that do not fit in the target type (in this case `byte`) lead to a compiler error
+when assigning the value to a variable of the target type (in this case `byte b = 128`), unless we use a "down-cast".
+
+We can use *cast* operators to cast values to "smaller" types, risking *overflow/underflow for primitive numeric types*
+and *(compilation/runtime) errors for reference types*.
 
 As an example of overflow/underflow, `(byte) (Byte.MAX_VALUE + 1)` returns `-128`.
 
