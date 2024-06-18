@@ -47,7 +47,7 @@ Examples of checking scope, types and initialization of variables:
 * *Final static fields* must be explicitly initialized *precisely once*, *during class initialization* (so all static fields are always initialized during class initialization)
 * *Final instance fields* must be explicitly initialized *precisely once*, *during object construction* (so all instance fields are always initialized during object construction)
 * *Local variables* (in the broad sense of the word) *cannot shadow each other* (that includes lambda parameters)
-* Mind *flow scope*
+* Mind *flow scope* (in particular in combination with "local variable shadowing")
 * `switch` statements/expressions can not take `long`, reference types other than `String` and primitive wrappers, etc.
 * Loop conditions etc. must be `boolean` expressions
 * Enhanced for-loops loop over arrays or `Iterable`
