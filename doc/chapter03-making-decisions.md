@@ -252,7 +252,8 @@ regard it as a `java.util.function.Consumer<T>`, much in the same way as a *swit
 Otherwise, *conceptually* we can regard a *switch expression* as an implementation of `java.util.function.Function<T, R>`,
 where `T` must meet the requirements on the *type of the target expression*, and each *switch label* must be *compile-time
 constants* (or `default`), of the same type as the target expression. Also, this "function" must be a *total function* to `R`,
-other than the possibility of throwing exceptions.
+other than the possibility of throwing exceptions. So, if the type of the target expression is `String`, a `default`
+switch label is required.
 
 ### While-loops
 
