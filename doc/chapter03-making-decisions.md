@@ -319,7 +319,7 @@ So, in practice, the "init part" is either a local variable declaration or a com
 pre-/post-unary expressions.
 
 The optional condition is an expression, and the optional "update part" is a comma-separated list of these so-called
-"statement expressions" (so typically assignments or pre-/post-unary expressions).
+"statement expressions" (so typically *assignments* or *pre-/post-unary expressions*, or *method calls*).
 
 Grammar:
 
@@ -361,9 +361,9 @@ The *enhanced-for-loop* (or *for-each-loop*) has been designed to loop over coll
 * followed by the statement to iterate over, which can be a "single statement" or block
 
 The "initialization section", within the pair of parentheses:
-* starts with a *local variable declaration* (which may start with "var")
-  * the "local variable declaration" typically starts with a type or "var", followed by a "variable name"
-  * the "local variable declaration" must have no initializer, and it must declare a single variable
+* starts with a *local variable declaration* (which may start with `var`)
+  * the "local variable declaration" typically starts with a *type* or `var`, followed by a "variable name"
+  * the "local variable declaration" must have *no initializer*, and it must declare a *single variable*
 * followed by a *colon* (and not a keyword like "in"!)
 * followed by an expression for the collection or array to loop over
 
