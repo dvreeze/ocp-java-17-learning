@@ -276,7 +276,7 @@ whileLoop:
 As for *correct use of types*, the condition must be a *boolean expression*.
 
 These loops are very basic, leaving details like "creation of a loop variable" to the programmer.
-Be aware of infinite loops, if the loop condition is not "progressing towards successful termination".
+Be aware of *infinite loops*, if the loop condition is not "progressing towards successful termination".
 
 ### Do-while-loops
 
@@ -298,7 +298,7 @@ doWhileLoop:
 
 As for *correct use of types*, the condition must be a *boolean expression*.
 
-Like for regular while-loops, be aware of infinite loops.
+Like for regular while-loops, be aware of *infinite loops*.
 
 Note that variables introduced in the statement to iterate over are no longer in scope in the loop condition!
 
@@ -344,12 +344,12 @@ statementExpressionList:
 As for *correct use of types*, the condition must be a *boolean expression*.
 
 Be careful to not redeclare a variable in the loop "init part", or else the compiler will emit an error.
-This makes sense, because there cannot be 2 local variables with the same name in scope at the same time.
+This makes sense, because there *cannot be 2 local variables with the same name in scope at the same time*.
 
 Also note that loop variables are no longer in scope after the loop. Finally, do not modify loop variables (to prevent
 having "2 owners" of that loop variable).
 
-It is still possible to create infinite loops.
+It is still possible to create *infinite loops*.
 
 ### Enhanced-for-loops
 
@@ -401,5 +401,13 @@ Note that break/continue/return are all "safe go-to statements" *returning contr
 Also note that it makes sense for switch statements to support the break statement inside switch cases, and that
 the continue statement makes no sense for switch statements (leading to a compilation error if we try to use it).
 
-If the compiler detects that break/continue/return statements make pieces of code unreachable, the compiler will
+As per the JLS (Java Language Specification):
+* The required *break target* of a `break` statement *without label* is the innermost *enclosing* `switch` or *loop* statement (completing it immediately)
+  * Between break target and `break` statement there can't be any methods, constructors, lambda expressions etc. (so there are no non-local jumps)
+* The required *continue target* of a `continue` statement is an *enclosing* *loop* statement (ending only the current loop iteration)
+  * If the `continue` statement has no label, the "continue target" is the innermost loop
+  * Between continue target and `continue` statement there can't be any methods, constructors, lambda expressions etc. (so there are no non-local jumps)
+* The required *return target* of a `return` statement is the innermost *enclosing* *constructor, method or lambda expression* (returning control to its invoker)
+
+If the compiler detects that `break`/`continue`/`return` statements make pieces of code *unreachable*, the compiler will
 emit an error.

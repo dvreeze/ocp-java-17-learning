@@ -30,12 +30,14 @@ This is about very quickly recognizing the *overall structure* of a piece of cod
 and their members like constructors, static/non-static fields, static/non-static methods, nested classes etc. This is
 also about quickly recognizing *subtype relationships* and constructor call chains.
 
+Syntax of *control structures* (such as loop statements, switch statements/expressions etc.) is also checked in this step.
+
 Examples of checking the "overall" syntax:
 * Distinguish *methods* from *constructors* (sometimes methods can be made to look suspiciously like constructors)
 * Distinguish *instance members* from *static members*
 * Note that classes *implement* interfaces (keyword `implements`), classes *extend* another class, and interfaces *extend* other interfaces (keyword `extends`)
 * When making `super` calls explicit in constructors (as first statement), where appropriate, is there always a superclass constructor that's called?
-* ...
+* Are *control structures* syntactically correct?
 
 #### Checking scope, types and initialization of variables
 
@@ -47,6 +49,8 @@ Examples of checking scope, types and initialization of variables:
 * *Local variables* (in the broad sense of the word) *cannot shadow each other* (that includes lambda parameters)
 * Mind *flow scope*
 * `switch` statements/expressions can not take `long`, reference types other than `String` and primitive wrappers, etc.
+* Loop conditions etc. must be `boolean` expressions
+* Enhanced for-loops loop over arrays or `Iterable`
 * ...
 
 #### Additional rules checked by the compiler
