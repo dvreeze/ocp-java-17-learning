@@ -36,6 +36,9 @@ Examples of checking the "overall" syntax:
 * Distinguish *methods* from *constructors* (sometimes methods can be made to look suspiciously like constructors)
 * Distinguish *instance members* from *static members*
 * Note that classes *implement* interfaces (keyword `implements`), classes *extend* another class, and interfaces *extend* other interfaces (keyword `extends`)
+* Syntax of *interfaces*
+  * Allowed *members* of interfaces (like instance methods without body, `default` instance methods etc.)
+  * *Inferred modifiers* (like `public`, `abstract` for instance methods without body, etc.)
 * When making `super` calls explicit in constructors (as first statement), where appropriate, is there always a superclass constructor that's called?
 * Are *control structures* syntactically correct?
   * Mind syntax rules for if-statements, loops, switch statements/expressions etc.
