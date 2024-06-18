@@ -35,6 +35,7 @@ public class SwitchExpressionExample {
         // Both are big improvements, as far as I am concerned.
         return
             switch (n) {
+                default -> Optional.empty(); // It's no problem to put the "default case" at the front
                 case 2, 4, 6, 8, 10, 12, 14, 16, 18 -> Optional.of(true);
                 case 1, 3, 5, 7, 9, 11, 13, 15, 17 -> {
                     // If we use a block, we need to "yield" a value (in all code paths, except where exceptions are thrown)
@@ -45,7 +46,6 @@ public class SwitchExpressionExample {
                         yield Optional.of(false);
                     }
                 }
-                default -> Optional.empty();
         };
     }
 
