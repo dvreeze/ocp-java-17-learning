@@ -27,20 +27,20 @@ Indexing in Strings, like is the case for arrays and collections, is *zero-based
 to a method (like `substring`), the start index is *inclusive* and the end index is *exclusive*.
 
 Some important *instance methods of class String* (or sets of overloaded String instance methods) are:
-* `length`
-* `charAt` (may throw a `StringIndexOutOfBoundsException`)
-* `indexOf` (may return `-1` instead of throwing an exception)
-* `substring`
-* `toLowerCase`, `toUpperCase`
-* `equals` (from the `Object` super-class), `equalsIgnoreCase`
-* `startsWith`, `endsWith`, `contains`
-* `replace` (taking 2 characters, or 2 strings), as opposed to `replaceAll` (taking a regular expression as first parameter)
-* `strip`, `stripLeading`, `stripTrailing`, `trim` (method "trim" is older, using a less advanced definition of whitespace)
-* `indent`, `stripIndent` (these methods are powerful, but mind line break normalization and trailing line break), and `lines`
-  * some exam questions involving multiline string literals and methods like `indent`, `stripIndent` etc. are to be expected on the exam; getting some experience with this topic pays off
-* `translateEscapes` (since Java 15)
-* `isEmpty`, `isBlank`
-* `formatted` (since Java 15; see static method `format`)
+* `length()`
+* `charAt(int)` (may throw a `StringIndexOutOfBoundsException`)
+* `indexOf(String)`, `indexOf(int)` and 2 other overloads (may return `-1` instead of throwing an exception)
+* `substring(int)` and `substring(int, int)`
+* `toLowerCase()`, `toUpperCase()` and overloads taking a Locale
+* `equals(Object)` (from the `Object` super-class), `equalsIgnoreCase(String)`
+* `startsWith(String)`, `endsWith(String)`, `contains(CharSequence)`
+* `replace(CharSequence, CharSequence)` (taking 2 characters, or 2 strings), as opposed to `replaceAll(String, String)` (taking a regular expression as first parameter)
+* `strip()`, `stripLeading()`, `stripTrailing()`, `trim()` (method "trim" is older, using a less advanced definition of whitespace)
+* `indent(int)`, `stripIndent()` (these methods are powerful, but mind line break normalization and trailing line break), and `lines()` (returning a Stream of strings)
+  * some exam questions involving multiline string literals and methods like `indent(int)`, `stripIndent()` etc. are to be expected on the exam; getting some experience with this topic pays off
+* `translateEscapes()` (since Java 15)
+* `isEmpty()`, `isBlank()`
+* `formatted(Object...)` (since Java 15; see static method `format(String, Object...)`)
 
 Note that the String API leans itself for *method chaining*. Given that class `String` is *immutable*, this means the
 creation of multiple intermediate String objects (at least in theory).
@@ -58,25 +58,25 @@ When creating a String in many steps, consider using a `StringBuilder` to create
 for creating one String, thus (potentially) getting rid of many intermediate immutable String objects that were only used for creating
 the result String. Note that unlike `String`, `StringBuilder` is mutable and not thread-safe.
 
-`StringBuilder` methods like `append` can be chained, but the effect is quite different than method chaining for `String`.
+`StringBuilder` methods like `append` can be *chained*, but the effect is quite different from method chaining for `String`.
 After all, `String` is immutable, so method chaining creates new Strings all the time, whereas for `StringBuilder` it is
 one and the same object that is being updated in-place all the time. So for String and StringBuilder we need a completely
 *different mental model* to reason about them ("immutable versus mutable").
 
 `StringBuilder` and `String` have several methods in common, partly from common implemented interface `CharSequence`.
 Some commonly shared methods are:
-* `indexOf`
-* `substring`
-* `length` (from `CharSequence`)
-* `charAt` (from `CharSequence`)
+* `indexOf(String)` and overloads
+* `substring(int, int)` and overloads
+* `length()` (from `CharSequence`)
+* `charAt(int)` (from `CharSequence`)
 
 Other important *instance methods of class StringBuilder* are:
-* `append` (many overloads)
-* `insert` (many overloads)
-* `delete`, `deleteCharAt`
-* `replace` (quite different from its String counterpart)
-* `reverse`
-* `toString` (from Object, but in this case building the result String from the StringBuilder)
+* `append(String)` (many overloads)
+* `insert(int, String)` (many overloads)
+* `delete(int, int)`, `deleteCharAt(int)`
+* `replace(int, int, String)` (quite different from its String counterpart)
+* `reverse()`
+* `toString()` (from Object, but in this case building the result String from the StringBuilder)
 
 Back to `String`. We know that class `String` uses value equality (or logical equality) for string comparisons using
 method `equals`. But what about "object equality" (with "==")? We need to know that Java stores strings that are *compile-time
@@ -191,7 +191,7 @@ Some `java.lang.Math` static methods:
 * `round`, with overloads for float (returning int) and double (returning long)
 * `ceil`, `floor`, taking and returning a double
 * `pow`, taking and returning doubles
-* `random`, returing a double between 0 (inclusive) and 1 (exclusive)
+* `random`, returning a double between 0 (inclusive) and 1 (exclusive)
 
 ### Dates and Times
 
