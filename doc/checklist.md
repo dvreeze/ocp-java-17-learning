@@ -52,6 +52,7 @@ Examples of checking scope, types and initialization of variables:
 * `switch` statements/expressions can not take `long`, reference types other than `String` and primitive wrappers, etc.
 * Loop conditions etc. must be `boolean` expressions
 * Enhanced for-loops loop over arrays or `Iterable`
+* Resources in try-resources statements must be `AutoCloseable`
 * ...
 
 #### Additional rules checked by the compiler
