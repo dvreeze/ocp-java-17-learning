@@ -148,7 +148,7 @@ the scoping rules we have seen so far for variables (for static fields, instance
   * where each "switch label" starts with the `case` keyword, which is followed by a non-empty comma-separated list of "case values"
   * note that before Java 14 there could be only one "case value" per "switch label"
 * followed by a branch, which is zero or more statements
-* the last statement should be a "break statement", or else execution "falls through" to the remaining cases, which can be unexpected
+* the *last statement should be a `break` statement*, or else execution "falls through" to the remaining cases, which can be unexpected
 
 The other *switch case* is the "default case", which:
 * starts with the `default` keyword
@@ -191,7 +191,7 @@ With *compile-time constant* we mean:
 * either a literal
 * or an enum constant, *without it being prefixed with the enum class name* (or else it will not compile)
 * or a trivial "operation" (such as `3 * 5`) that can easily be resolved by the compiler
-* or a final variable initialized with a literal or enum constant
+* or a *final variable initialized with a literal or enum constant*
 
 Note that *conceptually* we can regard a *switch statement* as an implementation of `java.util.function.Consumer<T>`,
 where `T` must meet the requirements on the *type of the target expression*, and each *switch label* must be *compile-time
