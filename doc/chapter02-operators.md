@@ -70,28 +70,13 @@ some rows and combining others, we get this table of operator precedence:
 | Ternary             | booleanExpr ? expr1 : expr2 | right-to-left |
 | Assignment          | =, +=, -=, *=, /=, %= etc.  | right-to-left |
 
-The *bitwise complement* operator (`~`) *flips the bits*. This example shows it in action:
-
-```java
-var maxByte = (int) Byte.MAX_VALUE; // 127
-var minByte = (int) Byte.MIN_VALUE; // -128
-
-// Indeed, they are each other's bitwise complement
-System.out.println(Integer.toBinaryString(maxByte)); // prints "1111111"
-System.out.println(Integer.toBinaryString(minByte)); // prints "11111111111111111111111110000000"
-
-// It is easy to compute the bitwise complements
-var check1 = (minByte == -1 * maxByte - 1); // true
-var check2 = (maxByte == -1 * minByte - 1); // true
-```
-
 ### Unary operators
 
-Below "int types" stands for primitive integer numeric types, which includes char (besides byte, short, int and long).
-Also, below "numeric types" stand for primitive numeric types, so "int types" along with double and float.
+Below "int types" stands for primitive integer numeric types, which includes `char` (besides `byte`, `short`, `int` and `long`).
+Also, below "numeric types" stand for primitive numeric types, so "int types" along with `double` and `float`.
 
-It also pays off to know that signed "int" types byte, short, int and long contain 1, 2, 4 and 8 (8-bit) bytes, respectively.
-Type char (which could be seen as an unsigned integer type) contains 2 bytes.
+It also pays off to know that signed "int" types `byte`, `short`, `int` and `long` contain 1, 2, 4 and 8 (8-bit) bytes, respectively.
+Type `char` (which could be seen as an unsigned integer type) contains 2 bytes.
 
 | Operator                 | Examples     | Description                                     | Operand type    |
 | ------------------------ | ------------ |-------------------------------------------------|-----------------|
@@ -108,6 +93,21 @@ of incrementing/decrementing after the expression has been evaluated.
 
 The *pre-unary* operators *pre-increment* and *pre-decrement* first apply the side effect of incrementing/decrementing,
 and then returns the *new value* as expression evaluation result.
+
+The *bitwise complement* operator (`~`) *flips the bits*. This example shows it in action:
+
+```java
+var maxByte = (int) Byte.MAX_VALUE; // 127
+var minByte = (int) Byte.MIN_VALUE; // -128
+
+// Indeed, they are each other's bitwise complement
+System.out.println(Integer.toBinaryString(maxByte)); // prints "1111111"
+System.out.println(Integer.toBinaryString(minByte)); // prints "11111111111111111111111110000000"
+
+// It is easy to compute the bitwise complements
+var check1 = (minByte == -1 * maxByte - 1); // true
+var check2 = (maxByte == -1 * minByte - 1); // true
+```
 
 ### Binary arithmetic operators
 
