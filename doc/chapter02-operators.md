@@ -156,6 +156,13 @@ byte b = 45; // max: 127
 b = -112; // min: -128
 ```
 
+A nice puzzle is this combination of ("self"-)assignment and post-increment:
+
+```java
+int x = 4;
+x = x++; // returns 4, not 5; the post-increment got lost
+```
+
 ### Comparison and "boolean logic" operators
 
 The *comparison operators* "equal-to" (`==`) and "not-equal-to" (`!=`) mean different things for primitives and reference types:
