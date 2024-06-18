@@ -139,7 +139,7 @@ the scoping rules we have seen so far for variables (for static fields, instance
 ### Switch statements
 
 *Syntactically*, a *switch statement*:
-* starts with the "switch" keyword
+* starts with the `switch` keyword
 * followed by the "target expression", which is an *expression* that must be *surrounded by parentheses*
 * followed by a "switch block", which is zero or more "cases" *surrounded by a pair of braces* (hence the name "switch block")
 
@@ -151,7 +151,7 @@ the scoping rules we have seen so far for variables (for static fields, instance
 * the last statement should be a "break statement", or else execution "falls through" to the remaining cases, which can be unexpected
 
 The other *switch case* is the "default case", which:
-* starts with the "default" keyword
+* starts with the `default` keyword
 * followed by a colon
 * followed by a branch, which is zero or more statements
 * there can be only 1 default case at most in the switch statement, or else the compiler emits an error
@@ -179,12 +179,12 @@ branch:
 ```
 
 As for the *type* of the "target expression", it can only be one of:
-* integral primitive types no larger than int, so byte, short, int and char
+* integral primitive types no larger than `int`, so `byte`, `short`, `int` and `char`
 * or the corresponding wrapper types
-* or the type String
-* or an enumeration type
+* or the type `String`
+* or an *enumeration type*
 
-A "var" is also allowed, if it resolves to one of the types mentioned above
+A `var` is also allowed, if it resolves to one of the types mentioned above.
 
 Each "case value" must be a "compile-time constant". Its type must be *assignable to the type of the target expression*.
 With *compile-time constant* we mean:
@@ -193,12 +193,16 @@ With *compile-time constant* we mean:
 * or a trivial "operation" (such as `3 * 5`) that can easily be resolved by the compiler
 * or a final variable initialized with a literal or enum constant
 
+Note that *conceptually* we can regard a *switch statement* as an implementation of `java.util.function.Consumer<T>`,
+where `T` must meet the requirements on the *type of the target expression*, and each *switch label* must be *compile-time
+constants* (or `default`), of the same type as the target expression.
+
 ### Switch expressions
 
 Java 14 added *switch expressions*, which are expressions instead of statements. As expressions, their result can be
 assigned to a variable, given some requirements are met (ensuring that the switch expression always returns a value).
 
-Syntactically they look very much like switch statements, but the colons in cases are replaced by *arrows* ("->").
+Syntactically they look very much like switch statements, but the colons in cases are replaced by *arrows* (`->`).
 Also, the "break statements" are gone (they are not needed for switch expressions), and we may see "yield statements" instead.
 
 The "case branches" are:
@@ -241,6 +245,14 @@ As for *typing*, we have the following requirements:
 
 Note that if the switch expression is the RHS of an assignment expression used as statement, we will see a semicolon
 (ending the expression statement) after a closing brace (of the switch expression).
+
+If a *switch expression* has "return type" `void`, so if it is only used for its side effects, then *conceptually* we can
+regard it as a `java.util.function.Consumer<T>`, much in the same way as a *switch statement*.
+
+Otherwise, *conceptually* we can regard a *switch expression* as an implementation of `java.util.function.Function<T, R>`,
+where `T` must meet the requirements on the *type of the target expression*, and each *switch label* must be *compile-time
+constants* (or `default`), of the same type as the target expression. Also, this "function" must be a *total function* to `R`,
+other than the possibility of throwing exceptions.
 
 ### While-loops
 
