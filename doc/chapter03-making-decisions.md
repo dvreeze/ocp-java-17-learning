@@ -145,7 +145,7 @@ the scoping rules we have seen so far for variables (for static fields, instance
 
 *Syntactically*, a (non-default) *switch case*:
 * starts with one or more pairs of "switch label" and colon
-  * where each "switch label" starts with the "case" keyword, which is followed by a non-empty comma-separated list of "case values"
+  * where each "switch label" starts with the `case` keyword, which is followed by a non-empty comma-separated list of "case values"
   * note that before Java 14 there could be only one "case value" per "switch label"
 * followed by a branch, which is zero or more statements
 * the last statement should be a "break statement", or else execution "falls through" to the remaining cases, which can be unexpected
