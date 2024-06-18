@@ -20,17 +20,17 @@ First of all, *read very carefully*! For example:
 
 Does a code snippet *compile successfully*? It might help to quickly follow these steps:
 
-1. Check the *syntactic structure*
+1. Check the *syntactic structure* of *classes/interfaces and their members*
 2. Check *scope, types and initialization of variables*
 3. Check *additional rules* checked by the compiler
 
-#### Checking syntax
+#### Checking syntax of classes/interfaces and their members
 
 This is about very quickly recognizing the *overall structure* of a piece of code, recognizing interfaces and classes,
 and their members like constructors, static/non-static fields, static/non-static methods, nested classes etc. This is
 also about quickly recognizing *subtype relationships* and constructor call chains.
 
-Examples of checking the syntax:
+Examples of checking the "overall" syntax:
 * Distinguish *methods* from *constructors* (sometimes methods can be made to look suspiciously like constructors)
 * Distinguish *instance members* from *static members*
 * Note that classes *implement* interfaces (keyword `implements`), classes *extend* another class, and interfaces *extend* other interfaces (keyword `extends`)
