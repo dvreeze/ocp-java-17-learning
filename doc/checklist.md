@@ -38,6 +38,7 @@ Examples of checking the "overall" syntax:
 * Note that classes *implement* interfaces (keyword `implements`), classes *extend* another class, and interfaces *extend* other interfaces (keyword `extends`)
 * When making `super` calls explicit in constructors (as first statement), where appropriate, is there always a superclass constructor that's called?
 * Are *control structures* syntactically correct?
+  * Mind syntax rules for if-statements, loops, switch statements/expressions etc.
 
 #### Checking scope, types and initialization of variables
 
