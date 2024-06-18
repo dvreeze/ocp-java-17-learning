@@ -89,6 +89,9 @@ Topics in chapter 1 (from this OCP Java SE 17 Developer Study Guide):
     * Passing a variable as argument to a method also counts as "using" it, so that requires first initializing it (so the method can always assume initialized parameters)
   * Yet *instance variables and class variables* are *automatically initialized* with default values (if not explicitly initialized)
     * For all reference types (e.g. `String`), this default value is `null`
+    * Maybe it was not mentioned in chapter 1, but the following is true for final (non-)static fields (see the JLS):
+      * *Final static fields* must be explicitly initialized *precisely once*, *during class initialization* (so *all static fields are always initialized during class initialization*)
+      * *Final instance fields* must be explicitly initialized *precisely once*, *during object construction* (so *all instance fields are always initialized during object construction*)
   * Local variables can use the *var* syntax, to have the compiler infer the type
   * This is called *local variable type inference*, making clear what it is and is not about
     * In this context, method/constructor parameters are not considered local variables, so *var* cannot be used there (let alone for fields)
