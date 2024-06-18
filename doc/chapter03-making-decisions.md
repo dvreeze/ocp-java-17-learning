@@ -215,7 +215,8 @@ lead to a value (of the correct type), or throw an exception. If the entire swit
 type `void`), this is not needed, of course.
 
 A great feature of switch expressions versus switch statements is that there is *no more need for break statements*,
-and that *fall-through behaviour is impossible*.
+and that *fall-through behaviour is impossible*. This also means that it does not matter where the `default` case is
+in the switch expression.
 
 Grammar (simplified):
 
@@ -237,8 +238,8 @@ switchLabel:
 ```
 
 As for *typing*, we have the following requirements:
-* the type of the "target expression" of the switch expression is restricted in exactly the same way as for switch statements
-* the "case values" are also restricted in exactly the same way as for switch statements
+* the type of the "target expression" of the switch expression is *restricted in exactly the same way* as for switch statements
+* the "case values" are also *restricted in exactly the same way* as for switch statements
 * if the switch expression returns a value, this value must be assignable to the expected return type
 * for "case blocks" this means that all code paths that don't throw an exception must lead to a "yield statement" returning a value
 * to make sure that a value (of the correct type) is always returned, the *default case* is needed, unless the compiler knows it is not needed
