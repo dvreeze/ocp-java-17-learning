@@ -25,8 +25,8 @@ The following is true for operators in Java:
 * The *associativity* of operators can be *left-to-right* or *right-to-left*
 * *Operator precedence* determines which operators are evaluated in what order
 * This order can be changed by the use of *parentheses* (which form "open-close pairs", and must nest properly)
-* *Assignment operators* are also operators; they have side effects, namely updating a variable
-* *Post-unary operators* and *pre-unary operators* also have side effects, like assignments do
+* *Assignment operators* are also operators; they have *side effects*, namely updating a variable
+* *Post-unary operators* and *pre-unary operators* also have *side effects*, like assignments do
 * Some operators are *short-circuiting*, where evaluation stops when the result is already known
 
 The following table of Java operator precedence (from the above-mentioned study guide) should be memorized by heart:
