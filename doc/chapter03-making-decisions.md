@@ -123,7 +123,7 @@ Consider the same example, written in a more verbose way:
 
 ```java
 boolean isJavaProgrammer(Employee employee) {
-    if (employee instanceof Developer developer) {
+    if (employee instanceof final Developer developer) { // Added "final" modifier
         return developer.getProgrammingLanguages().contains("Java");
     } else {
         return false;
