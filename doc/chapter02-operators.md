@@ -70,6 +70,21 @@ some rows and combining others, we get this table of operator precedence:
 | Ternary             | booleanExpr ? expr1 : expr2 | right-to-left |
 | Assignment          | =, +=, -=, *=, /=, %= etc.  | right-to-left |
 
+The *bitwise complement* operator (`~`) *flips the bits*. This example shows it in action:
+
+```java
+var maxByte = (int) Byte.MAX_VALUE; // 127
+var minByte = (int) Byte.MIN_VALUE; // -128
+
+// Indeed, they are each other's bitwise complement
+System.out.println(Integer.toBinaryString(maxByte)); // prints "1111111"
+System.out.println(Integer.toBinaryString(minByte)); // prints "11111111111111111111111110000000"
+
+// It is easy to compute the bitwise complements
+var check1 = (minByte == -1 * maxByte - 1); // true
+var check2 = (maxByte == -1 * minByte - 1); // true
+```
+
 ### Unary operators
 
 Below "int types" stands for primitive integer numeric types, which includes char (besides byte, short, int and long).
