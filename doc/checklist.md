@@ -63,7 +63,7 @@ Examples of additional rules checked by the compiler, other than syntax/scope/ty
   * When local variables (in the broad sense) are used in a *local or anonymous class*, they must be *effectively final*
   * When local variables (in the broad sense) that have already been declared are used in the *resource specification* of a *try-resources statement*, they must be *effectively final*
 * Does the compiler detect *unreachable code*?
-* Is a method *correctly overridden*? Method overloading only applies to methods having the *same signature* as methods in a supertype
+* Is a method *correctly overridden*? Method overriding only applies to *instance methods* having the *same signature* as *non-private instance methods* in a supertype
 * Is a method *correctly overloaded*? Method overloading only applies to methods having the *same name* but different signature
 * ...
 
