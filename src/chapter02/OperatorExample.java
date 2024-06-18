@@ -31,8 +31,8 @@ public class OperatorExample {
         float floatVar;
         double doubleVar;
 
-        byte twoAsByte = (byte) 2;
-        short threeAsShort = (short) 3;
+        byte twoAsByte = 2;
+        short threeAsShort = 3;
 
         System.out.println();
 
