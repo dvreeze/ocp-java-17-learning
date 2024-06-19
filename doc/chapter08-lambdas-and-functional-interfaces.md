@@ -44,7 +44,7 @@ The *lambda parameter lists* can be given in one of 3 styles:
   * a special case is having just one parameter, where we can leave out the parentheses; e.g. `s -> s.isEmpty())`
 * all parameters are *var parameters*; e.g. `(var s, var t) -> s.startsWith(t)` or `(final var s, final var t) -> s.startsWith(t)` etc.
 
-It is not allowed to mix these styles. For all parameters the same style is required (typed or without types or `var`).
+It is not allowed to mix these styles. For all parameters the same style is required (*typed*, or *without types*, or `var`).
 
 Note that in most cases (especially if the parameters are given without type in the lambda) we indeed context to type the lambda as
 functional interface type. The parameters must match the parameters of the single abstract method in the functional interface
