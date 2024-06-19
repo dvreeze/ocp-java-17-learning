@@ -286,7 +286,7 @@ As an example of a "custom Stream method", interface type `DoubleStream` has met
 with primitives (in this case "double" values), and use no generics at all.
 
 For `IntStream` and `LongStream` (and NOT for `DoubleStream`) there are also static factory methods to create "ranges":
-* `range(long, Long)` and `rangeClosed(long, long)` for `LongStream`, and similar methods for `IntStream`
+* `range(long, long)` and `rangeClosed(long, long)` for `LongStream`, and similar methods for `IntStream`
 
 *Terminal operations* for primitive streams are also relatively easy to predict, and quite similar to those for Object Streams.
 Some differences (other than non-generic parameter and return types) are:
