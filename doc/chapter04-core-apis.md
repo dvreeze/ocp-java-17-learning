@@ -75,11 +75,11 @@ Some commonly shared methods are:
 * `charAt(int)` (from `CharSequence`)
 
 Other important *instance methods of class StringBuilder* are:
-* `append(String)` (many overloads)
-* `insert(int, String)` (many overloads)
-* `delete(int, int)`, `deleteCharAt(int)`
-* `replace(int, int, String)` (quite different from its String counterpart)
-* `reverse()`
+* `append(String)` (many overloads), returning a reference to this object
+* `insert(int, String)` (many overloads), returning a reference to this object
+* `delete(int, int)`, `deleteCharAt(int)`, returning a reference to this object
+* `replace(int, int, String)` (quite different from its String counterpart), returning a reference to this object
+* `reverse()`, returning a reference to this object
 * `toString()` (from Object, but in this case building the result String from the StringBuilder)
 
 Back to `String`. We know that class `String` uses value equality (or logical equality) for string comparisons using
