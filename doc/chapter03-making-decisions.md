@@ -155,7 +155,8 @@ The other *switch case* is the "default case", which:
 * followed by a colon
 * followed by a branch, which is zero or more statements
 * there can be only 1 default case at most in the switch statement, or else the compiler emits an error
-* this should be the last case of the switch statement, but this is not checked by the compiler
+* for clarity, this should be the last case of the switch statement, but this is not checked by the compiler
+* yet the "default case" does not have to be the last one; it does not even matter where it occurs except for "fall-through" behaviour if it does not end with a `break` statement
 * for consistency, the default case should also end with a "break statement"
 
 Grammar (simplified, and using "wrong" name "switchCase"):
@@ -215,8 +216,7 @@ lead to a value (of the correct type), or throw an exception. If the entire swit
 type `void`), this is not needed, of course.
 
 A great feature of switch expressions versus switch statements is that there is *no more need for break statements*,
-and that *fall-through behaviour is impossible*. This also means that it does not matter where the `default` case is
-in the switch expression.
+and that *fall-through behaviour is impossible*. It does not matter where the `default` case is in the switch expression.
 
 Grammar (simplified):
 
@@ -300,7 +300,7 @@ As for *correct use of types*, the condition must be a *boolean expression*.
 
 Like for regular while-loops, be aware of *infinite loops*.
 
-Note that variables introduced in the statement to iterate over are no longer in scope in the loop condition!
+Note that variables introduced in the statement to iterate over are *no longer in scope in the loop condition*!
 
 ### For-loops
 

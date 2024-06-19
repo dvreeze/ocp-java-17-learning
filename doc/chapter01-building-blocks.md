@@ -65,7 +65,7 @@ Topics in chapter 1 (from this OCP Java SE 17 Developer Study Guide):
     * Compare `Integer.parseInt("123")` (returning an `int`) with `Integer.valueOf("123")` (returning an `Integer`)
   * Autoboxing and unboxing
   * Also know the corresponding literals well (note that float literals need an "f" suffix; otherwise it's a `double`)
-    * That includes octal, hexadecimal and binary number literals
+    * Also know octal, hexadecimal and binary number literals
   * Underscores in numeric literals
     * Not allowed at beginning and end, and not allowed directly before or after decimal point
   * *Text blocks* (also known as multi-line strings), and *incidental versus essential whitespace*
@@ -107,7 +107,7 @@ Topics in chapter 1 (from this OCP Java SE 17 Developer Study Guide):
   * Understanding when there are no more references to an object (then the object is *eligible for GC*)
 
 It is also important to have a clear mental picture of:
-* *references* (to an object, or null) versus *primitive values*
+* *references* (to an object, or `null`) versus *primitive values*
 * *stack* versus *heap* data
 * *call-by-value* where the value is either primitive data or references (to an object or null)
 * *eligibility for garbage collection*

@@ -30,6 +30,9 @@ public class SwitchStatementExample {
         switch (n) {
             case 2:
             case 4:
+            default: // default case can be anywhere
+                evenAndSmall = Optional.empty();
+                break;
             case 6, 8, 10: case 12, 14:
             case 16, 18:
                 evenAndSmall = Optional.of(true);
@@ -37,9 +40,6 @@ public class SwitchStatementExample {
             case 1, 3, 5: case 7, 9:
             case 11, 13, 15: case 17:
                 evenAndSmall = Optional.of(false);
-                break;
-            default:
-                evenAndSmall = Optional.empty();
                 break;
         }
         return evenAndSmall;

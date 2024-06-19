@@ -167,19 +167,21 @@ x = x++; // returns 4, not 5; the post-increment got lost
 
 The *comparison operators* "equal-to" (`==`) and "not-equal-to" (`!=`) mean different things for primitives and reference types:
 * For *primitives* the operand types must "match", and equality is value equality for primitive data
-* For *reference types* true is returned if both operands reference the same object or if both operands are null references
+* For *reference types* `true` is returned if both operands reference the same object or if both operands are `null` references
+  * If the compiler knows the operand types are not compatible (e.g. `String` and `Number`), the comparison does not compile
 
-Equality comparisons for reference types should normally be done using method `Object.equals`, instead of using comparison operators.
+Equality comparisons for reference types should normally be done using method `Object.equals(Object)`, instead of using comparison
+operators. This method can compare "anything" with "anything" (for better or for worse).
 
 *Relational operators* `<`, `<=` etc. only take numeric operands.
 
-The *instanceof* relational operator works on reference types. True is returned if the value to check is not null and
+The *instanceof* relational operator works on reference types. True is returned if the value to check is not `null` and
 can safely be cast to the target type. This operator can be used to make casting safer. If the compiler can determine that
 a cast cannot be successful from a typing perspective, a compilation error will result.
 
 *Logical operators* `&`, `|` and `^` mean different things for boolean types and numeric types:
 * For boolean types, they are the logical operators "logical AND", "logical OR" and "logical XOR", respectively
-* For numeric types, they are bitwise operators
+* For numeric types, they are bitwise operators (that we do not have to know about, other than the fact that they exist)
 
 *Conditional operators* `&&` and `||` (conditional inclusive OR) take boolean operands. They are *short-circuit* operators
 that do not evaluate the right-hand operand if that is not needed for computing the result of the operation.
