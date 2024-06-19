@@ -75,7 +75,8 @@ So the 2 method signatures (including the parameter names) are:
 
 The *return type* is mandatory, even if it is `void`. If it is not `void`, a `return` statement in the method body is required,
 and it must include the primitive or reference to return. For non-`void` return types, *all code paths* in the method body
-must lead to such a `return` statement or an exception.
+must lead to such a `return` statement or an exception. *Conceptually*, think of a *total function*
+`java.util.function.Function<T, R>` in that case (i.e. a "total function", module thrown exceptions).
 
 The *method name* by convention starts with a lowercase letter, although this is not required. Recall from chapter 1
 that each *identifier* (and therefore each method name) must obey the following requirements:
