@@ -69,6 +69,9 @@ If an interface is intended to be a functional interface, it makes sense to use 
 to make that intention clear to the compiler (and readers of the code), leading to a compilation error if the interface
 is not a functional interface.
 
+For the exam it is important to think about the following: when asked which interfaces are valid functional interfaces,
+check not only the functional interface requirements, but first check whether the interface is by itself a valid interface.
+
 ### Using method references
 
 Functional interfaces can always be instantiated with a lambda, but sometimes it is more convenient to replace the lambda
