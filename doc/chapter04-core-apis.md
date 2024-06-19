@@ -218,7 +218,7 @@ or short strings like "Asia/Kolkata".
 
 Types `LocalDate`, `LocalTime`, `LocalDateTime` and `ZonedDateTime` all have static method `now`.
 
-They also have methods called `of`. For example:
+They also have static methods called `of`. For example:
 
 ```java
 LocalDate.of(2024, Month.MAY, 9)
