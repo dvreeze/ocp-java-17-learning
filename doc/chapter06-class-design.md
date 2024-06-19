@@ -101,6 +101,9 @@ Some important additional *rules about constructors* are:
 * If a constructor makes no explicit `this()` or `super()` call (as first statement), the *compiler inserts* `super()` with no arguments
 * If a constructor calls `super()`, it must be *the first statement in the constructor body* (analogous to `this()`)
 
+If the superclass has only one constructor, taking one or more parameters, and no subclass constructor invokes this
+superclass constructor (through a `super()` call), the code will not compile.
+
 A simple example of compiler-generated constructor code:
 
 ```java
