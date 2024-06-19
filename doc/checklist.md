@@ -72,6 +72,10 @@ Examples of additional rules checked by the compiler, other than syntax/scope/ty
   * When local variables (in the broad sense) are used in a *local or anonymous class*, they must be *effectively final*
   * When local variables (in the broad sense) that have already been declared are used in the *resource specification* of a *try-resources statement*, they must be *effectively final*
 * Does the compiler detect *unreachable code*?
+  * For example: code directly after a `break`, `continue` or `return` statement that can never be reached will be rejected by the compiler
+  * Same for code after `while (true) {}`, for example
+  * Summarized: if the compiler can detect that all code paths make a subsequent statement unreachable, it will reject that code
+  * See for example [Java unreachable statements](https://www.baeldung.com/java-unreachable-statements)
 * Is a method *correctly overridden*? Method overriding only applies to *instance methods* having the *same signature* as *non-private instance methods* in a supertype
 * Is a method *correctly overloaded*? Method overloading only applies to methods having the *same name* but different signature
 * ...
