@@ -74,15 +74,15 @@ So the 2 method signatures (including the parameter names) are:
 * *strictfp*: used for making floating-point computations portable (out of scope here)
 
 The *return type* is mandatory, even if it is `void`. If it is not `void`, a `return` statement in the method body is required,
-and it must include the primitive or object to return. For non-`void` return types, all code paths in the method body must lead
-to such a `return` statement or an exception.
+and it must include the primitive or reference to return. For non-`void` return types, *all code paths* in the method body
+must lead to such a `return` statement or an exception.
 
 The *method name* by convention starts with a lowercase letter, although this is not required. Recall from chapter 1
 that each *identifier* (and therefore each method name) must obey the following requirements:
 * Identifiers can contain letters, digits, currency symbols and underscores
 * But they cannot start with a digit, and they cannot be just an underscore
 * And they cannot be *reserved words* (note that "var" is not a reserved word, but a "reserved type name")
-* And they cannot be "word" literals like true, false and null
+* And they cannot be "word" literals like `true`, `false` and `null`
 
 The *parameter list* has mandatory *parentheses*, that surround zero or more *comma-separated* parameters.
 Each *parameter* consists of a *type* followed by a *parameter name*.
@@ -93,7 +93,7 @@ compilation error.
 
 The *exception list* will be treated in chapter 11.
 
-The *method body* is a statement, typically a code block. It is mandatory unless the method is abstract (in which case we need
+The *method body* is a statement, in particular a code block. It is mandatory unless the method is abstract (in which case we need
 a semicolon to finish the abstract method declaration).
 
 ### Declaring local and instance variables
