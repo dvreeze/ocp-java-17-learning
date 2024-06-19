@@ -434,7 +434,7 @@ A *static nested class*:
 * can be `abstract` or `final`
 * can be declared `public`, `protected`, package-private or `private`
 
-Note that nested interfaces, enums and records are always `static` members of the outer class, even if the keyword `static`
+Note that *nested interfaces, enums and records* are always `static` members of the outer class, even if the keyword `static`
 is missing.
 
 A *local class*:
