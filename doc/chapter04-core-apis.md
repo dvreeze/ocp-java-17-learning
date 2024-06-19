@@ -28,16 +28,20 @@ to a method (like `substring`), the start index is *inclusive* and the end index
 
 Some important *instance methods of class String* (or sets of overloaded String instance methods) are:
 * `length()`
-* `charAt(int)` (may throw a `StringIndexOutOfBoundsException`)
-* `indexOf(String)`, `indexOf(int)` and 2 other overloads (may return `-1` instead of throwing an exception)
+* `charAt(int)` (may throw an unchecked `StringIndexOutOfBoundsException`)
+* `indexOf(String)` for finding a substring, `indexOf(int)` for finding a character, and 2 other overloads (may return `-1` instead of throwing an exception)
 * `substring(int)` and `substring(int, int)`
 * `toLowerCase()`, `toUpperCase()` and overloads taking a Locale
 * `equals(Object)` (from the `Object` super-class), `equalsIgnoreCase(String)`
 * `startsWith(String)`, `endsWith(String)`, `contains(CharSequence)`
 * `replace(CharSequence, CharSequence)` (taking 2 characters, or 2 strings), as opposed to `replaceAll(String, String)` (taking a regular expression as first parameter)
 * `strip()`, `stripLeading()`, `stripTrailing()`, `trim()` (method "trim" is older, using a less advanced definition of whitespace)
-* `indent(int)`, `stripIndent()` (these methods are powerful, but mind line break normalization and trailing line break), and `lines()` (returning a Stream of strings)
+* `indent(int)`, `stripIndent()` (these methods are powerful, but mind *line break normalization* and *trailing line break*), and `lines()` (returning a Stream of strings)
   * some exam questions involving multiline string literals and methods like `indent(int)`, `stripIndent()` etc. are to be expected on the exam; getting some experience with this topic pays off
+  * `"a\r\nb\r\nc".indent(0)` returns `"a\nb\nc\n"` (no indentation, but normalizing of newlines and ending with a newline)
+  * `"a\nb\nc".indent(2)` returns `"  a\n  b\n  c\n"` (indentation, and adding newline)
+  * `"   a\n\t\t\tb\nc\n".indent(-2)` returns `" a\n\tb\nc\n"` (removing indents, to the extent possible per line)
+  * `"  a\n   b\n  c".indent(-2).equals("  a\n   b\n  c".stripIndent() + "\n")` returns `true` (`stripIndent` normalizes newlines but does not add a trailing one)
 * `translateEscapes()` (since Java 15)
 * `isEmpty()`, `isBlank()`
 * `formatted(Object...)` (since Java 15; see static method `format(String, Object...)`)
