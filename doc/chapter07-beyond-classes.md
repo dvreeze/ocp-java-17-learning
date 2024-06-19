@@ -390,6 +390,16 @@ Finally, it is also possible to:
 Yet it is *not allowed to add instance fields*, not even private ones, which makes sense because a record is essentially
 *a struct of data components*.
 
+### Take-away points about enums, sealed interfaces/classes and records
+
+This is my personal take on enums, sealed interfaces/classes and records. A lot of what is restricted and what is allowed
+when creating enums, sealed type hierarchies and records makes a lot of sense, if we consider what these concepts are:
+* An *enum* is a *fixed set of constants* (as `public static final` fields)
+* A *sealed interface or class hierarchy* is a *fixed type (inheritance) hierarchy* with the sealed interface/class at the top, except for `non-sealed` subtypes which can have any subtypes
+* A *record* has a *fixed set of instance fields* (as `private final` instance fields), called the *components* of the record
+
+Recall that an enum can have zero constants, and a record can have zero components.
+
 ### Creating nested classes
 
 A *nested class* is a class defined with another class. There are 4 flavours:
