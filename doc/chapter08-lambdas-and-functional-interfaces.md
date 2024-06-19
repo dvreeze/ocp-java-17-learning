@@ -232,9 +232,9 @@ parameters". This illustrates that modern Java (with its language features and s
 ### Working with variables in lambdas
 
 From a *lambda body* inside a method we can access:
-* instance fields (if the method is not static) and static fields
-* lambda parameters
-* local variables and method parameters, provided they are *effectively final*
+* instance *fields* (if the method is not static) and static fields
+* *lambda parameters*
+* *local variables* and method parameters (from outside the lambda), provided they are *effectively final*
 
 Note that *local variables cannot shadow each other* in Java. So redefining a variable (e.g. as lambda parameter) where
 a variable with the same name is already in scope is disallowed by the Java compiler.
