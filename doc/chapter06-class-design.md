@@ -161,7 +161,7 @@ Note that the book is wrong here. It says instance field declarations come befor
 
 ### Inheriting members
 
-A superclass and subclass may have *methods with the same method signature*. If they are (non-private) *instance methods*,
+A superclass and subclass may have *methods with the same method signature*. If they are *non-private instance methods*,
 the subclass is said to *override* the corresponding superclass method. The subclass method may still refer to the superclass
 method using the `super` keyword.
 
@@ -169,7 +169,7 @@ method using the `super` keyword.
 it should be possible to initialize a *variable declared to be of the supertype* with an *instance of the subtype without
 breaking anything*. This implies that the method override in the subclass should *not break the API contract* of the superclass
 method. In particular:
-* The (instance) method in the subclass must have the *same method signature* as the (instance) method in the superclass, or else we have no overriding
+* The (instance) method in the subclass must have the *same method signature* as the non-private (instance) method in the superclass, or else we have no overriding
 * The method in the subclass must be *at least as accessible* as the method in the superclass
 * If the method returns a value, its type must be the *same type or a subtype of the return type* of the superclass method (*covariant return types*)
 * The subclass method must *not throw any additional/broader checked exceptions* that are not allowed by the superclass method 
@@ -188,7 +188,7 @@ If *fields* in a superclass and subclass have the same name, the two fields are 
 the subclass *hides* the one from the superclass. The *type of the reference variable* determines whether the subclass
 or superclass field is referenced, which is quite different from method overriding and polymorphism.
 
-*Final instance/static methods* cannot be overridden in subclasses.
+*Final instance methods* cannot be overridden in subclasses, and *final static methods* cannot be hidden in subclasses.
 
 ### Creating abstract classes
 
