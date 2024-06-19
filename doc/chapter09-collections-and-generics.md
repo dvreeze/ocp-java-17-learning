@@ -172,7 +172,7 @@ and [java.util.Deque](https://docs.oracle.com/en/java/javase/17/docs/api/java.ba
 
 It has pairs of methods where one method may throw an exception and the other method returns a special value instead (like
 a `boolean` or `null`). In particular:
-* method `add(e)` (from the Collection interface) throwing an exception if no space is available, versus `offer(E)`, which returns `false` if the element was not added
+* method `add(E)` (from the Collection interface) throwing an exception if no space is available, versus `offer(E)`, which returns `false` if the element was not added
 * method `remove()` to remove the head, and throwing an exception if empty, versus `poll()`, returning `null` if empty
 * method `element()`, retrieving the head without removing it, and throwing an exception if empty, versus `peek()`, returning `null` if empty
 
@@ -215,7 +215,7 @@ Two *main implementations* of interface `java.util.Map<K, V>` are:
 
 The static *factory methods* for *Map* creation are similar to the ones for the different collections, except that pairs of
 keys and values must be passed to the factory methods. Static methods like `java.util.Map.of(K, V, K, V, K, V)` are not very
-helpful in that regard. It is better to use static method `java.util.Map.ofEntries(Map.Entry<? extends K, ? extends V>)`
+helpful in that regard. It is better to use static method `java.util.Map.ofEntries(Map.Entry<? extends K, ? extends V>...)`
 instead, creating the (*unmodifiable*) entries with static method `java.util.Map.entry(K, V)`. Recall that "unmodifiable"
 implies non-`null` (in this case both for keys and values), and that "mutator" methods throw an `UnsupportedOperationException`.
 Consistently with collections, these factory methods indeed create *unmodifiable Maps*.
@@ -305,7 +305,7 @@ Functional interface `Comparator<T>` has several nice methods (static methods an
 Before calling one of the overloaded `Collections.binarySearch` methods (with or without *Comparator* argument), make
 sure to *first have called an appropriate sorting method* on the collection. Also note that if an element is not found,
 and its index would be `idx` if inserted at the correct position (to keep the collection ordered), the `binarySearch`
-call returns `-idx -1`.
+call returns `-1 * idx - 1`.
 
 Note that for example a `TreeSet.add` call may lead to a `ClassCastException` at runtime because of a failing cast to
 type `java.lang.Comparable`.
