@@ -150,16 +150,20 @@ An important *field* of array types is `length`.
 
 Some (overloaded) array support (static) methods are:
 * `java.util.Arrays.sort`
-* `java.util.Arrays.binarySearch` (returning index, if array has already been sorted; mind specific negative value `-insertionPoint - 1` if not found)
+  * For example: `public static <T> void sort(T[] a, Comparator<? super T> c)`
+* `java.util.Arrays.binarySearch` (returning index, if array *has already been sorted*; mind specific negative value `-insertionPoint - 1` if not found)
+  * For example: `public static <T> int binarySearch(T[] a, T key, Comparator<? super T> c)`
 * `java.util.Arrays.compare` (for arrays of the same type; returning number < 0 if first array is lexicographically "smaller" than the second one, etc.)
+  * For example: `public static <T> int compare(T[] a, T[] b, Comparator<? super T> c)`
 * `java.util.Arrrays.mismatch` (returns first index where the 2 arrays differ, and -1 if they are equal)
+  * For example: `public static <T> int mismatch(T[] a, T[] b, Comparator<? super T> c)`
 
 Note that for some of these methods there are non-generic and generic overloads. For example, the non-generic `sort` method
 (taking Object arrays) may throw a ClassCastException at runtime if elements are not comparable, whereas the generic variants
 have extra generic `Comparator` method parameters to help prevent those exceptions. The same is true for `binarySearch`.
 
 What does "smaller" (in lexicographical array comparisons) mean:
-* null is smaller than any other value
+* `null` is smaller than any other value
 * for numbers, normal numeric order is used
 * for strings, if one is a prefix of another string, it is considered smaller
 * for strings/characters, numbers are smaller than letters
