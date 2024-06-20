@@ -532,8 +532,9 @@ How to quickly check *stream pipelines*:
   * So do *not think in terms of intermediate collections, for there aren't any* in a single stream pipeline (with one terminal operation at the end)
   * Of course, keep *short-circuiting* behaviour in mind (for `allMatch` etc.)
 * Mind the *types of streams and results* in a stream pipeline, and the operations that are allowed
-  * Mind correct "hopping between primitive and non-primitive streams"
+  * Mind correct "hopping between primitive and non-primitive streams" (after all, an `IntStream` cannot be collected into a `List` of int primitives, for example)
   * Especially with "primitive streams", mind the operations that are and are not allowed (e.g. you cannot pass a `Collector` to a `collect` call in primitive streams)
+* Mind *checked exceptions* thrown in lambdas, that have to be wrapped in unchecked exceptions, in order to use the lambda as `Function`, `Predicate`, `Consumer`, `Supplier` etc.
 * Mind the difference between *throwing an exception* and *returning an exception as lambda result*
 
 And, as always, read questions and answers carefully!
