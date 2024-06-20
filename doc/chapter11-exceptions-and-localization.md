@@ -89,6 +89,7 @@ Some own remarks about exceptions:
 Some *unchecked exceptions* to know by heart are:
 * `java.lang.ArithmeticException`, thrown when trying to divide by zero
 * `java.lang.ArrayIndexOutOfBoundsException`, thrown when using an illegal index to access an array
+  * along with `java.lang.StringIndexOutOfBoundsException` it is a subtype of unchecked exception type `java.lang.IndexOutOfBoundsException`
 * `java.lang.ClassCastException`, thrown when trying to cast an object to a class of which it is not an instance (if the compiler could not catch this, of course)
 * `java.lang.NullPointerException`, thrown when there is a `null` reference where an object is required
 * `java.lang.IllegalArgumentException`, thrown when a method argument is illegal or inappropriate
