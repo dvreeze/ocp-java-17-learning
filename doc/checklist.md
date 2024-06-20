@@ -80,6 +80,21 @@ Examples of additional rules checked by the compiler, other than syntax/scope/ty
 * Is a method *correctly overloaded*? Method overloading only applies to methods having the *same name* but different signature
 * ...
 
+### Checks for specific language constructs and APIs
+
+It makes sense to do specific checks for certain language constructs and certain APIs, such as for:
+* do-while-loops
+* switch statements/expressions
+* Java pattern matching and flow scope
+* try-statements and try-resources statements
+* lambdas and functional interfaces
+* immutable `String` and mutable `StringBuilder` APIs
+* immutable `java.time` API
+* NIO.2 API (e.g. checked exceptions inside lambdas typed as functional interfaces not expecting any checked exceptions)
+* JDBC
+
+TODO Make such a list of language constructs and APIs on the one hand, with specific checks for them on the other hand.
+
 ### Quickly checking whether a code snippet runs successfully
 
 Below, assume that the code snippet to check compiles successfully. Does it run successfully, or does it throw an exception,
