@@ -187,7 +187,7 @@ So this leads to a compilation error:
 ```java
 try {
     doSomeStuff();
-} catch (FileNotFoundException | IOException e) {
+} catch (FileNotFoundException | IOException e) { // Not allowed by the compiler
     handleIOException(e);
 }
 ```
