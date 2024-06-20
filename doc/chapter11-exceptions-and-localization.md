@@ -94,6 +94,7 @@ Some *unchecked exceptions* to know by heart are:
 * `java.lang.NullPointerException`, thrown when there is a `null` reference where an object is required
 * `java.lang.IllegalArgumentException`, thrown when a method argument is illegal or inappropriate
   * subtype `java.lang.NumberFormatException`, thrown when trying to convert a String of the wrong format to a number
+* `java.lang.IllegalStateException`, thrown when the program is not in an appropriate state for the requested operation
 
 Note that since Java 17 NullPointerExceptions are "more helpful", showing the object reference that triggered the NPE.
 These helpful exception messages can be disabled in the `java` command by JVM option:
