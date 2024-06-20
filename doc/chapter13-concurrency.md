@@ -574,6 +574,21 @@ In addition, a `ReentrantLock` can do the following:
 
 There is also a `ReentrantReadWriteLock`, which is quite useful but not necessary to know about for the exam.
 
+In the following terrible code the lock is not released the same number of times as it is acquired, leading to the program
+hanging indefinitely:
+
+```java
+// Assume this code is running on a thread pool. Very poor code ahead...
+Lock lock = new ReentrantLock();
+lock.lock();
+if (lock.tryLock()) { // We should not do this, of course
+    // Do something
+}
+// Not in a "finally" clause, but foremost the lock was acquired twice and released only once.
+// As a result, the program hangs indefinitely.
+lock.unlock();
+```
+
 #### Orchestrating tasks with a CyclicBarrier
 
 We can use a `java.util.concurrent.CyclicBarrier` if we want a given number of "parties" (i.e. threads) to all reach a
