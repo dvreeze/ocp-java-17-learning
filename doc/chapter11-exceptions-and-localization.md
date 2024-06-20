@@ -425,8 +425,8 @@ A `java.util.Locale` represents a language, or the combination of a language and
 a so-called variant, but that's ignored here.
 
 The current Locale can be found with static method `Locale.getDefault()`. Locales created using a constructor can be
-nonsensical, but Java *will not complain about that*. Method `Locale.setDefault(Locale)` only changes the default Locale
-in the current JVM (so in the same OS process).
+nonsensical, but Java *will not complain about that* (during construction). Method `Locale.setDefault(Locale)` only changes
+the default Locale in the current JVM (so in the same OS process).
 
 For example (for some predefined Locales):
 
