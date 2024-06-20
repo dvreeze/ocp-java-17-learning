@@ -938,6 +938,9 @@ the `walk` method will track all visited paths, and throw a `FileSystemLoopExcep
 There is a more convenient `Files` static method to traverse directory trees, though, namely:
 * `public static Stream<Path> find(Path start, int maxDepth, BiPredicate<Path, BasicFileAttributes> matcher, FileVisitOption... options) throws IOException`
 
+This method takes a "maxDepth" as 2nd parameter, and (unlike for method `walk`) there is *no overload* that does not take
+this "maxDepth" parameter!
+
 The `BiPredicate<Path, BasicFileAttributes>` parameter gives us access to the `BasicFileAttributes`, as well as the `Path`,
 so the file attributes can be queried directly instead of having to call a `Files` method that throws an `IOException`
 that we have to wrap in an unchecked exception (such as `UncheckedIOException`). Of course, the stream returned by the
