@@ -179,6 +179,10 @@ When overriding an instance method, use the *Override* annotation to make that i
 There is a catch, though. If the *superclass instance method is private*, we have *no overriding*, and the superclass and subclass
 methods are *distinct methods*, that have nothing to do with each other, and may have quite different return types.
 
+In order to support *overriding/polymorphism*, all *non-private non-final instance method calls* are so-called *virtual
+method calls*. These are method calls that are *bound to a method at runtime and not at compile-time*. For these method
+calls, the compiler does not have enough information to bind them to methods at compile-time.
+
 For *static methods* with the same signature in parent and child classes, we have *no overriding but method hiding*.
 The rules for *static method hiding* are the same rules as (above) for *instance method overriding*, plus the additional
 rule that if the parent class method is *static*, then so must the child class method be static (and the other way around).
