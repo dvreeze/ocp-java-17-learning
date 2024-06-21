@@ -123,6 +123,7 @@ The following holds for binary arithmetic operators:
   * Division by zero for `double` and `float` returns `Infinity` (or `-Infinity`) instead of throwing an exception!
   * In particular, `Double.valueOf(5.0 / 0).isInfinite()` returns `true`
   * So does `Double.valueOf(5.0 / 0).equals(Double.POSITIVE_INFINITY)`
+  * Or `5.0 / 0 == Double.POSITIVE_INFINITY`
 * There is also a `+` addition operator for Strings, for string concatenation
 * Note (for integer types) that if `x / y == i && x % y == j`, then `i * y + j == x`
 * Also note (for integer types) that `-x % y` is equal to `-(x % y)`
