@@ -188,6 +188,15 @@ If *fields* in a superclass and subclass have the same name, the two fields are 
 the subclass *hides* the one from the superclass. The *type of the reference variable* determines whether the subclass
 or superclass field is referenced, which is quite different from method overriding and polymorphism.
 
+Without variable hiding, even static fields from a supertype can be accessed via the subtype:
+
+```java
+class X { static int i = 3; }
+class Y extends X {}
+
+System.out.println(Y.i); // prints 3
+```
+
 *Final instance methods* cannot be overridden in subclasses, and *final static methods* cannot be hidden in subclasses.
 
 ### Creating abstract classes
