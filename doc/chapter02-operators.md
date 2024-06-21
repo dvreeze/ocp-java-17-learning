@@ -119,7 +119,8 @@ The following holds for binary arithmetic operators:
   * Multiplication (`*`)
   * Division (`/`)
   * Modulus (`%`)
-* Division for integer types returns an integer, namely a "floor value" (unless dividing by zero)
+* Division for integer types returns an integer, namely a "floor value" (unless dividing by zero, for integer types)
+  * Division by zero for `double` and `float` returns `Infinity` (or `-Infinity`) instead of throwing an exception!
 * There is also a `+` addition operator for Strings, for string concatenation
 * Note (for integer types) that if `x / y == i && x % y == j`, then `i * y + j == x`
 * Also note (for integer types) that `-x % y` is equal to `-(x % y)`

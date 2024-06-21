@@ -60,7 +60,7 @@ Besides code *explicitly throwing an exception* in application code or third par
 *exceptions are thrown by the Java platform*. For example:
 * trying to access an object where the *reference is a null pointer*
 * trying to access an array member at an *index that is out of bounds*
-* *dividing by zero*
+* *dividing by zero* for integer types (not for `double` and `float`, where division by zero returns `Infinity` or `-Infinity`)
 
 Be aware of the following pitfall: if code throws an exception, while making it impossible to reach code after that,
 the compiler will report an *unreachable code error*! Declaring an unused exception is not considered unreachable code,
@@ -87,7 +87,7 @@ Some own remarks about exceptions:
 ### Recognizing exception classes
 
 Some *unchecked exceptions* to know by heart are:
-* `java.lang.ArithmeticException`, thrown when trying to divide by zero
+* `java.lang.ArithmeticException`, thrown when trying to divide by zero for integer types (not for `double` or `float`)
 * `java.lang.ArrayIndexOutOfBoundsException`, thrown when using an illegal index to access an array
   * along with `java.lang.StringIndexOutOfBoundsException` it is a subtype of unchecked exception type `java.lang.IndexOutOfBoundsException`
 * `java.lang.ClassCastException`, thrown when trying to cast an object to a class of which it is not an instance (if the compiler could not catch this, of course)
