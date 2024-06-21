@@ -257,6 +257,9 @@ Finally, the `java.util.Map<K, V>` interface has the following *looping (instanc
 
 Obviously, some methods are convenience methods that are easily implemented (naively) in terms of other methods (e.g. `isEmpty()` and `containsKey(Object)`).
 
+We should be somewhat aware of methods offered by `Map` sub-interface `java.util.SortedMap<K, V>` and its sub-interface
+`java.util.NavigableMap<K, V>`. On the other hand, those methods are rather self-explanatory (e.g. `pollFirstEntry()`).
+
 ### Comparing collection types
 
 The collection types that are *unmodifiable* (created with method `List.copyOf` etc.) or that *involve sorting* do *not allow null values*.
