@@ -30,12 +30,37 @@ import java.util.stream.Stream;
  */
 public class StreamingFizzBuzz {
 
+    private static final int MAX_NUMBER = 1_000_000;
+
+    // Far more efficient than computing remainder
+
+    private static boolean isDivisibleBy3(int i) {
+        var sumOfDigits =
+                String.valueOf(i).chars().filter(Character::isDigit).map(Character::getNumericValue).sum();
+
+        if (sumOfDigits >= 0 && sumOfDigits < 10) {
+            return sumOfDigits == 3 || sumOfDigits == 6 || sumOfDigits == 9;
+        } else {
+            // Recursive call
+            return isDivisibleBy3(sumOfDigits);
+        }
+    }
+
+    private static boolean isDivisibleBy5(int i) {
+        var s = String.valueOf(i);
+        return s.endsWith("5") || s.endsWith("0");
+    }
+
+    private static boolean isDivisibleBy15(int i) {
+        return isDivisibleBy5(i) && isDivisibleBy3(i);
+    }
+
     private static String convertNumber(int i) {
-        if (i % 15 == 0) {
+        if (isDivisibleBy15(i)) {
             return "FizzBuzz";
-        } else if (i % 3 == 0) {
+        } else if (isDivisibleBy3(i)) {
             return "Fizz";
-        } else if (i % 5 == 0) {
+        } else if (isDivisibleBy5(i)) {
             return "Buzz";
         } else {
             return String.valueOf(i);
@@ -50,25 +75,29 @@ public class StreamingFizzBuzz {
         }
     }
 
+    private static List<String> limitSolution(List<String> solution, int limit) {
+        return solution.stream().limit(limit).toList();
+    }
+
     public static List<String> fizzBuzz1() {
-        return IntStream.rangeClosed(1, 100)
+        return IntStream.rangeClosed(1, MAX_NUMBER)
                 .parallel() // Just for fun
                 .mapToObj(StreamingFizzBuzz::convertNumber)
                 .toList();
     }
 
     public static List<String> fizzBuzz2() {
-        return IntStream.rangeClosed(1, 100)
+        return IntStream.rangeClosed(1, MAX_NUMBER)
                 .parallel() // Just for fun
                 .mapToObj(Objects::toString)
-                .map(s -> getOptionalNumber(s).stream().filter(i -> i % 15 == 0).mapToObj(i -> "FizzBuzz").findFirst().orElse(s))
-                .map(s -> getOptionalNumber(s).stream().filter(i -> i % 3 == 0).mapToObj(i -> "Fizz").findFirst().orElse(s))
-                .map(s -> getOptionalNumber(s).stream().filter(i -> i % 5 == 0).mapToObj(i -> "Buzz").findFirst().orElse(s))
+                .map(s -> getOptionalNumber(s).stream().filter(StreamingFizzBuzz::isDivisibleBy15).mapToObj(i -> "FizzBuzz").findFirst().orElse(s))
+                .map(s -> getOptionalNumber(s).stream().filter(StreamingFizzBuzz::isDivisibleBy3).mapToObj(i -> "Fizz").findFirst().orElse(s))
+                .map(s -> getOptionalNumber(s).stream().filter(StreamingFizzBuzz::isDivisibleBy5).mapToObj(i -> "Buzz").findFirst().orElse(s))
                 .toList();
     }
 
     public static List<String> fizzBuzz3() {
-        return IntStream.rangeClosed(1, 100)
+        return IntStream.rangeClosed(1, MAX_NUMBER)
                 .parallel() // Just for fun
                 .boxed()
                 .collect(Collectors.toMap(Function.identity(), StreamingFizzBuzz::convertNumber))
@@ -84,16 +113,53 @@ public class StreamingFizzBuzz {
         Function<Integer, String> f = StreamingFizzBuzz::convertNumber;
         Collector<Integer, ?, List<String>> collector = Collectors.mapping(f, Collectors.toList());
 
-        return IntStream.rangeClosed(1, 100)
+        return IntStream.rangeClosed(1, MAX_NUMBER)
                 .parallel() // Just for fun
                 .boxed()
                 .collect(collector); // A bit over the top, but still equivalent
     }
 
+    public static List<String> fizzBuzz5() {
+        Collector<Integer, ?, List<String>> collector = Collector.of(
+                ArrayList::new,
+                (accList, nextElem) -> accList.add(convertNumber(nextElem)),
+                (accList1, accList2) -> {
+                    accList1.addAll(accList2);
+                    return accList1;
+                }
+        );
+
+        return IntStream.rangeClosed(1, MAX_NUMBER)
+                .parallel() // Just for fun
+                .boxed()
+                .collect(collector); // A bit over the top, but still equivalent
+    }
+
+    public static List<String> fizzBuzz6() {
+        return IntStream.rangeClosed(1, MAX_NUMBER)
+                .parallel() // Just for fun
+                .boxed()
+                .collect(
+                        ArrayList::new,
+                        (accList, nextElem) -> accList.add(convertNumber(nextElem)),
+                        ArrayList::addAll
+                ); // A bit over the top, but still equivalent
+    }
+
     public static void main(String[] args) {
         fizzBuzz1().forEach(System.out::println);
 
-        if (Stream.of(fizzBuzz1(), fizzBuzz2(), fizzBuzz3(), fizzBuzz4()).distinct().toList().size() != 1) {
+        var limit = 1000;
+        Set<List<String>> partialSolutions = Stream.of(
+                limitSolution(fizzBuzz1(), limit),
+                limitSolution(fizzBuzz2(), limit),
+                limitSolution(fizzBuzz3(), limit),
+                limitSolution(fizzBuzz4(), limit),
+                limitSolution(fizzBuzz5(), limit),
+                limitSolution(fizzBuzz6(), limit)
+        ).collect(Collectors.toSet());
+
+        if (partialSolutions.size() != 1) {
             throw new RuntimeException("Not all FizzBuzz solutions are the same, which is an error");
         }
     }
