@@ -757,6 +757,9 @@ All Java primitives and many well-known Java classes (such as `String` and colle
 *Transient* instance members of a serializable class do not take part in serialization, and get their default values
 (such as `null` for objects) on deserialization.
 
+We can (de)serialize classes transient non-serializable fields, however, if we take more explicit control over (de)serialization
+using methods like `readObject(ObjectInputStream)` and `writeObject(ObjectOutputStream)`.
+
 For versioning of serializable classes, use static field `private static final long serialVersionUID = 1L;` (where the
 constant value is incremented when needed). This "serial version UID" is part of the serialized data, along with the
 non-transient serialized instance fields. On deserialization, a checked `java.io.InvalidClassException` may be thrown
