@@ -76,7 +76,9 @@ Some commonly shared methods are:
 
 Other important *instance methods of class StringBuilder* are:
 * `append(String)` (many overloads), returning a reference to this object
+  * overloads `append(CharSequence, int, int)` and `append(char[], int, int)` append a substring/sub-array of the first parameter
 * `insert(int, String)` (many overloads), returning a reference to this object
+  * overloads such as `insert(int, CharSequence, int, int)` insert a substring of the first parameter
 * `delete(int, int)`, `deleteCharAt(int)`, returning a reference to this object
 * `replace(int, int, String)` (quite different from its String counterpart), returning a reference to this object
 * `reverse()`, returning a reference to this object
@@ -143,6 +145,19 @@ String[] againStrings = (String[]) objects; // works, because we happen to know 
 againStrings[0] = new StringBuilder(); // DOES NOT COMPILE
 
 objects[0] = new StringBuilder(); // throws ArrayStoreException at runtime, because the runtime type is String[]
+```
+
+Be careful with the use of `var` when declaring arrays:
+
+```java
+// This works
+var arr = new int[] { 1, 2, 3};
+
+// This does not compile, because the array type cannot be inferred
+var arr = { 1, 2, 3 };
+
+// Clearly, this does not compile either
+var arr[] = new int[] { 1, 2, 3 };
 ```
 
 An important *field* of array types is `length`.
