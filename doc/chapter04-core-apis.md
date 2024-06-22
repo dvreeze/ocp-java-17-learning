@@ -158,6 +158,9 @@ var arr = { 1, 2, 3 };
 
 // Clearly, this does not compile either
 var arr[] = new int[] { 1, 2, 3 };
+
+// Neither does this compile (we cannot provide the elements as well as set the size)
+var arr = new int[3] { 1, 2, 3 };
 ```
 
 An important *field* of array types is `length`.
