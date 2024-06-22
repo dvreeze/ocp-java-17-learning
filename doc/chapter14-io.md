@@ -427,6 +427,17 @@ var check4 = path9.resolve(path9.relativize(path10)).normalize().equals(path10.n
 var check5 = path10.resolve(path10.relativize(path9)).normalize().equals(path9.normalize());
 ```
 
+On calling method `relativize`, some normalization seems to take place if applicable:
+
+```java
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+Path p1 = Paths.get("/personal/./photos/../readme.txt");
+Path p2 = Paths.get("/personal/index.html");
+Path p3 = p1.relativize(p2); // Returns path "../index.html"
+```
+
 Method `normalize()` removes redundancies, in particular path symbols "." and "..", to the extent possible.
 So `Path.of("../../test.xml").normalize()` can only return the same path, with the repeated ".." path symbols.
 
