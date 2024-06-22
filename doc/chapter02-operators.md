@@ -158,6 +158,8 @@ provided that the integer literal fits in the number range allowed by the type. 
 ```java
 byte b = 45; // max: 127
 b = -112; // min: -128
+
+byte b2 = 'a'; // Assigns 97 to byte variable b2, which is well within the allowed range
 ```
 
 A nice puzzle is this combination of ("self"-)assignment and post-increment:
