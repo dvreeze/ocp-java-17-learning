@@ -527,7 +527,10 @@ How to quickly check *stream pipelines*:
   * So don't we *erroneously reuse an already closed stream*?
   * Do we have 0 or more *intermediate operations* followed by at most *one terminal operation*?
   * Indeed, do we have *exactly one terminal operation at the end*, for else the pipeline does not run?
-  * Are stream pipeline results picked up or ignored?
+  * Are *stream pipeline results* picked up or ignored?
+* Do all intermediate operations and the terminal operation get the *required arguments, of the correct type*?
+  * For example, intermediate operation `peek` takes a `Consumer` and therefore cannot be called without any parameters
+  * As another example, intermediate operation `filter` takes a `Predicate`, not a `Function` returning a `Boolean`
 * Especially for *infinite streams*, reason correctly about *evaluation order* of the stream pipeline (once the terminal operation is called)
   * In particular, *think in terms of one stream element processed (completely) at a time*, to the extent possible (sorting complicates this, of course)
   * So do *not think in terms of intermediate collections, for there aren't any* in a single stream pipeline (with one terminal operation at the end)
