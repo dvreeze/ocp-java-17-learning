@@ -151,7 +151,7 @@ Be careful with the use of `var` when declaring arrays:
 
 ```java
 // This works
-var arr = new int[] { 1, 2, 3};
+var arr = new int[] { 1, 2, 3 };
 
 // This does not compile, because the array type cannot be inferred
 var arr = { 1, 2, 3 };
