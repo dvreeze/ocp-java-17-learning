@@ -103,7 +103,7 @@ a semicolon to finish the abstract method declaration).
 * They occur *in a block* (or in the header of a basic or enhanced *for* statement, or in a "resource specification", or in a type pattern)
 * Typically, that block is a *method body* or a nested block inside a method body
 * These variables are *not implicitly initialized* if an initializer is missing
-* The scope of such a variable is (the remainder of) the block in which it is defined
+* The scope of such a variable is (the remainder of) the *block in which it is defined*
 * But if the variable is of a reference type, the referenced object itself may still exist after the block is executed
 * There is only one *modifier* for local variables, and that is *final* (and the combination `final var` is allowed)
 * Note that for reference types, `final` *only makes the reference final*, not the referenced object
