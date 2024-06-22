@@ -47,6 +47,7 @@ To get a database connection as `java.sql.Connection`, class `java.sql.DriverMan
   * `java.sql.SQLException` is a *checked exception* and is potentially thrown all over the place in JDBC; it is in that sense similar to (checked) `java.io.IOException` in NIO.2
 * overloaded `getConnection` static methods taking an additional user and password, or taking additional `java.util.Properties`
   * of course, passing a password in a `getConnection` call is not a secure practice, to say the least
+  * when using method overload `getConnection(String, Properties)`, user and password would be passed as properties using `Property` keys `"user"` and `"password"`
 
 Interface `java.sql.Connection` is *auto-closeable*. It should be used in a try-resources statement, like so:
 
@@ -359,3 +360,13 @@ A checked `SQLException` can be queried for:
 * its message, through method `getMessage()` (like all exceptions)
 * its "SQL state", through method `getSQLState()`, which returns a "code" that can be looked up
 * its database-specific error code, through method `getErrorCode()`
+
+### Extra info about JDBC 4.0
+
+*JDBC 4.0* introduced the use of the *Java Standard Service Provider* mechanism to find and automatically load JDBC drivers.
+JDBC 4.0 drivers are therefore required to include a "META-INF/services/java.sql.Driver" file containing the name of the
+JDBC driver class, in order for this JDBC driver to be picked up automatically by class `DriverManager`. At least this
+gets rid of the previously required `Class.forName(String)` call to load a JDBC driver.
+
+Again, note that in practice we use a `javax.sql.DataSource` as factory of `Connection` instances, and we do not use
+`DriverManager`.
