@@ -601,7 +601,10 @@ The resource bundle strings may contain "parameters" like `{0}`, `{1}` etc. Thes
 static method `java.text.MessageFormat.format(String, Object...)`, taking the "parameterized resource bundle string"
 as the first parameter (i.e. the "pattern").
 
-Property files are often used with class `java.util.Properties`, which is a kind of "Map from strings to strings",
-and which can be loaded from property files. Methods `getProperty(String)` and `getProperty(String, String)` can be
-used to retrieve a property, the latter method providing a default value if not found. Method `setProperty(String, String)`
-is used to set a property in the `Properties` object.
+Property files are often used with class `java.util.Properties`, which is in practice a kind of "Map from strings to strings",
+and which can be loaded from property files. Its supertype is `java.util.Hashtable<Object, Object>` though, so it is a
+`Map<Object, Object>`. Hence, treating keys and values as strings can easily lead to compilation errors!
+
+Instance methods `getProperty(String)` and `getProperty(String, String)` can be used to retrieve a property, the latter
+method providing a default value if not found. Method `setProperty(String, String)` is used to set a property in the
+`Properties` object.
