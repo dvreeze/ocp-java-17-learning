@@ -443,6 +443,15 @@ So `Path.of("../../test.xml").normalize()` can only return the same path, with t
 
 Method `normalize` helps in comparing paths for equality. Paths can better be compared for equality after normalization.
 
+Corner case example:
+
+```java
+import java.nio.file.Path;
+
+Path p1 = Path.of("/../temp/test.txt"); // the "double dots" are useless here and are just ignored
+Path p2 = p1.normalize(); // returns "/temp/test.txt"
+```
+
 Method `toRealPath(LinkOption...)` is different from other methods in interface `Path`, in that it does inspect existence
 of the file. Method `toRealPath(LinkOption...)`:
 * Eliminates redundant path symbols, like method `normalize()`
