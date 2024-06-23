@@ -171,7 +171,11 @@ breaking anything*. This implies that the method override in the subclass should
 method. In particular:
 * The (instance) method in the subclass must have the *same method signature* as the non-private (instance) method in the superclass, or else we have no overriding
 * The method in the subclass must be *at least as accessible* as the method in the superclass
-* If the method returns a value, its type must be the *same type or a subtype of the return type* of the superclass method (*covariant return types*)
+* If the method returns a value of a *reference type*, its type must be the *same type or a subtype of the return type* of the superclass method (*covariant return types*)
+  1. Be careful with primitive types in this context: admittedly, `short` is a subtype of `int`, according to the [JLS](https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html#jls-4.10.1)
+  2. Yet a method returning a `short` is not *return-type-substitutable* for a method (with the same signature) returning an `int`, according to the [JLS](https://docs.oracle.com/javase/specs/jls/se17/html/jls-8.html#jls-8.4.5)
+  3. Instead, for primitive types return-type-substitutability means that the primitive types must be exactly the same type
+  4. This means that an instance method returning `int` cannot be overridden by an instance method having the same signature but returning `short`
 * The subclass method must *not throw any additional/broader checked exceptions* that are not allowed by the superclass method 
 
 When overriding an instance method, use the *Override* annotation to make that intention clear to the compiler.
