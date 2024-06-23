@@ -1009,4 +1009,5 @@ import java.io.*;
 RandomAccessFile file = new RandomAccessFile("someFile.txt", "rw"); // Opened for reading/writing
 file.seek(file.length()); // Go to the end, in order to append data
 file.writeChars("Extra characters");
+// Method writeUTF would write the string in "modified UTF" encoding
 ```
