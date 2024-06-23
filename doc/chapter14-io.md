@@ -999,3 +999,14 @@ whether interface `java.nio.file.Path` had a method `toUri()`. I could have gues
 `Path`, because:
 * There is a factory method to create a `Path` from a `java.net.URI`, and `Path` has enough information to convert back to `URI`
 * Class `java.io.File` is conceptually similar to `Path`, and that class also has methods to convert a ("file" protocol) `URI` to a `File` and back
+
+I was not sufficiently aware of class `java.io.RandomAccessFile`, but it did pop up multiple times in sample exam questions.
+As an example of its usage, see the code below:
+
+```java
+import java.io.*;
+
+RandomAccessFile file = new RandomAccessFile("someFile.txt", "rw"); // Opened for reading/writing
+file.seek(file.length()); // Go to the end, in order to append data
+file.writeChars("Extra characters");
+```

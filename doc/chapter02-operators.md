@@ -169,6 +169,15 @@ int x = 4;
 x = x++; // returns 4, not 5; the post-increment got lost
 ```
 
+Or this:
+
+```java
+var i = 0;
+int[] arr = new int[] { 10, 20 };
+// This first resolves the LHS as "arr[0]", after that evaluates the RHS assignment, and assigns 30 to "arr[i]"
+arr[i] = i = 30;
+```
+
 ### Comparison and "boolean logic" operators
 
 The *comparison operators* "equal-to" (`==`) and "not-equal-to" (`!=`) mean different things for primitives and reference types:
