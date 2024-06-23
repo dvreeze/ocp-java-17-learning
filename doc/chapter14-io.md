@@ -427,7 +427,7 @@ var check4 = path9.resolve(path9.relativize(path10)).normalize().equals(path10.n
 var check5 = path10.resolve(path10.relativize(path9)).normalize().equals(path9.normalize());
 ```
 
-On calling method `relativize`, some normalization seems to take place if applicable:
+On calling method `relativize`, (since Java 11) normalization seems to take place before relativizing:
 
 ```java
 import java.nio.file.Path;
