@@ -174,7 +174,7 @@ Or this:
 ```java
 var i = 0;
 int[] arr = new int[] { 10, 20 };
-// This first resolves the LHS as "arr[0]", after that evaluates the RHS assignment, and assigns 30 to "arr[i]"
+// This first resolves the LHS as "arr[0]", after that evaluates the RHS assignment, and assigns 30 to "arr[0]"
 arr[i] = i = 30;
 ```
 
