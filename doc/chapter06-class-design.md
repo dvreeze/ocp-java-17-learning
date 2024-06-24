@@ -187,6 +187,33 @@ In order to support *overriding/polymorphism*, all *non-private non-final instan
 method calls*. These are method calls that are *bound to a method at runtime and not at compile-time*. For these method
 calls, the compiler does not have enough information to bind them to methods at compile-time.
 
+Instance method overriding in combination with object construction can be surprising. For example:
+
+```java
+class A {
+    public A() {
+        print();
+    }
+    public void print() {
+        System.out.print("A");
+    }
+}
+class B extends A {
+    private int i = 12;
+
+    @Override public void print() {
+        System.out.print(i + " ");
+    }
+    public static void main(String[] args) {
+        // The default constructor of B first calls the constructor of A
+        // That will call the overridden "print" method, before (!) field "i" has been initialized (so it is 0)
+        // Btw, had field "i" been made final, it would already be 12
+        A a = new B();
+        a.print(); // Calling B's override of the method, with "i" initialized to 12
+    }
+}
+```
+
 For *static methods* with the same signature in parent and child classes, we have *no overriding but method hiding*.
 The rules for *static method hiding* are the same rules as (above) for *instance method overriding*, plus the additional
 rule that if the parent class method is *static*, then so must the child class method be static (and the other way around).
