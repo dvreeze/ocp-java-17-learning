@@ -202,7 +202,7 @@ Optional<Integer> max2 = intRange.stream().collect(Collectors.maxBy(Comparator.n
 
 Ignoring the *mutable reduction* part, *conceptually* we can think of the following as being equivalent:
 * Calling `Stream` instance method `Stream<T>.collect(Collector<T, ?, R>)` (where `R` can be anything, like a collection, aggregated value etc.)
-* Calling "function" `Function<Stream<T>, R>` on the stream
+* Calling an equivalent "function" `Function<Stream<T>, R>` on the stream
 
 #### Using common intermediate operations
 
