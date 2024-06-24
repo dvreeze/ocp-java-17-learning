@@ -200,6 +200,10 @@ Optional<Integer> max1 = intRange.stream().max(Comparator.naturalOrder());
 Optional<Integer> max2 = intRange.stream().collect(Collectors.maxBy(Comparator.naturalOrder()));
 ```
 
+Ignoring the *mutable reduction* part, *conceptually* we can think of the following as being equivalent:
+* Calling `Stream` instance method `Stream<T>.collect(Collector<T, ?, R>)` (where `R` can be anything, like a collection, aggregated value etc.)
+* Calling "function" `Function<Stream<T>, R>` on the stream
+
 #### Using common intermediate operations
 
 *Intermediate operations* transform Streams, and are *lazily evaluated*, as explained earlier in some detail.
