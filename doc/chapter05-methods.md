@@ -252,3 +252,5 @@ Overloading for methods with primitives as parameters, in the correct order:
 * Larger primitive type
 * Autoboxing
 * Varargs
+
+If there are 2 potential matching overloads and none is more specific than the other, the compiler will emit an error.
