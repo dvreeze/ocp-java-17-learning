@@ -60,6 +60,7 @@ Simple *typing* rules that are easy to overlook include:
 Simple *scoping* rules that are easy to overlook include:
 * A variable declared inside a block is scoped to that block, so:
   * In a while-do statement, any variable declared in the loop body is out of scope in the loop condition
+* At least "in spirit" related to scoping: if the compiler can detect *unreachable code*, it will
 
 #### Streams, functional interfaces, lambdas and method references
 
