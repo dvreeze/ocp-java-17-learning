@@ -1,10 +1,86 @@
-# Checklist
+# Checklist to use in exam questions
 
-When confronted with a *code snippet*, we typically need to check:
+When confronted with a *code snippet* in exam questions, we typically need to check:
 1. whether it *compiles*
 2. if so, whether it *runs successfully* (without throwing an exception, without running forever, etc.)
 
 That's the main topic of this checklist.
+
+### Quickly checking code snippets
+
+Many exam questions start with a code snippet before or after the main question. It makes sense to first read the question
+well, and then get an idea of the *solution space* in the potential answers, in order to determine how to best go about
+quickly answering the question. For example:
+* If possible answers to a question asking what a code snippet does include normal output, exception at runtime and compilation error, we know the *solution space* is quite large
+* If such a question only has possible answers that show output, then the solution space is much smaller and does not include exceptions or compilation errors
+
+When inspecting the code snippet and the potential answers, first of all *read carefully*. Don't mix up `throw` with `throws`,
+`=` with `==` etc.
+
+How to best quickly check code snippets (in question and/or possible answers) depends on the code snippet.
+
+If a code snippet contains *1 or more interfaces and/or classes*, in any case we need to quickly *understand the global
+structure* of the classes/interfaces, and *static versus instance scope* for their members. That is:
+* What are the top-level (and nested) classes and interfaces?
+  * Remember: classes *extend* a superclass, interfaces *extend* other interfaces, but classes *implement* interfaces
+  * If applicable, what are the *static and instance initializer blocks*?
+* What are the *constructors*, in the case of classes (since interfaces do not have them)?
+  * Be careful: it is to be expected that at least one question makes a *method look like a constructor*
+  * What is the *constructor call chain* and does it work? E.g., if the superclass has one constructor only, and it has a parameter, the subclass constructor must invoke this superclass constructor (with argument)
+* What are the *static and instance fields*?
+  * Note that the only fields in interfaces are `public static final` constants, whether these modifiers are inferred or explicit
+* What are the *static and instance methods*?
+  * Note that in interfaces non-private instance methods without body are always `public abstract`, whether these modifiers are inferred or explicit
+* Note that *nested interfaces/enums/records* are implicitly *static* (so they cannot and do not share any state with any "instance of the outer class")
+
+If needed for answering the question, we may need to figure out *class initialization order* and *instance initialization order*.
+
+When the same method name is used once or more in a class/interface and in subtypes, we probably need to check:
+* Proper use of *non-private instance method overriding* (if applicable), where *equally named methods have the same method signature*
+* Proper use of *method overloading*, where *equally named methods have different method signatures*
+
+Depending on the question (and possible answers) we may need to dive deeper into class/interface members, in particular the methods:
+* *Types* of fields, method/constructor results and method/constructor parameters
+* Should a method declare any *thrown exceptions*?
+* *Scope* and *type* of *local variables*
+  * Pitfall: *local variables cannot shadow each other* (so in this context, also check method parameter names, lambda parameter names etc.)
+* *Initialization* of *local variables*
+  * If a local variable is `final`, is it indeed initialized exactly once?
+  * Is there a requirement for a local variable to be *effectively final*?
+
+Specific *control structures* (in particular `switch` statements and expressions) and *type declarations*, such as `record`,
+`enum` etc. come with their own *syntactic and typing/scoping* rules. This should be checked whenever encountering these
+control structures and custom kinds of classes. This is also true for *sealed types*. Of course, it is important to know
+these rules well, but they only need to be checked where applicable.
+
+#### Streams, functional interfaces, lambdas and method references
+
+*Lambdas and method references* have a *functional interface* as type, and they get this type from "immediate context",
+such as an *assignment*, *cast* or *method parameter*. The latter is the most usual case, as "functional" method arguments
+in *stream pipelines*. So lambdas and method references must get their type from an assignment, cast or method parameter.
+
+For *lambdas*, mind their syntactic requirements as well. If they are given in a context where other local variables exist,
+mind the remarks about local variables not shadowing each other and about "effectively final".
+
+For *method references*, we can immediately ditch method references that "get parameters" or that act as "lambda bodies",
+when asked for valid expressions that happen to contain method references. This can save time on several "stream-related"
+questions.
+
+Of course, besides checking the correct use of methods in *stream pipelines* (e.g. `peek` gets a *Consumer* parameter),
+we always need to check the *correct use of intermediate and terminal operations* in stream pipelines. E.g., without terminal
+operation at the end, the stream pipeline is just lazy code waiting to be triggered but so far doing nothing.
+
+### Other tips
+
+If a question comes with multiple answers, each being snippets of code, it may help to start with the simplest one and
+see what it "teaches us" about how to check the other answers.
+
+In such questions it may also help to weed out incorrect answers by first checking the *syntax*. Depending on the variation
+among the answers it may or may not be handy to weed out incorrect answers simply by comparing all answers.
+
+## Old content
+
+TODO Remove, but take from it what's useful.
 
 ### Quickly checking whether a code snippet compiles successfully
 
