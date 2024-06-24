@@ -317,7 +317,7 @@ The "init-condition-update" part contains exactly *2 (top-level) semicolons*, to
 Even the following minimal for-loop is syntactically correct, useless as it may be:
 
 ```java
-for (;;); // the loop body is just a semicolon as statement
+for (;;); // the loop body is just a semicolon as statement (the so-called empty statement)
 ```
 
 The "init part", if present, is either a local variable declaration or a comma-separated list of so-called "statement expressions".
