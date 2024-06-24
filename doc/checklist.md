@@ -42,6 +42,7 @@ When the same method name is used once or more in a class/interface and in subty
 Depending on the question (and possible answers) we may need to dive deeper into class/interface members, in particular the methods:
 * *Types* of fields, method/constructor results and method/constructor parameters
 * Should a method declare any *thrown exceptions*?
+  * Hint: if the code block in the question is just a method declaration (instead of only a small sequence of statements), be extra vigilant in this regard
 * *Scope* and *type* of *local variables*
   * Pitfall: *local variables cannot shadow each other* (so in this context, also check method parameter names, lambda parameter names etc.)
 * *Initialization* of *local variables*
