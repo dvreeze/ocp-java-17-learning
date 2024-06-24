@@ -262,7 +262,7 @@ can be treated as a *resource* in a try-with-resources statement. For example, i
 is automatically closed before leaving this try-with-resources statement:
 
 ```java
-// FileInputStream is a Closable and therefore AutoCloseable
+// FileInputStream is a Closeable and therefore AutoCloseable
 try (var is = new FileInputStream("myfile.txt")) {
     doSomeFileStuff(is);
 } catch (IOException e) {
