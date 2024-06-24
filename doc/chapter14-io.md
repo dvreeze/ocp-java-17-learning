@@ -196,7 +196,7 @@ methods not mentioned here.
 
 Methods `File.mkdirs` and `Files.createDirectories` also create non-existing parent directories.
 
-Method `Path.move` is not only used for renaming, but also for moving files.
+Method `Files.move` is not only used for renaming, but also for moving files.
 
 Note that NIO.2 is not only more powerful and "strict" than the old I/O API, but it is also cleaner, by making a
 distinction between paths (`Path`) and file operations involving paths. For example, creating a directory gets
