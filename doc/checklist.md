@@ -53,6 +53,14 @@ Specific *control structures* (in particular `switch` statements and expressions
 control structures and custom kinds of classes. This is also true for *sealed types*. Of course, it is important to know
 these rules well, but they only need to be checked where applicable.
 
+Simple *typing* rules that are easy to overlook include:
+* A loop/if-statement condition must be a `boolean` expression
+* A resource in a resource specification of a try-resources statement must implement the `AutoCloseable` interface
+
+Simple *scoping* rules that are easy to overlook include:
+* A variable declared inside a block is scoped to that block, so:
+  * In a while-do statement, any variable declared in the loop body is out of scope in the loop condition
+
 #### Streams, functional interfaces, lambdas and method references
 
 *Lambdas and method references* have a *functional interface* as type, and they get this type from "immediate context",
