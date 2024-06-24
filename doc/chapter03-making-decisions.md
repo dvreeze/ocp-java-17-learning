@@ -314,6 +314,12 @@ A *for-loop* offers some support in creating and using "loop variables".
 The "init-condition-update" part contains exactly *2 (top-level) semicolons*, to separate the "init part" from the
 "condition", and the "condition" from the "update part". All those 3 parts can be empty, leaving only 2 semicolons!
 
+Even the following minimal for-loop is syntactically correct, useless as it may be:
+
+```java
+for (;;); // the loop body is just a semicolon as statement
+```
+
 The "init part", if present, is either a local variable declaration or a comma-separated list of so-called "statement expressions".
 So, in practice, the "init part" is either a local variable declaration or a comma-separated list of assignments or
 pre-/post-unary expressions.
