@@ -56,7 +56,7 @@ these rules well, but they only need to be checked where applicable.
 #### Streams, functional interfaces, lambdas and method references
 
 *Lambdas and method references* have a *functional interface* as type, and they get this type from "immediate context",
-such as an *assignment*, *cast* or *method parameter*. The latter is the most usual case, as "functional" method arguments
+i.e., an *assignment*, *cast* or *method parameter*. The latter is the most usual case, as "functional" method arguments
 in *stream pipelines*. So lambdas and method references must get their type from an assignment, cast or method parameter.
 
 For *lambdas*, mind their syntactic requirements as well. If they are given in a context where other local variables exist,
