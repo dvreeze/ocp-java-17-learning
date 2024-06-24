@@ -766,6 +766,7 @@ objects.
 No Java class is "automatically" serializable. This is also true for Java *record classes*. The class must be "marked"
 as such. To use Java serialization with a Java class, the following is required:
 * The class must be marked as serializable, by having the class *implement* the *marker interface* `java.io.Serializable`
+  * Of course, this makes subclasses of the class *serializable* as well (but mind the extra requirements on instance members below)
 * Recursively, each *instance member* of the class must be *serializable*, marked `transient`, or be `null` at the time of serialization
 
 If the superclass of a serializable class is not serializable, *the instance fields of the non-serializable superclass will
