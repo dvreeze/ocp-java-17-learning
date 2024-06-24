@@ -70,6 +70,17 @@ Of course, besides checking the correct use of methods in *stream pipelines* (e.
 we always need to check the *correct use of intermediate and terminal operations* in stream pipelines. E.g., without terminal
 operation at the end, the stream pipeline is just lazy code waiting to be triggered but so far doing nothing.
 
+### Standard APIs
+
+Some standard APIs are quite "functional" in nature, and some are not. For example, the `java.time` API is "functional",
+in that the methods take/return *immutable* objects. So is `String`. But `StringBuilder` is not, and its methods rely
+on side effects (returning the same but altered object, instead of a fresh new immutable object).
+
+Especially for "functional" APIs, check if *method results are used*. If not, those calls predominantly do nothing.
+
+For specific APIs (e.g. NIO.2), check *which checked exceptions* are likely to occur in their methods. So check whether
+we need to declare them in *throws clauses*.
+
 ### Other tips
 
 If a question comes with multiple answers, each being snippets of code, it may help to start with the simplest one and
