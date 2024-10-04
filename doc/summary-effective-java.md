@@ -9,7 +9,7 @@ Performance will typically follow relatively easily once writing such programs.
 This document summarizes the book Effective Java, following the exact structure of the book in terms of chapters
 and items per chapter.
 
-Of course this summary in no way replaces the book itself. It is absolutely worth the money to buy the book itself.
+**Of course this summary in no way replaces the book itself. It is absolutely worth the money to buy the book itself.**
 
 ## Chapter 2. Creating and Destroying Objects
 
@@ -30,7 +30,7 @@ Some limitations of static factory methods are:
 
 ### Item 2: Consider a builder when faced with many constructor parameters
 
-Suppose object construction (through a constructor or static factory method) requires a lot of parameters, consider using
+Suppose object construction (through a constructor or static factory method) requires a lot of parameters. Consider using
 the *Builder pattern* (especially if many construction parameters are optional). The Builder pattern can even be used for creating objects
 of different types in a class hierarchy.
 
