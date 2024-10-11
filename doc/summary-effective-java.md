@@ -47,7 +47,7 @@ static field or factory method returning the single instance. Yet mind potential
 using Java (de)serialization (consider using a readResolve method, while making all instance fields transient).
 
 A *single-element enum* also has uses these techniques, while protecting against reflection and serialization attacks
-that lead to multiple instantiations. A single-element enum is also concise. It cannot extend another superclass, however.
+that lead to multiple element instantiations. A single-element enum is also concise. It cannot extend another superclass, however.
 
 So a single-element enum helps achieve *clarity* and *correctness* in enforcing the singleton property.
 
@@ -71,7 +71,7 @@ where the underlying resource is a *dependency* that is *injected* on creating a
 
 This form of dependency injection also helps preserve *immutability*, which helps enforce *correctness* and *clarity*.
 
-It enhances *flexibility*, *reusability* and *testability* of a class.
+It enhances *flexibility*, *reusability* and *testability* of a class (the latter through easy mocking of dependencies).
 
 Dependency injection "clutter" can be reduced by the use of the dependency injection framework.
 
@@ -94,6 +94,18 @@ a good thing. Correctness should never be sacrificed, so when *defensive copies*
 in order to increase performance at the expense of correctness.
 
 ### Item 7: Eliminate obsolete object references
+
+Java's *garbage collector* may leave the impression that *thinking about memory management* is not needed. This is not
+entirely true.
+
+For example, if we create some `Stack` class that *manages its own memory*, we may invite *memory leaks* (aka *unintentional
+object retentions*). This can be solved by *nulling out references* once they become obsolete. This technique should
+be an exception rather than the norm, but in this case it may be needed. Simply letting *reference variables fall out of scope*
+should be the norm otherwise.
+
+*Caches* may also invite memory leaks. So do *listeners and other callbacks*, if they are not deregistered explicitly.
+
+*Weak references* (such as keys in a `WeakHashMap`) may help prevent memory leaks.
 
 ### Item 8: Avoid finalizers and cleaners
 
