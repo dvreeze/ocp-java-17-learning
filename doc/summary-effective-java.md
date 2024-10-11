@@ -47,7 +47,7 @@ static field or factory method returning the single instance. Yet mind potential
 using Java (de)serialization (consider using a readResolve method, while making all instance fields transient).
 
 A *single-element enum* also has uses these techniques, while protecting against reflection and serialization attacks
-against multiple instantiation. A single-element enum is also concise. It cannot extend another superclass, however.
+that lead to multiple instantiations. A single-element enum is also concise. It cannot extend another superclass, however.
 
 So a single-element enum helps achieve *clarity* and *correctness* in enforcing the singleton property.
 
