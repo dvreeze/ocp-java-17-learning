@@ -42,11 +42,56 @@ In other words, the Builder pattern can help achieve *clarity* and *correctness*
 
 ### Item 3: Enforce the singleton property with a private constructor or an enum type
 
+A singleton class has *precisely 1 instance*. This can be enforced by a private constructor, in combination with a public
+static field or factory method returning the single instance. Yet mind potential attacks through reflection, and vulnerabilities
+using Java (de)serialization (consider using a readResolve method, while making all instance fields transient).
+
+A *single-element enum* also has uses these techniques, while protecting against reflection and serialization attacks
+against multiple instantiation. A single-element enum is also concise. It cannot extend another superclass, however.
+
+So a single-element enum helps achieve *clarity* and *correctness* in enforcing the singleton property.
+
+Singleton classes (including single-element enums) can make its clients difficult to test, however (since the singleton
+is typically hard to mock).
+
 ### Item 4: Enforce noninstantiability with a private constructor
+
+Some classes ("utility classes") contain only static methods (and maybe static fields), and are not meant to be instantiated.
+Non-instantiation can be enforced by a private constructor (that is not called), accompanied by a clarifying comment.
+Note that the private constructor also prevents the creation of subclasses.
+
+Again, this is about *clarity* (and *correctness*).
 
 ### Item 5: Prefer dependency injection to hardwiring resources
 
+Many classes have *underlying resources as dependencies*. Implementing them as utility classes or singleton classes that
+create the underlying resource themselves is quite inflexible and untestable. It is much better to *pass the resource
+in the constructor* when creating a new instance of the class. In other words, use a form of *dependency injection*,
+where the underlying resource is a *dependency* that is *injected* on creating an instance of the class.
+
+This form of dependency injection also helps preserve *immutability*, which helps enforce *correctness* and *clarity*.
+
+It enhances *flexibility*, *reusability* and *testability* of a class.
+
+Dependency injection "clutter" can be reduced by the use of the dependency injection framework.
+
 ### Item 6: Avoid creating unnecessary objects
+
+Object creation on the JVM is *cheap in general*. Still, *some objects are expensive to create*, and this object creation
+is not always visible. For example, consider matching strings against regular expressions. A reused `Pattern` (holding
+a compiled regular expression) may dramatically improve execution speed compared to repeated implicit `Pattern` creation
+under the hood.
+
+Immutable objects can always be reused. For example, using a `String` constructor passing a `String` literal as constructor
+argument makes no sense at all. *Immutable classes offering static factory methods* may also help avoid unnecessary
+creation of different equal instances.
+
+Mind the runtime costs of *unintentional autoboxing* of primitives.
+
+On the other hand, creating own object pools is typically a bad idea. So is lazy initialisation of fields.
+Program clarity should not suffer, and creating additional objects for clarity, simplicity or flexibility is generally
+a good thing. Correctness should never be sacrificed, so when *defensive copies* are needed, we should never avoid them
+in order to increase performance at the expense of correctness.
 
 ### Item 7: Eliminate obsolete object references
 
