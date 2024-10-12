@@ -11,6 +11,8 @@ and items per chapter.
 
 **Of course this summary in no way replaces the book itself. It is absolutely worth the money to buy the book itself.**
 
+Another summary/discussion of the items in the book Effective Java can be found [here](https://dev.to/kylec32/).
+
 ## Chapter 2. Creating and Destroying Objects
 
 ### Item 1: Consider static factory methods instead of constructors
@@ -109,7 +111,45 @@ should be the norm otherwise.
 
 ### Item 8: Avoid finalizers and cleaners
 
+In the C++ language, destructors are normally used to reclaim resources associated with an object. There destructors are
+the necessary counterparts to constructors. In Java, which uses garbage collection, there is no such thing as destructors.
+Java offers *finalizers* instead (i.e., method `Object.finalize`). Java 9 deprecated them and offered *cleaners* as an
+alternative. See [Cleaner](https://docs.oracle.com/javase/9/docs/api/?java/lang/ref/Cleaner.html). Unfortunately, finalizers
+and cleaners are quite unpredictable, and therefore they should normally be avoided.
+
+Finalizers are unpredictable, often dangerous, and mostly unnecessary. Cleaners, while less dangerous than finalizers,
+are still unpredictable and mostly unnecessary.
+
+First of all, after an object becomes unreachable (so a candidate for garbage collection) it *cannot be predicted when
+its finalizer or cleaner runs, if ever*. This may also vary significantly between JVMs.
+
+Uncaught exceptions during finalization are ignored, potentially leaving objects in a corrupt state. Cleaners do not have
+this specific problem.
+
+Finalizers inhibit efficient garbage collection, making them a slow way to destroy objects. Cleaners are generally slow as well.
+
+Finalizers are also open to so-called *finalizer attacks*. Normally, throwing an exception from a constructor prevents
+the object from being created, but in the presence of finalizers this is not the case!
+
+A much safer alternative to finalizers/cleaners is implementing the `AutoCloseable` interface, and requiring users of the
+class to call the `close` method, typically by using a *try-with-resources* statement.
+
+Cleaners may be useful only as safety net (when users of the class might forget to call the `close` method) or to terminate
+noncritical native resources. Otherwise, they should not be used at all. Starting with Java 9, finalizers should never be
+used at all.
+
 ### Item 9: Prefer try-with-resources to try-finally
+
+Closing resources was done using a *try-finally* statement before the advent of *try-with-resources* statements. The latter
+leads to more *concise* code, especially with more than 1 resource that must be closed. But it also *keeps track of
+suppressed exceptions*, leading to better diagnostics when exceptions are thrown.
+
+Obviously, try-with-resources statements require the resources to implement interface `AutoCloseable`. This is the case
+for all kinds of resource-representing classes in the JDK, but can also be implemented by application code.
+
+In short, the try-with-resources statement makes it practically possible to write correct code using resources that must
+be closed. This was not the case with try-finally statements. So try-with-resources statements offer *correctness*
+and *clarity* when dealing with resources that must be closed.
 
 ## Chapter 3. Methods Common to All Objects
 
