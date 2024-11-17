@@ -155,9 +155,71 @@ and *clarity* when dealing with resources that must be closed.
 
 ### Item 10: Obey the general contract when overriding equals
 
+Every class ultimately extends class `java.lang.Object`, and therefore inherits its `equals` method, which must obey
+a certain *contract*.
+
+By default, `equals` behaves as *object identity*. By all means, do not override `equals` if:
+* each instance of the class is inherently unique
+* a "logical equality" test is not needed
+* a superclass has overridden `equals`, and the superclass behaviour is appropriate for this class
+* the class is private or package-private and the `equals` method will never be invoked
+
+Never write an `equals` method depending on unreliable resources.
+
+Overriding `equals` is appropriate for *value classes*, where *logical equality* differs from object identity.
+
+The contract of method `equals` states that it must be an *equivalence relationship*, so it must be:
+* *reflexive* (for non-null references)
+* *symmetric* (for non-null references)
+* *transitive* (for non-null references)
+
+Moreover, the `equals` contract states that:
+* this method must be *consistent* (for non-null references), so consistently return `true` or `false` if no data (that `equals` depends on) is changed
+* for any non-null references, `equals(null)` must return `false`
+
+Symmetry and transitivity are *very easy to break*, potentially causing serious *bugs*, for example when using these
+classes having broken equality in collections. E.g., what does `Collection.contains` return if equality is broken for the element type?
+
+Joshua Bloch illustrates broken transitivity of `equals` with imaginary class `Point` (having a position) and subclass
+`ColorPoint` (adding a color). He says that class `java.sql.Timestamp` (which extends `java.util.Date`) has the same issue.
+The problem is very *fundamental* (and not Java-specific), he says. Namely, in his words:
+
+*There is no way to extend an instantiable class and add a value component while preserving the equals contract*, unless
+we sacrifice the *Liskov substitution principle* (which says that a subclass must adhere to the API contract of the superclass).
+
+The *recipe* for writing an overridden `equals` method follows rather easily from the contract. Yet keep the following in mind:
+* always override `hashCode` when overriding `equals` (see next item)
+* do not write any equality method *overloading* `java.lang.Object.equals`
+* do not try to be too clever when overriding `equals`
+
+A *personal note*, applying to relatively recent Java LTS versions such as Java 17 and 21:
+
+These Java versions ship with *Java record classes*. Combined with *Guava immutable collections* it is easier than ever
+to create *deeply immutable thread-safe data classes* with automatically created well-behaved `equals` and `hashCode` methods.
+The idea is to create such classes by *recursively* following the *construction rules* below:
+
+1. Start with "atomic" *non-record non-collection* immutable classes
+2. Each *record* class whose components are clearly immutable data classes is itself clearly an immutable data class with well-behaved equality
+3. Each *immutable Guava collection* whose element types (or key/value types) are clearly immutable data classes is itself clearly an immutable data class with well-behaved equality
+
+The effort to create these classes is minimal, while it is very *easy to reason about* them w.r.t. equality, immutability, thread-safety etc.
+
 ### Item 11: Always override hashCode when you override equals
 
+When overriding method `equals`, method `hashCode` must be overridden too. The `hashCode` contract states that *equal objects*
+(according to method `equals`) must have the *same hash code* (returned by method `hashCode`).
+
+When failing to do so, instances of such classes may not be found in a `HashSet` collection or as keys in a `HashMap`.
+After all, based on the `hashCode` value, the element is first searched for in the *hash bucket* for its hash code,
+and only then the equality check using method `equals` is done. Yet if the "same" element is found in another hash bucket,
+the equality check will never be done, so for example method `HashSet.contains` would not work.
+
 ### Item 12: Always override toString
+
+Overriding method `toString` makes a class more pleasant to use and aids in debugging.
+
+There are pros and cons to specifying the format returned by the `toString` method. Note that the `toString` method is
+not a substitute for programmatic access to the information contained in the `toString` result.
 
 ### Item 13: Override clone judiciously
 
