@@ -184,7 +184,7 @@ Joshua Bloch illustrates broken transitivity of `equals` with imaginary class `P
 `ColorPoint` (adding a color). He says that class `java.sql.Timestamp` (which extends `java.util.Date`) has the same issue.
 The problem is very *fundamental* (and not Java-specific), he says. Namely, in his words:
 
-*There is no way to extend an instantiable class and add a value component while preserving the equals contract*, unless
+**There is no way to extend an instantiable class and add a value component while preserving the equals contract**, unless
 we sacrifice the *Liskov substitution principle* (which says that a subclass must adhere to the API contract of the superclass).
 
 The *recipe* for writing an overridden `equals` method follows rather easily from the contract. Yet keep the following in mind:
