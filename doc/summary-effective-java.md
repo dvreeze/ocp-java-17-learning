@@ -198,7 +198,7 @@ These Java versions ship with *Java record classes*. Combined with *Guava immuta
 to create *deeply immutable thread-safe data classes* with automatically created well-behaved `equals` and `hashCode` methods.
 The idea is to create such classes by *recursively* following the *construction rules* below:
 
-1. Start with "atomic" *non-record non-collection* immutable classes
+1. Start with "atomic" *non-record non-collection* immutable classes (such as `String`, `LocalDate` etc.)
 2. Each *record* class whose components are clearly immutable data classes is itself clearly an immutable data class with well-behaved equality
 3. Each *immutable Guava collection* whose element types (or key/value types) are clearly immutable data classes is itself clearly an immutable data class with well-behaved equality
 
