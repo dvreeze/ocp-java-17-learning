@@ -187,6 +187,8 @@ The problem is very *fundamental* (and not Java-specific), he says. Namely, in h
 **There is no way to extend an instantiable class and add a value component while preserving the equals contract**, unless
 we sacrifice the *Liskov substitution principle* (which says that a subclass must adhere to the API contract of the superclass).
 
+In that case, *favoring composition over inheritance* (item 18) is helpful.
+
 The *recipe* for writing an overridden `equals` method follows rather easily from the contract. Yet keep the following in mind:
 * always override `hashCode` when overriding `equals` (see next item)
 * do not write any equality method *overloading* `java.lang.Object.equals`
