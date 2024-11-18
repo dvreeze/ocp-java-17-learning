@@ -168,7 +168,7 @@ Never write an `equals` method depending on unreliable resources.
 
 Overriding `equals` is appropriate for *value classes*, where *logical equality* differs from object identity.
 
-The contract of method `equals` states that it must be an *equivalence relationship*, so it must be:
+The contract of method `equals` states that it must be an *equivalence relation*, so it must be:
 * *reflexive* (for non-null references)
 * *symmetric* (for non-null references)
 * *transitive* (for non-null references)
