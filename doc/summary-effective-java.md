@@ -169,13 +169,13 @@ Never write an `equals` method depending on unreliable resources.
 Overriding `equals` is appropriate for *value classes*, where *logical equality* differs from object identity.
 
 The contract of method `equals` states that it must be an *equivalence relation*, so it must be:
-* *reflexive* (for non-null references)
-* *symmetric* (for non-null references)
-* *transitive* (for non-null references)
+* *reflexive* (for non-null reference values)
+* *symmetric* (for non-null reference values)
+* *transitive* (for non-null reference values)
 
 Moreover, the `equals` contract states that:
-* this method must be *consistent* (for non-null references), so consistently return `true` or `false` if no data (that `equals` depends on) is changed
-* for any non-null references, `equals(null)` must return `false`
+* this method must be *consistent* (for non-null reference values), so consistently return `true` or `false` if no data (that `equals` depends on) is changed
+* for any non-null reference values, `equals(null)` must return `false`
 
 Symmetry and transitivity are *very easy to break*, potentially causing serious *bugs*, for example when using these
 classes having broken equality in collections. E.g., what does `Collection.contains` return if equality is broken for the element type?
