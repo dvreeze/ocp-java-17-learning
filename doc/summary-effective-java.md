@@ -328,7 +328,7 @@ interface extending another interface).
 of the superclass*, and these implementation details may change from release to release. Also, "self use" among superclass
 methods may break method overriding in the subclass.
 
-*Composition* rather than inheritance* does not break encapsulation. The example given in the book uses an imaginary
+*Composition* rather than inheritance does not break encapsulation. The example given in the book uses an imaginary
 `InstrumentedSet`, where the alternative using inheritance is broken and the alternative using *forwarding* methods
 is safe. (Again, one level of indirection saves the day.) This is known as the *decorator pattern*, and the combination
 of composition and forwarding is loosely known as *delegation*.
