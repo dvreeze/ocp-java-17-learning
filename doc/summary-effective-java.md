@@ -1,7 +1,7 @@
 # Summary of Effective Java, 3rd Edition
 
 Besides learning the OCP material, it makes a lot of sense to be familiar with the content of the book
-Effective Java (3rd Edition), authored by Joshua Bloch. Whereas the OCP material teaches us about Java itself,
+*Effective Java (3rd Edition)*, authored by *Joshua Bloch*. Whereas the OCP material teaches us about Java itself,
 the book Effective Java teaches us about how to use java *idiomatically*. More precisely, the book is about
 writing *clear, correct, usable, robust, flexible and maintainable programs*, as the book says in the introduction.
 Performance will typically follow relatively easily once writing such programs.
@@ -10,8 +10,21 @@ This document summarizes the book Effective Java, following the exact structure 
 and items per chapter.
 
 **Of course this summary in no way replaces the book itself. It is absolutely worth the money to buy the book itself.**
+For example, the example code in the book is carefully chosen to prove the points made by the author. Even examples
+in the Java platform itself that go against the advice in the book are included. The author clearly knows what he is
+talking about, and this book also shows many lessons learned by maintainers of the Java platform, including the author
+himself (who wrote the Java 1.2 Collections Framework, among other APIs).
 
 Another summary/discussion of the items in the book Effective Java can be found [here](https://dev.to/kylec32/).
+
+The advice offered in this book is sometimes a bit at odds with common practices in "Java enterprise" projects, for example
+due to limitations imposed on application programmers by byte-code manipulation libraries, and due to "legacy APIs".
+Still, it is good to be aware of *competing design forces* and to try to find a reasonable balance. It can be said
+that this book is about *coding discipline*, which is a good thing. Experimenting a lot while coding is great, balancing
+that with discipline is even better. Good code is often *boring code*.
+
+It sometimes seems to me that this book Effective Java is less well-known nowadays than it used to be. Yet I remember
+that the 3 editions of this book have made a *tremendous positive impact on the quality of Java code* "in the field".
 
 ## Chapter 2. Creating and Destroying Objects
 
@@ -244,7 +257,7 @@ Mechanisms for encapsulation:
 * For top-level classes/interfaces: `public` or package-private (the default); the latter makes the class part of the implementation
 * For members (fields, methods, nested classes/interfaces): `public`, `protected`, package-private and `private`; only the latter 2 provide encapsulation
   * But mind the possibility that serialization breaks encapsulation even for private members (the same is true for reflection)
-  * Note that the difference between `protected` and package-private as far greater than the difference between package-private and `private`
+  * Note that the difference between `protected` and package-private is far greater than the difference between package-private and `private`
   * Method overriding: the compiler does not allow for breaking the *Liskov substitution principle* by *restricting the access level*
 * Java 9+ *modules* can help limit access among Java packages
   * In the end (outside the Java platform itself) they are only advisory, because it is still possible to use the class path instead of the module path
@@ -260,11 +273,85 @@ Summarized: design a *minimal public API* and try to keep implementation details
 
 ### Item 17: Minimize mutability
 
+*Immutable classes* are classes *whose instances cannot be modified*. Some examples in the Java platform are `String`,
+`LocalDate`, `URI`, `BigInteger` and `BigDecimal`. Immutable classes are easy to reason about, and *hugely promote correctness*.
+
+Nowadays, with Java records, making immutable (record) classes is quite easy. Ignoring records, a Java class can be made
+*immutable* as follows:
+* Make all *fields* `private` and `final`, and *ensure exclusive access to mutable components* by *defensive copies* in constructors/getters
+* Do not provide any *mutator* methods (that would not work anyway if the requirement above is met)
+* Ensure that the class *cannot be extended* (e.g. by making the class `final`), thus preventing subclasses from being mutable
+
+So-called update methods in immutable classes are *functional update* methods, creating a new immutable object instead
+of modifying existing objects. This is the *functional* approach, in contrast to the *imperative/procedural* approach.
+
+Again, Java records make this very easy, offering value equality out of the box as well.
+
+Immutable classes are *simple* (instances have just one state, forever), *inherently thread-safe* (but mind the semantics
+of `final` in this regard) and they can be *shared freely*.
+
+Defensive copies (or copy constructors) are never needed for immutable classes.
+
+Not only can immutable classes be shared freely, but also their internals can be shared.
+
+Immutable objects are *great building blocks for other objects*. They also provide *failure atomicity* for free. In particular,
+they make great `Map` keys and `Set` elements.
+
+The major disadvantage of immutable classes is that they require a *separate object for each distinct value*.
+
+Often it makes sense to have an immutable class and a mutable companion class for creating instances of the immutable
+class. A well-known example is the pair of classes `String` (immutable) and `StringBuilder` (mutable).
+
+Implementation freedom for immutable classes can be achieved by not making the class `final`, but instead making it
+*effectively final*, using private constructors and public static factory methods. This allows for multiple package-private
+implementation classes.
+
+Be aware of the dangers of serialization in combination with fields referring to mutable objects. This is covered in item 88.
+
+In summary:
+* Classes should be *immutable* unless there's a good reason to make them mutable
+* If a class cannot be made immutable, *limit its mutability* as much as possible
+* Declare each field `private final` unless there's a good reason to do otherwise (see item 15 as well)
+* Constructors should create *fully initialized objects with all invariants established*
+
+The advice in this item makes it quite easy to *reason about objects* and their state (which is just one state for the
+duration of the life of immutable objects), and therefore helps *enforce correctness*.
+
 ### Item 18: Favor composition over inheritance
+
+Inheritance from classes not designed for inheritance is dangerous (see below). In the book, inheritance means
+*implementation inheritance*, not the far safer *interface inheritance* (i.e. a class implementing an interface, or an
+interface extending another interface).
+
+*Unlike method invocation, inheritance violates encapsulation*. After all, the subclass *depends on implementation details
+of the superclass*, and these implementation details may change from release to release. Also, "self use" among superclass
+methods may break method overriding in the subclass.
+
+*Composition* rather than inheritance* does not break encapsulation. The example given in the book uses an imaginary
+`InstrumentedSet`, where the alternative using inheritance is broken and the alternative using *forwarding* methods
+is safe. (Again, one level of indirection saves the day.) This is known as the *decorator pattern*, and the combination
+of composition and forwarding is loosely known as *delegation*.
+
+A disadvantage of wrapper classes is that they are not suited for use in *callback frameworks*, where objects pass self-references
+to other objects for subsequent invocations. The wrapped object does not know about the wrapper, however. This is known
+as the *SELF problem*.
+
+When choosing to use inheritance, make sure that there really is an *is-a* relationship from subclass to superclass.
+The Java platform itself violates this principle, since `Stack` extends `Vector`, whereas it shouldn't.
+
+In summary, *inheritance is powerful but problematic, because it violates encapsulation*. Instead, use *composition*.
 
 ### Item 19: Design and document for inheritance or else prohibit it
 
 ### Item 20: Prefer interfaces to abstract classes
+
+TODO
+
+Note that a class can only extend one superclass, whereas a class can implement multiple interfaces. Interfaces also
+allow for the construction of non-hierarchical type frameworks.
+
+Advantages of interfaces and abstract classes can be combined in the *template method pattern*. For example, interface
+`List`, abstract implementation `AbstractList` and concrete subclasses `ArrayList` and `LinkedList`.
 
 ### Item 21: Design interfaces for posterity
 
@@ -334,6 +421,24 @@ Summarized: design a *minimal public API* and try to keep implementation details
 
 ### Item 50: Make defensive copies when needed
 
+Java may be a *safe language* compared to C and C++ (with their memory corruption issues), we must still
+*program defensively, and assume clients of your class do their best to destroy its invariants*, whether intentionally
+or unintentionally.
+
+Suppose you write a `Period` class with 2 legacy `java.util.Date` fields as an "almost immutable class", following the
+advice of item 17 (minimize mutability) except for the defensive copies in constructor and getters. Then it is quite
+easy to modify the internals of a `Period` instance, through a `Date` mutator method. Of course class `java.util.Date`
+should no longer be used, but the point remains. Defensive copies may also be needed for *collection-valued fields*,
+for example.
+
+Mind the window of vulnerability between the time parameters are checked and the time they are copied, so check
+validity on the copies rather than the originals.
+
+Do not use method `clone` to make defensive copies, if the class is sub-classable by untrusted parties.
+
+This advice about defensive copies of mutable state goes beyond their need in immutable classes containing mutable
+internal state. Clearly, this item on *defensive copies* is about *correctness* (and security).
+
 ### Item 51: Design method signatures carefully
 
 ### Item 52: Use overloading judiciously
@@ -364,6 +469,10 @@ Summarized: design a *minimal public API* and try to keep implementation details
 
 ### Item 64: Refer to objects by their interfaces
 
+*If appropriate interfaces exist, then parameters, return values, variables and fields should be declared using
+interface types*. This habit makes programs far more *flexible*. Sometimes there is no appropriate interface, in particular
+for "value classes". In that case, use the *least specific class in the class hierarchy providing the required functionality*.
+
 ### Item 65: Prefer interfaces to reflection
 
 ### Item 66: Use native methods judiciously
@@ -389,6 +498,21 @@ Summarized: design a *minimal public API* and try to keep implementation details
 ### Item 75: Include failure-capture information in detail messages
 
 ### Item 76: Strive for failure atomicity
+
+Generally, *a failed method call should leave an object in the state that it was in prior to the method call*.
+This is called *failure atomicity*. This property of programs helps reason about *correctness*.
+
+For immutable classes, failure atomicity is free. For methods operating on mutable objects, check parameters for
+validity (and throw an exception when needed) before performing the operation.
+
+A third approach to achieve failure atomicity is to perform the operation on a temporary copy of the object and replace
+the contents of the object with the temporary copy once the operation is complete.
+
+A fourth approach (less common) is to write failure recovery code.
+
+Failure atomicity is not always achievable, nor is it always desirable (if the downside is complexity or performance).
+Still, it should be strived for, and for immutable classes it comes for free. When deviating from this advice, this should
+be documented in the API documentation.
 
 ### Item 77: Don’t ignore exceptions
 
