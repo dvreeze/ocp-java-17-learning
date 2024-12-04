@@ -233,6 +233,29 @@ not a substitute for programmatic access to the information contained in the `to
 
 ### Item 15: Minimize the accessibility of classes and members
 
+Well-designed components hide their implementation details, and separate the *API* from the *implementation*.
+This is known as *information hiding* or *encapsulation*. It is important, because it *decouples* components comprising
+a system, and therefore allows them to be developed, tested, used, understood and maintained in isolation.
+Encapsulation therefore promotes *flexibility*, *correctness* and *development speed*, among other things.
+
+Rule of thumb: *make each class and member as inaccessible as possible*.
+
+Mechanisms for encapsulation:
+* For top-level classes/interfaces: `public` or package-private (the default); the latter makes the class part of the implementation
+* For members (fields, methods, nested classes/interfaces): `public`, `protected`, package-private and `private`; only the latter 2 provide encapsulation
+  * But mind the possibility that serialization breaks encapsulation even for private members (the same is true for reflection)
+  * Note that the difference between `protected` and package-private as far greater than the difference between package-private and `private`
+  * Method overriding: the compiler does not allow for breaking the *Liskov substitution principle* by *restricting the access level*
+* Java 9+ *modules* can help limit access among Java packages
+  * In the end (outside the Java platform itself) they are only advisory, because it is still possible to use the class path instead of the module path
+
+Instance fields of public classes should rarely be public. Classes with public mutable fields are generally not thread-safe.
+Immutable public static final "constants" are ok, though.
+
+Classes should not have static final array fields, or accessors returning such a field. Defensive copies can fix this.
+
+Summarized: design a *minimal public API* and try to keep implementation details encapsulated and hidden from that public API.
+
 ### Item 16: In public classes, use accessor methods, not public fields
 
 ### Item 17: Minimize mutability
