@@ -249,7 +249,7 @@ not a substitute for programmatic access to the information contained in the `to
 Well-designed components hide their implementation details, and separate the *API* from the *implementation*.
 This is known as *information hiding* or *encapsulation*. It is important, because it *decouples* components comprising
 a system, and therefore allows them to be developed, tested, used, understood and maintained in isolation.
-Encapsulation therefore promotes *flexibility*, *correctness* and *development speed*, among other things.
+Encapsulation therefore helps increase *flexibility*, *correctness* and *development speed*, among other things.
 
 Rule of thumb: *make each class and member as inaccessible as possible*.
 
@@ -274,7 +274,8 @@ Summarized: design a *minimal public API* and try to keep implementation details
 ### Item 17: Minimize mutability
 
 *Immutable classes* are classes *whose instances cannot be modified*. Some examples in the Java platform are `String`,
-`LocalDate`, `URI`, `BigInteger` and `BigDecimal`. Immutable classes are easy to reason about, and *hugely promote correctness*.
+`LocalDate`, `URI`, `BigInteger` and `BigDecimal`. Immutable classes are easy to reason about, and hugely helps in
+achieving program *correctness*.
 
 Nowadays, with Java records, making immutable (record) classes is quite easy. Ignoring records, a Java class can be made
 *immutable* as follows:
