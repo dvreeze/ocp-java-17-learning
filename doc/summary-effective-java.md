@@ -527,8 +527,8 @@ Obviously, some form of synchronisation is needed when multiple threads access t
 Indeed, as the title of the item says: *synchronize access to shared mutable data*.
 Data typically stands for fields of objects. Shared stands for "shared between threads". Mutability stands for mutability
 anywhere in the object graph (if the field is not of primitive type).
-Synchronization stands not just for the `synchronized` keyword. See the *Java Memory Model* (and the semantics of `volatile`
-and `final`).
+Synchronization stands not just for the `synchronized` keyword. See the *Java Memory Model* (and the semantics of `synchronized`,
+`volatile` and `final`, for example).
 
 From the title it is obvious that 2 potential ways of preventing corruption due to sharing mutable data are:
 * do not shared the data; typically, make the data accessible from only one thread (e.g. *request-handling-thread-scoped* data in a Servlet application)
