@@ -521,6 +521,28 @@ be documented in the API documentation.
 
 ### Item 78: Synchronize access to shared mutable data
 
+Note that a JVM has one stack (of stack frames) per thread, but just one heap, containing the created non-GC'ed objects.
+Obviously, some form of synchronisation is needed when multiple threads access the same objects on the heap.
+
+Indeed, as the title of the item says: *synchronize access to shared mutable data*.
+Data typically stands for fields of objects. Shared stands for "shared between threads". Mutability stands for mutability
+anywhere in the object graph (if the field is not of primitive type).
+Synchronization stands not just for the `synchronized` keyword. See the *Java Memory Model* (and the semantics of `volatile`
+and `final`).
+
+From the title it is obvious that 2 potential ways of preventing corruption due to sharing mutable data are:
+* do not shared the data; typically, make the data accessible from only one thread (e.g. *request-handling-thread-scoped* data in a Servlet application)
+* do not mutate the data; in other words, make the data *immutable*
+
+Synchronizing access to shared mutable data is needed for *mutual exclusion*, but also for *reliable communication between threads*.
+See the Java Memory Model. To help understanding, data may reside outside main memory during thread context switches, so some
+synchronization mechanism is needed to make sure the data is flushed to main memory before the thread context switch.
+
+Also note that in order for synchronization to work *both read and write operations must be synchronized*.
+
+Note that *immutable* classes are *thread-safe*, without needing any further synchronization. Also note that mutable classes like
+`AtomicReference` are thread-safe, and often a great tool to make application classes thread-safe.
+
 ### Item 79: Avoid excessive synchronization
 
 ### Item 80: Prefer executors, tasks, and streams to threads
