@@ -535,7 +535,7 @@ From the title it is obvious that 2 potential ways of preventing data corruption
 * do not mutate the data; in other words, make the data *immutable*
 
 Synchronizing access to shared mutable data is needed for *mutual exclusion*, but also for *reliable communication between threads*.
-See the Java Memory Model. To help understanding, data may reside outside main memory during thread context switches, so some
+See the Java Memory Model. To help understanding, data may reside outside of main memory during thread context switches, so some
 synchronization mechanism is needed to make sure the data is flushed to main memory before the thread context switch.
 
 Also note that in order for synchronization to work *both read and write operations must be synchronized*.
