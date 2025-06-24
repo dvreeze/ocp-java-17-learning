@@ -531,8 +531,8 @@ Synchronization stands not just for the `synchronized` keyword. See the *Java Me
 `volatile` and `final`, for example).
 
 From the title it is obvious that 2 potential ways of preventing data corruption due to sharing mutable data are:
-* do not shared the data; typically, make the data accessible from only one thread (e.g. *request-handling-thread-scoped* data in a Servlet application)
-* do not mutate the data; in other words, make the data *immutable*
+* *do not share* the data; typically, make the data accessible from only one thread (e.g. *request-handling-thread-scoped* data in a Servlet application)
+* *do not mutate* the data; in other words, make the data *immutable*
 
 Synchronizing access to shared mutable data is needed for *mutual exclusion*, but also for *reliable communication between threads*.
 See the Java Memory Model. To help understanding, data may reside outside of main memory during thread context switches, so some
